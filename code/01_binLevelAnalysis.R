@@ -15,15 +15,16 @@ suppressMessages({
   library(crayon)
 })
 
-cat("\n\n > This script \n\t calculate mu score and amplification frequency for each 1Mbp bin \n\n")
+cat("\n\n > This script calculates mu score and amplification frequency for each 1Mbp bin \n\n")
+cat(" The computation will be performed for 23 cancer types and for \n several gene and mutation types (it will take a while)")
 
 setwd("../")
 
 tumor_types <- c(  
-  "LUAD", "LUSC", "BRCA", "CESC", "THCA", "HNSC", "PAAD", "COADREAD", "GBMLGG",
+  "SKCM", "LUAD", "LUSC", "BRCA", "CESC", "THCA", "HNSC", "PAAD", "COADREAD", "GBMLGG",
   # #
   "OV", "BLCA",  "PCPG", "PRAD", "KIRC", "MESO", "TGCT",
-  "KIRP", "SARC", "LIHC", "ESCA", "STAD", "UCS", "SKCM"
+  "KIRP", "SARC", "LIHC", "ESCA", "STAD", "UCS"
 )
 
 mutation_types <- c("all_mutations",
@@ -39,6 +40,9 @@ mutation_types <- c("all_mutations",
                     "CADD_moderatelyDamaging",
                     "haploinsufficient",
                     "non_haploinsufficient")
+
+cat("\n\n Gene and mutation types are:\n\n")
+print(mutation_types)
 
 fixed_bin_length <- 1000000 # segmentation length (set at default 1 Mbp)
 
@@ -56,11 +60,11 @@ for(mutation_type in mutation_types){
   ## >> 1st Loop: cancer types << ----
   for (tumor_type in tumor_types) {
     ## 1st Loop: load sCNAs and SNVs files ----
-    cat(" >>>>>>>>>>>>>>>>>>>><<<<<<<<<<<<<<<<<<< \n")
+    cat(" \n\n\n >>>>>>>>>>>>>>>>>>>><<<<<<<<<<<<<<<<<<< \n")
     cat(" >     ----------", paste0(tumor_type, " ---------- \n"))
     
     # Load SNVs file
-    cat(" > Load Mutation File \n")
+    cat("\n > Load Mutation File \n")
     snv <-
       read.csv(file = paste0("data/FireBrowse_SNVs/", tumor_type, "_mutations.csv"))
     snv <-
@@ -68,7 +72,7 @@ for(mutation_type in mutation_types){
     cat("  done!")
     
     # Load CNAs file
-    cat(" > Load SCNA File \n")
+    cat("\n > Load SCNA File \n")
     scna <-
       read.delim(
         paste0(
@@ -88,24 +92,24 @@ for(mutation_type in mutation_types){
       levels(as.factor(snv[snv$patient_id %in% scna$patient_id, ]$patient_id))
     scna <-
       scna[scna$Segment_Mean >= 0.2 | scna$Segment_Mean <= -0.2, ]
-    cat("  done!")
-    cat(" > common patients:", length(common_patients))
+    cat("\n  done!")
+    cat("\n > common patients:", length(common_patients))
     
     ## 1st Loop: filter for gene properties ----
-    cat(" > Filter for gene properties \n")
+    cat("\n > Filter for gene properties \n")
     if (mutation_type == "all_mutations") {
-      cat(blue(" | \n no gene filtering"))
+      cat(" no gene filtering")
     }
     
     if (mutation_type == "remove_OG") {
-      cat(" | \n Filter for gene type: OGs \n")
+      cat("\n Filter for gene type: OGs \n")
       OGs <- read.csv(file = "data/CancerGenes/OG_list.tsv", sep = "\t")
       snv_filt <- snv_filt[!snv_filt$SWISSPROT %in%  OGs$Entry.name, ]
       cat("Removed", dim(snv)[1] - dim(snv_filt)[1], "mutations")
       rm(OGs)
     }
     if (mutation_type == "remove_TSG") {
-      cat(" | \n Filter for gene type: TSGs \n")
+      cat("\n Filter for gene type: TSGs \n")
       TSGs <-
         read.csv(file = "data/CancerGenes/TSG_list.tab", sep = "\t")
       snv_filt <- snv_filt[!snv_filt$SWISSPROT %in%  TSGs$Entry.name, ]
@@ -113,7 +117,7 @@ for(mutation_type in mutation_types){
       rm(TSGs)
     }
     if (mutation_type == "remove_BOTH") {
-      cat(" | \n Filter for gene type: both TSGs and OGs \n")
+      cat("\n Filter for gene type: both TSGs and OGs \n")
       OGs <- read.csv(file = "data/CancerGenes/OG_list.tsv", sep = "\t")
       TSGs <-
         read.csv(file = "data/CancerGenes/TSG_list.tab", sep = "\t")
@@ -125,7 +129,7 @@ for(mutation_type in mutation_types){
     }
     
     if (mutation_type == "haploinsufficient") {
-      cat(" | \n Filter for haploinsufficient genes")
+      cat("\n Filter for haploinsufficient genes")
       pLI_scores <- readxl::read_xlsx("data/pLI_scores.xlsx", sheet = 2)
       pLI_scores <-
         pLI_scores[!is.na(pLI_scores$chr), ] # remove genes within X and Y chromosomes
@@ -136,7 +140,7 @@ for(mutation_type in mutation_types){
       snv_filt <- unique(snv_filt)
     }
     if (mutation_type == "non_haploinsufficient") {
-      cat(" | \n Filter for non-haploinsufficient genes")
+      cat("\n Filter for non-haploinsufficient genes")
       pLI_scores <- readxl::read_xlsx("data/pLI_scores.xlsx", sheet = 2)
       pLI_scores <-
         pLI_scores[!is.na(pLI_scores$chr), ] # remove genes within X and Y chromosomes
@@ -148,13 +152,13 @@ for(mutation_type in mutation_types){
     }
     
     ## 1st Loop: filter for mutation properties ----
-    cat(" > Filter for Mutations Type \n")
+    cat("\n > Filter for Mutations Type \n")
     if (mutation_type == "all_mutations") {
-      cat(" | \n no mutation filtering\n")
+      cat("\n no mutation filtering\n")
     }
     
     if (mutation_type == "polyphen_highlyDamaging") {
-      cat(" | \n Filter for polyphen_highlyDamaging mutations")
+      cat("\n Filter for polyphen_highlyDamaging mutations")
       mean(as.numeric(snv_filt$Polyphen2_HVAR_score), na.rm = T)
       snv_filt <- snv_filt[!is.na(snv_filt$Polyphen2_HVAR_score), ]
       snv_filt <-
@@ -163,7 +167,7 @@ for(mutation_type in mutation_types){
       snv_filt <- unique(snv_filt)
     }
     if (mutation_type == "polyphen_moderatelyDamaging") {
-      cat(" | \n Filter for polyphen_moderatelyDamaging mutations")
+      cat("\n Filter for polyphen_moderatelyDamaging mutations")
       snv_filt <- snv_filt[!is.na(snv_filt$Polyphen2_HVAR_score), ]
       snv_filt <-
         snv_filt[as.numeric(snv_filt$Polyphen2_HVAR_score) <= 0.3, ]
@@ -172,7 +176,7 @@ for(mutation_type in mutation_types){
     }
     
     if (mutation_type == "CADD_highlyDamaging") {
-      cat(" | \n Filter for CADD_highlyDamaging mutations")
+      cat("\n Filter for CADD_highlyDamaging mutations")
       plot(density(as.numeric(snv_filt$CADD_raw), na.rm = T))
       abline(col = "red", v = mean(as.numeric(snv_filt$CADD_raw), na.rm = T))
       abline(col = "blue", v = 2)
@@ -181,7 +185,7 @@ for(mutation_type in mutation_types){
       snv_filt <- snv_filt[!is.na(snv_filt$Chromosome), ]
     }
     if (mutation_type == "CADD_moderatelyDamaging") {
-      cat(" | \n Filter for CADD_moderatelyDamaging mutations")
+      cat("\n Filter for CADD_moderatelyDamaging mutations")
       # snv_filt <- snv_filt[!is.na(as.numeric(snv_filt$CADD_raw)),]
       snv_filt <- snv_filt[as.numeric(snv_filt$CADD_raw) <= 3.5, ]
       snv_filt <- snv_filt[!is.na(snv_filt$Chromosome), ]
@@ -189,7 +193,7 @@ for(mutation_type in mutation_types){
     
     
     if (mutation_type == "aggregation_causing") {
-      cat(" | \n Filter for aggregation_causing mutations")
+      cat("\n Filter for aggregation_causing mutations")
       snv_filt <-
         snv_filt[snv_filt$Aggregation > 5000 & snv_filt$FoldChange > 1, ]
       snv_filt <- snv_filt[!is.na(snv_filt$Chromosome), ]
@@ -197,7 +201,7 @@ for(mutation_type in mutation_types){
       print(paste0("Aggregating mutations: ",dim(snv_filt)))
     }
     if (mutation_type == "non_aggregation_causing") {
-      cat(" | \n Filter for non_aggregation_causing mutations")
+      cat("\n Filter for non_aggregation_causing mutations")
       snv_filt <-
         snv_filt[!(snv_filt$Aggregation > 5000 & snv_filt$FoldChange > 1), ]
       snv_filt <- snv_filt[!is.na(snv_filt$Chromosome), ]
@@ -216,7 +220,7 @@ for(mutation_type in mutation_types){
       snv_filt <- snv_filt[!is.na(snv_filt$Chromosome), ]
     }
     if (mutation_type == "missense") {
-      cat(" | \n Filter for non_aggregation_causing mutations")
+      cat(" Filter for non_aggregation_causing mutations")
       snv_filt <-
         snv_filt[snv_filt$Variant_Classification == "Missense_Mutation", ]
       snv_filt <- snv_filt[!is.na(snv_filt$Chromosome), ]
@@ -231,7 +235,7 @@ for(mutation_type in mutation_types){
     
     
     ##  initialize table for chromosome and arm amplification frequencies ----
-    cat("> Start chromosome Loop \n")
+    cat("\n\n >> Start chromosome Loop \n")
     freq_ampl_chr <- t(data.frame("p", "p+q", "q"))
     colnames(freq_ampl_chr) <- "arms"
     rownames(freq_ampl_chr) <- NULL
@@ -555,8 +559,8 @@ for(mutation_type in mutation_types){
     write.table(freq_ampl_chr,
                 file = paste0(results_table_path, tumor_type, "_chrAmpFreq.txt"))
     
-    cat("> End. Next tumor type \n")
+    cat("\n\n > End. Next tumor type \n\n")
   }
 }
 
-cat("\n\nOUTPUT of the script: \n \t (1) raw tables path: results/tables/01_binLevelAnalysis/ \n")
+cat("\n\n OUTPUT of the script: \n \t (1) raw tables path: results/tables/01_binLevelAnalysis/ \n")

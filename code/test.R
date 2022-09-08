@@ -1843,4 +1843,470 @@ Changes not staged for commit:
 	[31mdeleted:    01_binLevelAnalysis.R[m
 	[31mdeleted:    02_statisticalAnalysis.R[m
 	[31mdeleted:    03_BRCA-PAAD_analysis.R[m
-	[31mdelete
+	[31mdeleted:    04_timingAnalysis.R[m
+	[31mdeleted:    05_protectionAnalysis.R[m
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+	[31mcode/[m
+	[31mdata/[m
+	[31mresults/[m
+	[31mtest.R[m
+
+no changes added to commit (use "git add" and/or "git commit -a")
+(base) ]0;ieo5099@laninst-HP-Z6-G4-Workstation: ~/Desktop_linux/mutation_compensation[01;32mieo5099@laninst-HP-Z6-G4-Workstation[00m:[01;34m~/Desktop_linux/mutation_compensation[00m$ git add coe[Kde/
+(base) ]0;ieo5099@laninst-HP-Z6-G4-Workstation: ~/Desktop_linux/mutation_compensation[01;32mieo5099@laninst-HP-Z6-G4-Workstation[00m:[01;34m~/Desktop_linux/mutation_compensation[00m$ ll
+total 128K
+drwxrwxrwx 1 laninst laninst 4,0K set  8 13:46 [0m[34;42m.[0m/
+drwxr-xr-x 1 laninst laninst 4,0K set  8 11:18 [01;34m..[0m/
+drwxrwxr-x 1 laninst laninst 4,0K set  8 11:14 [01;34m06_proteinAggregation[0m/
+drwxr-xr-x 1 laninst laninst 4,0K set  8 13:45 [01;34mcode[0m/
+drwxrwxr-x 1 laninst laninst 4,0K ago 31 11:52 [01;34mdata[0m/
+drwxrwxr-x 1 laninst laninst 4,0K set  8 13:46 [01;34m.git[0m/
+-rw-rw-r-- 1 laninst laninst 2,6K set  8 12:11 README.md
+drwxrwxr-x 1 laninst laninst 4,0K ago 23 10:48 [01;34mresults[0m/
+-rw-r--r-- 1 laninst laninst  95K set  8 13:46 test.R
+(base) ]0;ieo5099@laninst-HP-Z6-G4-Workstation: ~/Desktop_linux/mutation_compensation[01;32mieo5099@laninst-HP-Z6-G4-Workstation[00m:[01;34m~/Desktop_linux/mutation_compensation[00m$ gfi[K[Kit stats
+git: 'stats' is not a git command. See 'git --help'.
+
+The most similar command is
+	status
+(base) ]0;ieo5099@laninst-HP-Z6-G4-Workstation: ~/Desktop_linux/mutation_compensation[01;32mieo5099@laninst-HP-Z6-G4-Workstation[00m:[01;34m~/Desktop_linux/mutation_compensation[00m$ gia[Kt status
+On branch main
+Your branch is up-to-date with 'origin/main'.
+
+Changes to be committed:
+  (use "git restore --staged <file>..." to unstage)
+	[32mnew file:   code/00_geneLevelAnalysis.R[m
+	[32mnew file:   code/01_binLevelAnalysis.R[m
+	[32mnew file:   code/02_statisticalAnalysis.R[m
+	[32mnew file:   code/03_BRCA-PAAD_analysis.R[m
+	[32mnew file:   code/04_timingAnalysis.R[m
+	[32mnew file:   code/05_protectionAnalysis.R[m
+	[32mnew file:   code/test.R[m
+
+Changes not staged for commit:
+  (use "git add/rm <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+	[31mdeleted:    00_geneLevelAnalysis.R[m
+	[31mdeleted:    01_binLevelAnalysis.R[m
+	[31mdeleted:    02_statisticalAnalysis.R[m
+	[31mdeleted:    03_BRCA-PAAD_analysis.R[m
+	[31mdeleted:    04_timingAnalysis.R[m
+	[31mdeleted:    05_protectionAnalysis.R[m
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+	[31mdata/[m
+	[31mresults/[m
+	[31mtest.R[m
+
+(base) ]0;ieo5099@laninst-HP-Z6-G4-Workstation: ~/Desktop_linux/mutation_compensation[01;32mieo5099@laninst-HP-Z6-G4-Workstation[00m:[01;34m~/Desktop_linux/mutation_compensation[00m$ git push
+Username for 'https://github.com': fabio-alfieri
+Password for 'https://fabio-alfieri@github.com': 
+Everything up-to-date
+(base) ]0;ieo5099@laninst-HP-Z6-G4-Workstation: ~/Desktop_linux/mutation_compensation[01;32mieo5099@laninst-HP-Z6-G4-Workstation[00m:[01;34m~/Desktop_linux/mutation_compensation[00m$ git commint[K[Kt -m "ha[K[Kchange location to scrit[K[Kipts "
+[main ee576aa] change location to scripts
+ 7 files changed, 4640 insertions(+)
+ create mode 100755 code/00_geneLevelAnalysis.R
+ create mode 100755 code/01_binLevelAnalysis.R
+ create mode 100755 code/02_statisticalAnalysis.R
+ create mode 100755 code/03_BRCA-PAAD_analysis.R
+ create mode 100755 code/04_timingAnalysis.R
+ create mode 100755 code/05_protectionAnalysis.R
+ create mode 100644 code/test.R
+(base) ]0;ieo5099@laninst-HP-Z6-G4-Workstation: ~/Desktop_linux/mutation_compensation[01;32mieo5099@laninst-HP-Z6-G4-Workstation[00m:[01;34m~/Desktop_linux/mutation_compensation[00m$ git puish[K[K[Ksh
+Enumerating objects: 6, done.
+Counting objects:  16% (1/6)Counting objects:  33% (2/6)Counting objects:  50% (3/6)Counting objects:  66% (4/6)Counting objects:  83% (5/6)Counting objects: 100% (6/6)Counting objects: 100% (6/6), done.
+Delta compression using up to 48 threads
+Compressing objects:  20% (1/5)Compressing objects:  40% (2/5)Compressing objects:  60% (3/5)Compressing objects:  80% (4/5)Compressing objects: 100% (5/5)Compressing objects: 100% (5/5), done.
+Writing objects:  20% (1/5)Writing objects:  40% (2/5)Writing objects:  60% (3/5)Writing objects:  80% (4/5)Writing objects: 100% (5/5)Writing objects: 100% (5/5), 19.81 KiB | 1.80 MiB/s, done.
+Total 5 (delta 1), reused 0 (delta 0), pack-reused 0
+remote: Resolving deltas:   0% (0/1)[Kremote: Resolving deltas: 100% (1/1)[Kremote: Resolving deltas: 100% (1/1), completed with 1 local object.[K
+To https://github.com/fabio-alfieri/mutation_compensation.git
+   9e86d7e..ee576aa  main -> main
+(base) ]0;ieo5099@laninst-HP-Z6-G4-Workstation: ~/Desktop_linux/mutation_compensation[01;32mieo5099@laninst-HP-Z6-G4-Workstation[00m:[01;34m~/Desktop_linux/mutation_compensation[00m$ ll
+total 128K
+drwxrwxrwx 1 laninst laninst 4,0K set  8 13:46 [0m[34;42m.[0m/
+drwxr-xr-x 1 laninst laninst 4,0K set  8 11:18 [01;34m..[0m/
+drwxrwxr-x 1 laninst laninst 4,0K set  8 11:14 [01;34m06_proteinAggregation[0m/
+drwxr-xr-x 1 laninst laninst 4,0K set  8 13:45 [01;34mcode[0m/
+drwxrwxr-x 1 laninst laninst 4,0K ago 31 11:52 [01;34mdata[0m/
+drwxrwxr-x 1 laninst laninst 4,0K set  8 13:47 [01;34m.git[0m/
+-rw-rw-r-- 1 laninst laninst 2,6K set  8 12:11 README.md
+drwxrwxr-x 1 laninst laninst 4,0K ago 23 10:48 [01;34mresults[0m/
+-rw-r--r-- 1 laninst laninst  95K set  8 13:46 test.R
+(base) ]0;ieo5099@laninst-HP-Z6-G4-Workstation: ~/Desktop_linux/mutation_compensation[01;32mieo5099@laninst-HP-Z6-G4-Workstation[00m:[01;34m~/Desktop_linux/mutation_compensation[00m$ ll
+total 128K
+drwxrwxrwx 1 laninst laninst 4,0K set  8 13:46 [0m[34;42m.[0m/
+drwxr-xr-x 1 laninst laninst 4,0K set  8 11:18 [01;34m..[0m/
+drwxrwxr-x 1 laninst laninst 4,0K set  8 11:14 [01;34m06_proteinAggregation[0m/
+drwxr-xr-x 1 laninst laninst 4,0K set  8 13:45 [01;34mcode[0m/
+drwxrwxr-x 1 laninst laninst 4,0K ago 31 11:52 [01;34mdata[0m/
+drwxrwxr-x 1 laninst laninst 4,0K set  8 13:47 [01;34m.git[0m/
+-rw-rw-r-- 1 laninst laninst 2,6K set  8 12:11 README.md
+drwxrwxr-x 1 laninst laninst 4,0K ago 23 10:48 [01;34mresults[0m/
+-rw-r--r-- 1 laninst laninst  95K set  8 13:46 test.R
+(base) ]0;ieo5099@laninst-HP-Z6-G4-Workstation: ~/Desktop_linux/mutation_compensation[01;32mieo5099@laninst-HP-Z6-G4-Workstation[00m:[01;34m~/Desktop_linux/mutation_compensation[00m$ git push[K[K[K[K[K[K[K[Kgit [K[K[K[Kmv o[K06_proteinAggregation/
+mv: missing destination file operand after '06_proteinAggregation/'
+Try 'mv --help' for more information.
+(base) ]0;ieo5099@laninst-HP-Z6-G4-Workstation: ~/Desktop_linux/mutation_compensation[01;32mieo5099@laninst-HP-Z6-G4-Workstation[00m:[01;34m~/Desktop_linux/mutation_compensation[00m$ mv [K[K[Kll
+total 128K
+drwxrwxrwx 1 laninst laninst 4,0K set  8 13:46 [0m[34;42m.[0m/
+drwxr-xr-x 1 laninst laninst 4,0K set  8 11:18 [01;34m..[0m/
+drwxrwxr-x 1 laninst laninst 4,0K set  8 11:14 [01;34m06_proteinAggregation[0m/
+drwxr-xr-x 1 laninst laninst 4,0K set  8 13:45 [01;34mcode[0m/
+drwxrwxr-x 1 laninst laninst 4,0K ago 31 11:52 [01;34mdata[0m/
+drwxrwxr-x 1 laninst laninst 4,0K set  8 13:47 [01;34m.git[0m/
+-rw-rw-r-- 1 laninst laninst 2,6K set  8 12:11 README.md
+drwxrwxr-x 1 laninst laninst 4,0K ago 23 10:48 [01;34mresults[0m/
+-rw-r--r-- 1 laninst laninst  95K set  8 13:46 test.R
+(base) ]0;ieo5099@laninst-HP-Z6-G4-Workstation: ~/Desktop_linux/mutation_compensation[01;32mieo5099@laninst-HP-Z6-G4-Workstation[00m:[01;34m~/Desktop_linux/mutation_compensation[00m$ mv 06_proteinAggregation/ code/
+(base) ]0;ieo5099@laninst-HP-Z6-G4-Workstation: ~/Desktop_linux/mutation_compensation[01;32mieo5099@laninst-HP-Z6-G4-Workstation[00m:[01;34m~/Desktop_linux/mutation_compensation[00m$ l
+[0m[01;34mcode[0m/  [01;34mdata[0m/  README.md  [01;34mresults[0m/  test.R
+(base) ]0;ieo5099@laninst-HP-Z6-G4-Workstation: ~/Desktop_linux/mutation_compensation[01;32mieo5099@laninst-HP-Z6-G4-Workstation[00m:[01;34m~/Desktop_linux/mutation_compensation[00m$ ll
+total 124K
+drwxrwxrwx 1 laninst laninst 4,0K set  8 13:48 [0m[34;42m.[0m/
+drwxr-xr-x 1 laninst laninst 4,0K set  8 11:18 [01;34m..[0m/
+drwxr-xr-x 1 laninst laninst 4,0K set  8 13:48 [01;34mcode[0m/
+drwxrwxr-x 1 laninst laninst 4,0K ago 31 11:52 [01;34mdata[0m/
+drwxrwxr-x 1 laninst laninst 4,0K set  8 13:47 [01;34m.git[0m/
+-rw-rw-r-- 1 laninst laninst 2,6K set  8 12:11 README.md
+drwxrwxr-x 1 laninst laninst 4,0K ago 23 10:48 [01;34mresults[0m/
+-rw-r--r-- 1 laninst laninst  95K set  8 13:46 test.R
+(base) ]0;ieo5099@laninst-HP-Z6-G4-Workstation: ~/Desktop_linux/mutation_compensation[01;32mieo5099@laninst-HP-Z6-G4-Workstation[00m:[01;34m~/Desktop_linux/mutation_compensation[00m$ cd codeq
+bash: cd: codeq: No such file or directory
+(base) ]0;ieo5099@laninst-HP-Z6-G4-Workstation: ~/Desktop_linux/mutation_compensation[01;32mieo5099@laninst-HP-Z6-G4-Workstation[00m:[01;34m~/Desktop_linux/mutation_compensation[00m$ l[Kcd code/
+(base) ]0;ieo5099@laninst-HP-Z6-G4-Workstation: ~/Desktop_linux/mutation_compensation/code[01;32mieo5099@laninst-HP-Z6-G4-Workstation[00m:[01;34m~/Desktop_linux/mutation_compensation/code[00m$ ll
+total 252K
+drwxr-xr-x 1 laninst laninst 4,0K set  8 13:48 [0m[01;34m.[0m/
+drwxrwxrwx 1 laninst laninst 4,0K set  8 13:48 [34;42m..[0m/
+-rwxr-xr-x 1 laninst laninst 9,9K set  8 13:46 [01;32m00_geneLevelAnalysis.R[0m*
+-rwxr-xr-x 1 laninst laninst  20K set  6 18:38 [01;32m01_binLevelAnalysis.R[0m*
+-rwxr-xr-x 1 laninst laninst  40K set  7 14:34 [01;32m02_statisticalAnalysis.R[0m*
+-rwxr-xr-x 1 laninst laninst  19K set  2 11:31 [01;32m03_BRCA-PAAD_analysis.R[0m*
+-rwxr-xr-x 1 laninst laninst  13K set  1 17:53 [01;32m04_timingAnalysis.R[0m*
+-rwxr-xr-x 1 laninst laninst  12K set  7 17:36 [01;32m05_protectionAnalysis.R[0m*
+drwxrwxr-x 1 laninst laninst 4,0K set  8 11:14 [01;34m06_proteinAggregation[0m/
+-rw-r--r-- 1 laninst laninst 120K set  8 13:48 test.R
+(base) ]0;ieo5099@laninst-HP-Z6-G4-Workstation: ~/Desktop_linux/mutation_compensation/code[01;32mieo5099@laninst-HP-Z6-G4-Workstation[00m:[01;34m~/Desktop_linux/mutation_compensation/code[00m$ ..
+(base) ]0;ieo5099@laninst-HP-Z6-G4-Workstation: ~/Desktop_linux/mutation_compensation[01;32mieo5099@laninst-HP-Z6-G4-Workstation[00m:[01;34m~/Desktop_linux/mutation_compensation[00m$ ll
+total 124K
+drwxrwxrwx 1 laninst laninst 4,0K set  8 13:48 [0m[34;42m.[0m/
+drwxr-xr-x 1 laninst laninst 4,0K set  8 11:18 [01;34m..[0m/
+drwxr-xr-x 1 laninst laninst 4,0K set  8 13:48 [01;34mcode[0m/
+drwxrwxr-x 1 laninst laninst 4,0K ago 31 11:52 [01;34mdata[0m/
+drwxrwxr-x 1 laninst laninst 4,0K set  8 13:47 [01;34m.git[0m/
+-rw-rw-r-- 1 laninst laninst 2,6K set  8 12:11 README.md
+drwxrwxr-x 1 laninst laninst 4,0K ago 23 10:48 [01;34mresults[0m/
+-rw-r--r-- 1 laninst laninst  95K set  8 13:46 test.R
+(base) ]0;ieo5099@laninst-HP-Z6-G4-Workstation: ~/Desktop_linux/mutation_compensation[01;32mieo5099@laninst-HP-Z6-G4-Workstation[00m:[01;34m~/Desktop_linux/mutation_compensation[00m$ rm test.R 
+(base) ]0;ieo5099@laninst-HP-Z6-G4-Workstation: ~/Desktop_linux/mutation_compensation[01;32mieo5099@laninst-HP-Z6-G4-Workstation[00m:[01;34m~/Desktop_linux/mutation_compensation[00m$ ll
+total 28K
+drwxrwxrwx 1 laninst laninst 4,0K set  8 13:48 [0m[34;42m.[0m/
+drwxr-xr-x 1 laninst laninst 4,0K set  8 11:18 [01;34m..[0m/
+drwxr-xr-x 1 laninst laninst 4,0K set  8 13:48 [01;34mcode[0m/
+drwxrwxr-x 1 laninst laninst 4,0K ago 31 11:52 [01;34mdata[0m/
+drwxrwxr-x 1 laninst laninst 4,0K set  8 13:47 [01;34m.git[0m/
+-rw-rw-r-- 1 laninst laninst 2,6K set  8 12:11 README.md
+drwxrwxr-x 1 laninst laninst 4,0K ago 23 10:48 [01;34mresults[0m/
+(base) ]0;ieo5099@laninst-HP-Z6-G4-Workstation: ~/Desktop_linux/mutation_compensation[01;32mieo5099@laninst-HP-Z6-G4-Workstation[00m:[01;34m~/Desktop_linux/mutation_compensation[00m$ cd code
+(base) ]0;ieo5099@laninst-HP-Z6-G4-Workstation: ~/Desktop_linux/mutation_compensation/code[01;32mieo5099@laninst-HP-Z6-G4-Workstation[00m:[01;34m~/Desktop_linux/mutation_compensation/code[00m$ ll
+total 256K
+drwxr-xr-x 1 laninst laninst 4,0K set  8 13:48 [0m[01;34m.[0m/
+drwxrwxrwx 1 laninst laninst 4,0K set  8 13:48 [34;42m..[0m/
+-rwxr-xr-x 1 laninst laninst 9,9K set  8 13:46 [01;32m00_geneLevelAnalysis.R[0m*
+-rwxr-xr-x 1 laninst laninst  20K set  6 18:38 [01;32m01_binLevelAnalysis.R[0m*
+-rwxr-xr-x 1 laninst laninst  40K set  7 14:34 [01;32m02_statisticalAnalysis.R[0m*
+-rwxr-xr-x 1 laninst laninst  19K set  2 11:31 [01;32m03_BRCA-PAAD_analysis.R[0m*
+-rwxr-xr-x 1 laninst laninst  13K set  1 17:53 [01;32m04_timingAnalysis.R[0m*
+-rwxr-xr-x 1 laninst laninst  12K set  7 17:36 [01;32m05_protectionAnalysis.R[0m*
+drwxrwxr-x 1 laninst laninst 4,0K set  8 11:14 [01;34m06_proteinAggregation[0m/
+-rw-r--r-- 1 laninst laninst 124K set  8 13:48 test.R
+(base) ]0;ieo5099@laninst-HP-Z6-G4-Workstation: ~/Desktop_linux/mutation_compensation/code[01;32mieo5099@laninst-HP-Z6-G4-Workstation[00m:[01;34m~/Desktop_linux/mutation_compensation/code[00m$ p[Kmore test.R 
+#!/usr/bin/env Rscript
+library(optparse)
+
+option_list = list(
+  make_option(c("-a", "--analysis"), type="character", default=NULL, 
+              help="Options are:
+              \t - 00 or geneLevelAnalysis
+              \t - 01 or binLevelAnalysis
+              \t - 02 or produceStatistics
+              \t - 03 or BRCAandPAADAnalysis
+              \t - 04 or timingAnalysis
+              \t - 05 or protectionAnalysis
+              \t - all", metavar="character")
+); 
+
+opt_parser = OptionParser(option_list=option_list);
+opt = parse_args(opt_parser);
+
+if (is.null(opt$analysis)) {
+  print_help(opt_parser)
+  stop("please specify the analysis you want to perform!", call.=FALSE)
+}
+if (!any(opt$analysis %in% c("00","geneLevelAnalysis",
+                             "01","binLevelAnalysis",
+                             "02","statisticalAnalysis",
+                             "03","BRCAandPAADAnalysis",
+                             "04","timingAnalysis",
+                             "05","protectionAnalysis",
+                             "all"
+                             ))) {
+  print_help(opt_parser)
+  stop("typo in the analysis flag, plase see above for the available options!", call.=FALSE)
+}
+
+if (opt$analysis == "geneLevelAnalysis" | opt$analysis == "00") {
+  system(paste0("Rscript --vanilla code/00_geneLevelAnalysis.R"))
+}
+[7m--More--(1%)[27m[K[7m--More--(1%)[27m[K
+if (opt$analysis == "binLevelAnalysis" | opt$analysis == "01") {
+  system(paste0("Rscript --vanilla code/01_binLevelAnalysis.R"))
+}
+
+if (opt$analysis == "protectionAnalysis" | opt$analysis == "05") {
+  system(paste0("Rscript --vanilla code/05_protectionAnalysis.R"))
+  stop()
+}
+
+# if (opt$analysis == "BRCAandPAADAnalysis" | opt$analysis == "03") {
+#   system(paste0("Rscript --vanilla code/02_statisticalAnalysis.R"))
+# }
+# 
+# if (opt$analysis == "statisticalAnalysis" | opt$analysis == "02") {
+#   system(paste0("Rscript --vanilla code/02_statisticalAnalysis.R"))
+# }
+# 
+# if (opt$analysis == "statisticalAnalysis" | opt$analysis == "02") {
+#   system(paste0("Rscript --vanilla code/02_statisticalAnalysis.R"))
+# }5h[?25h[?25h[?25h[?25h[?25h[?25h[?25h[?25h[1mRows: [22m[34m1912[39m [1mColumns: [22m[34m1[39m
+[36m──[39m [1mColumn specification[22m [36m─────────────────────────────────────────────────────────────────────────────────
+───────────────────[39m
+[1mDelimiter:[22m ","
+[31mchr[39m (1): gene
+
+[36mℹ[39m Use `spec()` to retrieve the full column specification for this data.
+[36mℹ[39m Specify the column types or set `show_col_types = FALSE` to quiet this message.
+[?25h[1mRows: [22m[34m781[39m [1mColumns: [22m[34m1[39m
+[36m──[39m [1mColumn specification[22m [36m─────────────────────────────────────────────────────────────────────────────────
+───────────────────[39m
+[1mDelimiter:[22m ","
+[31mchr[39m (1): gene
+
+[36mℹ[39m Use `spec()` to retrieve the full column specification for this data.
+[36mℹ[39m Specify the column types or set `show_col_types = FALSE` to quiet this message.
+[?25h
+[7m--More--(2%)[27mFALSE  TRUE 
+ 2115   328 
+[?25h
+FALSE  TRUE 
+ 2401    42 
+[?25h
+
+ >> Contingency tables 
+
+[?25h     [,1] [,2]
+TRUE  328   42
+TRUE   46  120
+[?25h[?25h     FALSE TRUE
+[1,]  2401   42
+[2,]   914  120
+[?25h
+	Fisher's Exact Test for Count Data
+
+data:  rbind(table(protected$V1 %in% nonessential$gene), table(unprotected$V1 %in% nonessential$gene))
+p-value < 2.2e-16
+alternative hypothesis: true odds ratio is not equal to 1
+95 percent confidence interval:
+  5.189696 11.021757
+sample estimates:
+odds ratio 
+  7.499359 
+
+[?25h     FALSE TRUE
+[1,]  2115  328
+[2,]   988   46
+[?25h
+	Fisher's Exact Test for Count Data
+
+data:  rbind(table(protected$V1 %in% common_essential$gene), table(unprotected$V1 %in% common_essential$gene))
+p-value < 2.2e-16
+alternative hypothesis: true odds ratio is not equal to 1
+95 percent confidence interval:
+[7m--More--(3%)[27m 0.2136024 0.4140493
+sample estimates:
+odds ratio 
+ 0.3003023 
+
+[?25h[?25hError: 
+Execution halted
+(base) ]0;ieo5099@laninst-HP-Z6-G4-Workstation: ~/Desktop_linux/mutation_compensation[01;32mieo5099@laninst-HP-Z6-G4-Worksta
+tion[00m:[01;34m~/Desktop_linux/mutation_compensation[00m$ ^C^C
+(base) ]0;ieo5099@laninst-HP-Z6-G4-Workstation: ~/Desktop_linux/mutation_compensation[01;32mieo5099@laninst-HP-Z6-G4-Worksta
+tion[00m:[01;34m~/Desktop_linux/mutation_compensation[00m$ ^C
+(base) ]0;ieo5099@laninst-HP-Z6-G4-Workstation: ~/Desktop_linux/mutation_compensation[01;32mieo5099@laninst-HP-Z6-G4-Worksta
+tion[00m:[01;34m~/Desktop_linux/mutation_compensation[00m$ 
+(base) ]0;ieo5099@laninst-HP-Z6-G4-Workstation: ~/Desktop_linux/mutation_compensation[01;32mieo5099@laninst-HP-Z6-G4-Worksta
+tion[00m:[01;34m~/Desktop_linux/mutation_compensation[00m$ ^C
+(base) ]0;ieo5099@laninst-HP-Z6-G4-Workstation: ~/Desktop_linux/mutation_compensation[01;32mieo5099@laninst-HP-Z6-G4-Worksta
+tion[00m:[01;34m~/Desktop_linux/mutation_compensation[00m$ ^C
+(base) ]0;ieo5099@laninst-HP-Z6-G4-Workstation: ~/Desktop_linux/mutation_compensation[01;32mieo5099@laninst-HP-Z6-G4-Worksta
+tion[00m:[01;34m~/Desktop_linux/mutation_compensation[00m$ 
+(base) ]0;ieo5099@laninst-HP-Z6-G4-Workstation: ~/Desktop_linux/mutation_compensation[01;32mieo5099@laninst-HP-Z6-G4-Worksta
+tion[00m:[01;34m~/Desktop_linux/mutation_compensation[00m$ Rscript test.R -a 05[K[K[K[K[K[K[K[K[K[K[K[K
+code/        data/        data.zip     results/     results.zip  Rplots.pdf   test.R       
+(base) ]0;ieo5099@laninst-HP-Z6-G4-Workstation: ~/Desktop_linux/mutation_compensation[01;32mieo5099@laninst-HP-Z6-G4-Worksta
+tion[00m:[01;34m~/Desktop_linux/mutation_compensation[00m$ Rscript code/
+00_geneLevelAnalysis.R    02_statisticalAnalysis.R  04_timingAnalysis.R       .Rapp.history
+01_binLevelAnalysis.R     03_BRCA-PAAD_analysis.R   05_protectionAnalysis.R   
+(base) ]0;ieo5099@laninst-HP-Z6-G4-Workstation: ~/Desktop_linux/mutation_compensation[01;32mieo5099@laninst-HP-Z6-G4-Worksta
+tion[00m:[01;34m~/Desktop_linux/mutation_compensation[00m$ Rscript code/05_protectionAnalysis.R 
+
+
+ >> Loading libraries 
+
+^C
+Execution halted
+[?25h(base) ]0;ieo5099@laninst-HP-Z6-G4-Workstation: ~/Desktop_linux/mutation_compensation[01;32mieo5099@laninst-HP-Z6-G4-Wo
+rkstation[00m:[01;34m~/Desktop_linux/mutation_compensation[00m$ ..
+(base) ]0;ieo5099@laninst-HP-Z6-G4-Workstation: ~/Desktop_linux[01;32mieo5099@laninst-HP-Z6-G4-Workstation[00m:[01;34m~/Desk
+[7m--More--(5%)[27mtop_linux[00m$ ll
+total 2,9G
+drwxr-xr-x  1 laninst laninst 4,0K set  2 12:04  [0m[01;34m.[0m/
+drwxr-xr-x 25 ieo5099 ieo5099 4,0K set  6 20:39  [01;34m..[0m/
+drwxr-xr-x  1 laninst laninst 4,0K feb  4  2022  [01;34m0_MAGISTRALE[0m/
+drwxr-xr-x  1 laninst laninst 4,0K feb  4  2022  [01;34m8_TESI[0m/
+-rw-rw-r--  1 laninst laninst  62K set  2 12:04  [01;35maggregation.png[0m
+-rwxr-xr-x  1 laninst laninst 2,9G set 12  2021 [01;32m'LUCA PORTFOLIO.zip'[0m*
+-rw-rw-r--  1 laninst laninst 4,7K lug 26  2021  maf2vcf.sh
+drwxrwxr-x  1 laninst laninst 4,0K dic  3  2021  [01;34mmainProject_html[0m/
+-rw-rw-r--  1 laninst laninst 261K ott  1  2021  [01;35mmeme.png[0m
+drwxrwxr-x  1 laninst laninst 4,0K giu 15  2021  [01;34mMountWorkstation[0m/
+drwxrwxrwx  1 laninst laninst 4,0K set  7 11:59  [34;42mmutation_compensation[0m/
+-rw-rw-r--  1 laninst laninst  508 nov 12  2021  script.sh
+-rw-rw-r--  1 laninst laninst 3,1K set  2 10:29  ubuntu.txt
+drwxrwxr-x  1 laninst laninst 4,0K dic 13  2021  [01;34mxAngi[0m/
+(base) ]0;ieo5099@laninst-HP-Z6-G4-Workstation: ~/Desktop_linux[01;32mieo5099@laninst-HP-Z6-G4-Workstation[00m:[01;34m~/Desk
+top_linux[00m$ ll..Rscript code/05_protectionAnalysis.R 
+Fatal error: cannot open file 'code/05_protectionAnalysis.R': No such file or directory
+(base) ]0;ieo5099@laninst-HP-Z6-G4-Workstation: ~/Desktop_linux[01;32mieo5099@laninst-HP-Z6-G4-Workstation[00m:[01;34m~/Desk
+top_linux[00m$ cd mutation_compensation/
+(base) ]0;ieo5099@laninst-HP-Z6-G4-Workstation: ~/Desktop_linux/mutation_compensation[01;32mieo5099@laninst-HP-Z6-G4-Worksta
+tion[00m:[01;34m~/Desktop_linux/mutation_compensation[00m$ cd[K[Kll
+total 6,6G
+drwxrwxrwx 1 laninst laninst 4,0K set  7 11:59 [0m[34;42m.[0m/
+drwxr-xr-x 1 laninst laninst 4,0K set  2 12:04 [01;34m..[0m/
+drwxr-xr-x 1 laninst laninst 4,0K set  6 17:59 [01;34mcode[0m/
+drwxrwxr-x 1 laninst laninst 4,0K ago 31 11:52 [01;34mdata[0m/
+-rw-rw-r-- 1 laninst laninst 5,4G set  1 16:38 [01;31mdata.zip[0m
+drwxrwxr-x 1 laninst laninst 4,0K ago 23 10:48 [01;34mresults[0m/
+-rw-rw-r-- 1 laninst laninst 1,3G set  1 16:25 [01;31mresults.zip[0m
+-rw-rw-r-- 1 laninst laninst  24K set  7 17:32 Rplots.pdf
+-rw-r--r-- 1 laninst laninst 6,1K set  7 17:34 test.R
+(base) ]0;ieo5099@laninst-HP-Z6-G4-Workstation: ~/Desktop_linux/mutation_compensation[01;32mieo5099@laninst-HP-Z6-G4-Worksta
+tion[00m:[01;34m~/Desktop_linux/mutation_compensation[00m$ cd code/
+(base) ]0;ieo5099@laninst-HP-Z6-G4-Workstation: ~/Desktop_linux/mutation_compensation/code[01;32mieo5099@laninst-HP-Z6-G4-Wo
+rkstation[00m:[01;34m~/Desktop_linux/mutation_compensation/code[00m$ ll
+[7m--More--(7%)[27mtotal 128K[K
+drwxr-xr-x 1 laninst laninst 4,0K set  6 17:59 [0m[01;34m.[0m/
+drwxrwxrwx 1 laninst laninst 4,0K set  7 11:59 [34;42m..[0m/
+-rwxr-xr-x 1 laninst laninst 8,7K set  6 18:36 [01;32m00_geneLevelAnalysis.R[0m*
+-rwxr-xr-x 1 laninst laninst  20K set  6 18:38 [01;32m01_binLevelAnalysis.R[0m*
+-rwxr-xr-x 1 laninst laninst  40K set  7 14:34 [01;32m02_statisticalAnalysis.R[0m*
+-rwxr-xr-x 1 laninst laninst  19K set  2 11:31 [01;32m03_BRCA-PAAD_analysis.R[0m*
+-rwxr-xr-x 1 laninst laninst  13K set  1 17:53 [01;32m04_timingAnalysis.R[0m*
+-rwxr-xr-x 1 laninst laninst  12K set  7 17:33 [01;32m05_protectionAnalysis.R[0m*
+-rwxr-xr-x 1 laninst laninst    0 ago 30 15:03 [01;32m.Rapp.history[0m*
+(base) ]0;ieo5099@laninst-HP-Z6-G4-Workstation: ~/Desktop_linux/mutation_compensation/code[01;32mieo5099@laninst-HP-Z6-G4-Wo
+rkstation[00m:[01;34m~/Desktop_linux/mutation_compensation/code[00m$ cd [K[K[KRscript --vai[Knilla 095[K[K0[K5_protectionAnalysis.R
+ 
+
+
+ >> Loading libraries 
+
+[?25h[?25h
+
+ >> Calculate protection index 
+
+[?25h[?25h		 LUAD 
+Error in file(file, "rt") : cannot open the connection
+Calls: suppressMessages ... withCallingHandlers -> read.csv -> read.table -> file
+In addition: Warning message:
+In file(file, "rt") :
+  cannot open file 'results/tables/00_geneLevelAnalysis/LUAD_geneLevel.csv': No such file or directory
+Execution halted
+[?25h(base) ]0;ieo5099@laninst-HP-Z6-G4-Workstation: ~/Desktop_linux/mutation_compensation/code[01;32mieo5099@laninst-HP-Z6-
+G4-Workstation[00m:[01;34m~/Desktop_linux/mutation_compensation/code[00m$ Rscript --vanilla 05_protectionAnalysis.R 
+
+
+ >> Loading libraries 
+
+[?25h[?25h[?25h
+
+ >> Calculate protection index 
+[7m--More--(8%)[27m[K
+[?25h[?25h		 LUAD 
+		 LUSC 
+		 BRCA 
+		 CESC 
+		 THCA 
+		 HNSC 
+		 PAAD 
+		 GBMLGG 
+		 COADREAD 
+[?25h[?25h[?25h[?25h[?25h[?25h[?25h[?25h[?25h[?25h[?25h[?25h[?25h
+
+ >> Extacting common protected and unprotected genes across tumor types 
+
+[?25h[?25h[?25h[?25h[?25h[?25h[?25h[?25h[?25h
+
+ >> Calculating essentiality scores for each gene of the two categories 
+
+[?25h[?25h[?25h[?25h
+	Welch Two Sample t-test
+
+data:  mean_crispr_effect[mean_crispr_effect$genes %in% protected$V1, ]$mean and mean_crispr_effect[mean_crispr_effect$genes
+ %in% unprotected$V1, ]$mean
+t = -9.6362, df = 2647.7, p-value < 2.2e-16
+alternative hypothesis: true difference in means is less than 0
+95 percent confidence interval:
+        -Inf -0.09674922
+sample estimates:
+  mean of x   mean of y 
+-0.18701814 -0.07034669 
+
+[?25h[?25h[?25h[?25h
+	Wilcoxon rank sum test with continuity correction
+
+data:  mean_crispr_effect[mean_crispr_effect$genes %in% protected$V1, ]$mean and mean_crispr_effect[mean_crispr_effect$genes
+ %in% unprotected$V1, ]$mean
+W = 828944, p-value < 2.2e-16
+[7m--More--(9%)[27m[K(base) ]0;ieo5099@laninst-HP-Z6-G4-Workstation: ~/Desktop_linux/mutation_compensation/code[01;32mieo5099@laninst-HP-Z6-G4-Workstation[00m:[01;34m~/Desktop_linux/mutation_compensation/code[00m$ 
+(base) ]0;ieo5099@laninst-HP-Z6-G4-Workstation: ~/Desktop_linux/mutation_compensation/code[01;32mieo5099@laninst-HP-Z6-G4-Workstation[00m:[01;34m~/Desktop_linux/mutation_compensation/code[00m$ ll
+total 268K
+drwxr-xr-x 1 laninst laninst 4,0K set  8 13:48 [0m[01;34m.[0m/
+drwxrwxrwx 1 laninst laninst 4,0K set  8 13:48 [34;42m..[0m/
+-rwxr-xr-x 1 laninst laninst 9,9K set  8 13:46 [01;32m00_geneLevelAnalysis.R[0m*
+-rwxr-xr-x 1 laninst laninst  20K set  6 18:38 [01;32m01_binLevelAnalysis.R[0m*
+-rwxr-xr-x 1 laninst laninst  40K set  7 14:34 [01;32m02_statisticalAnalysis.R[0m*
+-rwxr-xr-x 1 laninst laninst  19K set  2 11:31 [01;32m03_BRCA-PAAD_analysis.R[0m*
+-rwxr-xr-x 1 laninst laninst  13K set  1 17:53 [01;32m04_timingAnalysis.R[0m*
+-rwxr-xr-x 1 laninst laninst  12K set  7 17:36 [01;32m05_protectionAnalysis.R[0m*
+drwxrwxr-x 1 laninst laninst 4,0K set  8 11:14 [01;34m06_proteinAggregation[0m/
+-rw-r--r-- 1 laninst laninst 136K set  8 13:49 test.R
+(base) ]0;ieo5099@laninst-HP-Z6-G4-Workstation: ~/Desktop_linux/mutation_compensation/code[01;32mieo5099@laninst-HP-Z6-G4-Workstation[00m:[01;34m~/Desktop_linux/mutation_compensation/code[00m$ ll
+total 268K
+drwxr-xr-x 1 laninst laninst 4,0K set  8 13:48 [0m[01;34m.[0m/
+drwxrwxrwx 1 laninst laninst 4,0K set  8 13:48 [34;42m..[0m/
+-rwxr-xr-x 1 laninst laninst 9,9K set  8 13:46 [01;32m00_geneLevelAnalysis.R[0m*
+-rwxr-xr-x 1 laninst laninst  20K set  6 18:38 [01;32m01_binLevelAnalysis.R[0m*
+-rwxr-xr-x 1 laninst laninst  40K set  7 14:34 [01;32m02_statisticalAnalysis.R[0m*
+-rwxr-xr-x 1 laninst laninst  19K set  2 11:31 [01;32m03_BRCA-PAAD_analysis.R[0m*
+-rwxr-xr-x 1 laninst laninst  13K set  1 17:53 [01;32m04_timingAnalysis.R[0m*
+-rwxr-xr-x 1 laninst laninst  12K set  7 17:36 [01;32m05_protectionAnalysis.R[0m*
+drwxrwxr-x 1 laninst laninst 4,0K set  8 11:14 [01;34m06_proteinAggregation[0m/
+-rw-r--r-- 1 laninst laninst 136K set  8 13:49 test.R
+(base) ]0;ieo5099@laninst-HP-Z6-G4-Workstation: ~/Desktop_linux/mutation_compensation/code[01;32mieo5099@laninst-HP-Z6-G4-Workstation[00m:[01;34m~/Desktop_linux/mutation_compensation/code[00m$ ..
+(base) ]0;ieo5099@laninst-HP-Z6-G4-Workstation: ~/Desktop_linux/mutation_compens

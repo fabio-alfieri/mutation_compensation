@@ -2309,4 +2309,216 @@ drwxrwxrwx 1 laninst laninst 4,0K set  8 13:48 [34;42m..[0m/
 drwxrwxr-x 1 laninst laninst 4,0K set  8 11:14 [01;34m06_proteinAggregation[0m/
 -rw-r--r-- 1 laninst laninst 136K set  8 13:49 test.R
 (base) ]0;ieo5099@laninst-HP-Z6-G4-Workstation: ~/Desktop_linux/mutation_compensation/code[01;32mieo5099@laninst-HP-Z6-G4-Workstation[00m:[01;34m~/Desktop_linux/mutation_compensation/code[00m$ ..
-(base) ]0;ieo5099@laninst-HP-Z6-G4-Workstation: ~/Desktop_linux/mutation_compens
+(base) ]0;ieo5099@laninst-HP-Z6-G4-Workstation: ~/Desktop_linux/mutation_compensation[01;32mieo5099@laninst-HP-Z6-G4-Workstation[00m:[01;34m~/Desktop_linux/mutation_compensation[00m$ ll
+total 28K
+drwxrwxrwx 1 laninst laninst 4,0K set  8 13:48 [0m[34;42m.[0m/
+drwxr-xr-x 1 laninst laninst 4,0K set  8 11:18 [01;34m..[0m/
+drwxr-xr-x 1 laninst laninst 4,0K set  8 13:48 [01;34mcode[0m/
+drwxrwxr-x 1 laninst laninst 4,0K ago 31 11:52 [01;34mdata[0m/
+drwxrwxr-x 1 laninst laninst 4,0K set  8 13:47 [01;34m.git[0m/
+-rw-rw-r-- 1 laninst laninst 2,6K set  8 12:11 README.md
+drwxrwxr-x 1 laninst laninst 4,0K ago 23 10:48 [01;34mresults[0m/
+(base) ]0;ieo5099@laninst-HP-Z6-G4-Workstation: ~/Desktop_linux/mutation_compensation[01;32mieo5099@laninst-HP-Z6-G4-Workstation[00m:[01;34m~/Desktop_linux/mutation_compensation[00m$ git add 
+00_geneLevelAnalysis.R    03_BRCA-PAAD_analysis.R   06_proteinAggregation     results/
+01_binLevelAnalysis.R     04_timingAnalysis.R       code/                     
+02_statisticalAnalysis.R  05_protectionAnalysis.R   data/                     
+(base) ]0;ieo5099@laninst-HP-Z6-G4-Workstation: ~/Desktop_linux/mutation_compensation[01;32mieo5099@laninst-HP-Z6-G4-Workstation[00m:[01;34m~/Desktop_linux/mutation_compensation[00m$ git add 
+00_geneLevelAnalysis.R    03_BRCA-PAAD_analysis.R   06_proteinAggregation     results/
+01_binLevelAnalysis.R     04_timingAnalysis.R       code/                     
+02_statisticalAnalysis.R  05_protectionAnalysis.R   data/                     
+(base) ]0;ieo5099@laninst-HP-Z6-G4-Workstation: ~/Desktop_linux/mutation_compensation[01;32mieo5099@laninst-HP-Z6-G4-Workstation[00m:[01;34m~/Desktop_linux/mutation_compensation[00m$ git add [K[K[K[K[K[K[K[Kgit sttu[K[Katus
+On branch main
+Your branch is up-to-date with 'origin/main'.
+
+Changes not staged for commit:
+  (use "git add/rm <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+	[31mdeleted:    00_geneLevelAnalysis.R[m
+	[31mdeleted:    01_binLevelAnalysis.R[m
+	[31mdeleted:    02_statisticalAnalysis.R[m
+	[31mdeleted:    03_BRCA-PAAD_analysis.R[m
+	[31mdeleted:    04_timingAnalysis.R[m
+	[31mdeleted:    05_protectionAnalysis.R[m
+	[31mdeleted:    06_proteinAggregation/00_estimateAggregationTANGO.py[m
+	[31mdeleted:    06_proteinAggregation/01_produceOutputTable.py[m
+	[31mmodified:   code/test.R[m
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+	[31mcode/06_proteinAggregation/[m
+	[31mdata/[m
+	[31mresults/[m
+
+no changes added to commit (use "git add" and/or "git commit -a")
+(base) ]0;ieo5099@laninst-HP-Z6-G4-Workstation: ~/Desktop_linux/mutation_compensation[01;32mieo5099@laninst-HP-Z6-G4-Workstation[00m:[01;34m~/Desktop_linux/mutation_compensation[00m$ git add code/
+(base) ]0;ieo5099@laninst-HP-Z6-G4-Workstation: ~/Desktop_linux/mutation_compensation[01;32mieo5099@laninst-HP-Z6-G4-Workstation[00m:[01;34m~/Desktop_linux/mutation_compensation[00m$ ll
+total 28K
+drwxrwxrwx 1 laninst laninst 4,0K set  8 13:48 [0m[34;42m.[0m/
+drwxr-xr-x 1 laninst laninst 4,0K set  8 11:18 [01;34m..[0m/
+drwxr-xr-x 1 laninst laninst 4,0K set  8 13:48 [01;34mcode[0m/
+drwxrwxr-x 1 laninst laninst 4,0K ago 31 11:52 [01;34mdata[0m/
+drwxrwxr-x 1 laninst laninst 4,0K set  8 13:49 [01;34m.git[0m/
+-rw-rw-r-- 1 laninst laninst 2,6K set  8 12:11 README.md
+drwxrwxr-x 1 laninst laninst 4,0K ago 23 10:48 [01;34mresults[0m/
+(base) ]0;ieo5099@laninst-HP-Z6-G4-Workstation: ~/Desktop_linux/mutation_compensation[01;32mieo5099@laninst-HP-Z6-G4-Workstation[00m:[01;34m~/Desktop_linux/mutation_compensation[00m$ git ad[K[K[K[K[K[Kgit add README.md 
+(base) ]0;ieo5099@laninst-HP-Z6-G4-Workstation: ~/Desktop_linux/mutation_compensation[01;32mieo5099@laninst-HP-Z6-G4-Workstation[00m:[01;34m~/Desktop_linux/mutation_compensation[00m$ ll
+total 28K
+drwxrwxrwx 1 laninst laninst 4,0K set  8 13:48 [0m[34;42m.[0m/
+drwxr-xr-x 1 laninst laninst 4,0K set  8 11:18 [01;34m..[0m/
+drwxr-xr-x 1 laninst laninst 4,0K set  8 13:48 [01;34mcode[0m/
+drwxrwxr-x 1 laninst laninst 4,0K ago 31 11:52 [01;34mdata[0m/
+drwxrwxr-x 1 laninst laninst 4,0K set  8 13:49 [01;34m.git[0m/
+-rw-rw-r-- 1 laninst laninst 2,6K set  8 12:11 README.md
+drwxrwxr-x 1 laninst laninst 4,0K ago 23 10:48 [01;34mresults[0m/
+(base) ]0;ieo5099@laninst-HP-Z6-G4-Workstation: ~/Desktop_linux/mutation_compensation[01;32mieo5099@laninst-HP-Z6-G4-Workstation[00m:[01;34m~/Desktop_linux/mutation_compensation[00m$ git commint [K[K[Kt "update"
+error: pathspec 'update' did not match any file(s) known to git
+(base) ]0;ieo5099@laninst-HP-Z6-G4-Workstation: ~/Desktop_linux/mutation_compensation[01;32mieo5099@laninst-HP-Z6-G4-Workstation[00m:[01;34m~/Desktop_linux/mutation_compensation[00m$ git commit "update"-"update"m"update" "update"
+[main b3d8745] update
+ 3 files changed, 584 insertions(+), 1 deletion(-)
+ create mode 100644 code/06_proteinAggregation/00_estimateAggregationTANGO.py
+ create mode 100644 code/06_proteinAggregation/01_produceOutputTable.py
+(base) ]0;ieo5099@laninst-HP-Z6-G4-Workstation: ~/Desktop_linux/mutation_compensation[01;32mieo5099@laninst-HP-Z6-G4-Workstation[00m:[01;34m~/Desktop_linux/mutation_compensation[00m$ git push
+Enumerating objects: 7, done.
+Counting objects:  14% (1/7)Counting objects:  28% (2/7)Counting objects:  42% (3/7)Counting objects:  57% (4/7)Counting objects:  71% (5/7)Counting objects:  85% (6/7)Counting objects: 100% (7/7)Counting objects: 100% (7/7), done.
+Delta compression using up to 48 threads
+Compressing objects:  25% (1/4)Compressing objects:  50% (2/4)Compressing objects:  75% (3/4)Compressing objects: 100% (4/4)Compressing objects: 100% (4/4), done.
+Writing objects:  25% (1/4)Writing objects:  50% (2/4)Writing objects:  75% (3/4)Writing objects: 100% (4/4)Writing objects: 100% (4/4), 3.00 KiB | 341.00 KiB/s, done.
+Total 4 (delta 3), reused 0 (delta 0), pack-reused 0
+remote: Resolving deltas:   0% (0/3)[Kremote: Resolving deltas:  33% (1/3)[Kremote: Resolving deltas:  66% (2/3)[Kremote: Resolving deltas: 100% (3/3)[Kremote: Resolving deltas: 100% (3/3), completed with 3 local objects.[K
+To https://github.com/fabio-alfieri/mutation_compensation.git
+   ee576aa..b3d8745  main -> main
+(base) ]0;ieo5099@laninst-HP-Z6-G4-Workstation: ~/Desktop_linux/mutation_compensation[01;32mieo5099@laninst-HP-Z6-G4-Workstation[00m:[01;34m~/Desktop_linux/mutation_compensation[00m$ ll
+total 28K
+drwxrwxrwx 1 laninst laninst 4,0K set  8 13:48 [0m[34;42m.[0m/
+drwxr-xr-x 1 laninst laninst 4,0K set  8 11:18 [01;34m..[0m/
+drwxr-xr-x 1 laninst laninst 4,0K set  8 13:48 [01;34mcode[0m/
+drwxrwxr-x 1 laninst laninst 4,0K ago 31 11:52 [01;34mdata[0m/
+drwxrwxr-x 1 laninst laninst 4,0K set  8 13:49 [01;34m.git[0m/
+-rw-rw-r-- 1 laninst laninst 2,6K set  8 12:11 README.md
+drwxrwxr-x 1 laninst laninst 4,0K ago 23 10:48 [01;34mresults[0m/
+(base) ]0;ieo5099@laninst-HP-Z6-G4-Workstation: ~/Desktop_linux/mutation_compensation[01;32mieo5099@laninst-HP-Z6-G4-Workstation[00m:[01;34m~/Desktop_linux/mutation_compensation[00m$ [K(base) ]0;ieo5099@laninst-HP-Z6-G4-Workstation: ~/Desktop_linux/mutation_compensation[01;32mieo5099@laninst-HP-Z6-G4-Workstation[00m:[01;34m~/Desktop_linux/mutation_compensation[00m$ [K(base) ]0;ieo5099@laninst-HP-Z6-G4-Workstation: ~/Desktop_linux/mutation_compensation[01;32mieo5099@laninst-HP-Z6-G4-Workstation[00m:[01;34m~/Desktop_linux/mutation_compensation[00m$ [K(base) ]0;ieo5099@laninst-HP-Z6-G4-Workstation: ~/Desktop_linux/mutation_compensation[01;32mieo5099@laninst-HP-Z6-G4-Workstation[00m:[01;34m~/Desktop_linux/mutation_compensation[00m$ [K(base) ]0;ieo5099@laninst-HP-Z6-G4-Workstation: ~/Desktop_linux/mutation_compensation[01;32mieo5099@laninst-HP-Z6-G4-Workstation[00m:[01;34m~/Desktop_linux/mutation_compensation[00m$ [K(base) ]0;ieo5099@laninst-HP-Z6-G4-Workstation: ~/Desktop_linux/mutation_compensation[01;32mieo5099@laninst-HP-Z6-G4-Workstation[00m:[01;34m~/Desktop_linux/mutation_compensation[00m$ [K(base) ]0;ieo5099@laninst-HP-Z6-G4-Workstation: ~/Desktop_linux/mutation_compensation[01;32mieo5099@laninst-HP-Z6-G4-Workstation[00m:[01;34m~/Desktop_linux/mutation_compensation[00m$ [K(base) ]0;ieo5099@laninst-HP-Z6-G4-Workstation: ~/Desktop_linux/mutation_compensation[01;32mieo5099@laninst-HP-Z6-G4-Workstation[00m:[01;34m~/Desktop_linux/mutation_compensation[00m$ [K(base) ]0;ieo5099@laninst-HP-Z6-G4-Workstation: ~/Desktop_linux/mutation_compensation[01;32mieo5099@laninst-HP-Z6-G4-Workstation[00m:[01;34m~/Desktop_linux/mutation_compensation[00m$ [K(base) ]0;ieo5099@laninst-HP-Z6-G4-Workstation: ~/Desktop_linux/mutation_compensation[01;32mieo5099@laninst-HP-Z6-G4-Workstation[00m:[01;34m~/Desktop_linux/mutation_compensation[00m$ [K(base) ]0;ieo5099@laninst-HP-Z6-G4-Workstation: ~/Desktop_linux/mutation_compensation[01;32mieo5099@laninst-HP-Z6-G4-Workstation[00m:[01;34m~/Desktop_linux/mutation_compensation[00m$ [K(base) ]0;ieo5099@laninst-HP-Z6-G4-Workstation: ~/Desktop_linux/mutation_compensation[01;32mieo5099@laninst-HP-Z6-G4-Workstation[00m:[01;34m~/Desktop_linux/mutation_compensation[00m$ [K(base) ]0;ieo5099@laninst-HP-Z6-G4-Workstation: ~/Desktop_linux/mutation_compensation[01;32mieo5099@laninst-HP-Z6-G4-Workstation[00m:[01;34m~/Desktop_linux/mutation_compensation[00m$ [K(base) ]0;ieo5099@laninst-HP-Z6-G4-Workstation: ~/Desktop_linux/mutation_compensation[01;32mieo5099@laninst-HP-Z6-G4-Workstation[00m:[01;34m~/Desktop_linux/mutation_compensation[00m$ [K(base) ]0;ieo5099@laninst-HP-Z6-G4-Workstation: ~/Desktop_linux/mutation_compensation[01;32mieo5099@laninst-HP-Z6-G4-Workstation[00m:[01;34m~/Desktop_linux/mutation_compensation[00m$ [K(base) ]0;ieo5099@laninst-HP-Z6-G4-Workstation: ~/Desktop_linux/mutation_compensation[01;32mieo5099@laninst-HP-Z6-G4-Workstation[00m:[01;34m~/Desktop_linux/mutation_compensation[00m$ [K(base) ]0;ieo5099@laninst-HP-Z6-G4-Workstation: ~/Desktop_linux/mutation_compensation[01;32mieo5099@laninst-HP-Z6-G4-Workstation[00m:[01;34m~/Desktop_linux/mutation_compensation[00m$ [K(base) ]0;ieo5099@laninst-HP-Z6-G4-Workstation: ~/Desktop_linux/mutation_compensation[01;32mieo5099@laninst-HP-Z6-G4-Workstation[00m:[01;34m~/Desktop_linux/mutation_compensation[00m$ [K(base) ]0;ieo5099@laninst-HP-Z6-G4-Workstation: ~/Desktop_linux/mutation_compensation[01;32mieo5099@laninst-HP-Z6-G4-Workstation[00m:[01;34m~/Desktop_linux/mutation_compensation[00m$ [K(base) ]0;ieo5099@laninst-HP-Z6-G4-Workstation: ~/Desktop_linux/mutation_compensation[01;32mieo5099@laninst-HP-Z6-G4-Workstation[00m:[01;34m~/Desktop_linux/mutation_compensation[00m$ [K(base) ]0;ieo5099@laninst-HP-Z6-G4-Workstation: ~/Desktop_linux/mutation_compensation[01;32mieo5099@laninst-HP-Z6-G4-Workstation[00m:[01;34m~/Desktop_linux/mutation_compensation[00m$ [K(base) ]0;ieo5099@laninst-HP-Z6-G4-Workstation: ~/Desktop_linux/mutation_compensation[01;32mieo5099@laninst-HP-Z6-G4-Workstation[00m:[01;34m~/Desktop_linux/mutation_compensation[00m$ [K(base) ]0;ieo5099@laninst-HP-Z6-G4-Workstation: ~/Desktop_linux/mutation_compensation[01;32mieo5099@laninst-HP-Z6-G4-Workstation[00m:[01;34m~/Desktop_linux/mutation_compensation[00m$ [K(base) ]0;ieo5099@laninst-HP-Z6-G4-Workstation: ~/Desktop_linux/mutation_compensation[01;32mieo5099@laninst-HP-Z6-G4-Workstation[00m:[01;34m~/Desktop_linux/mutation_compensation[00m$ [K(base) ]0;ieo5099@laninst-HP-Z6-G4-Workstation: ~/Desktop_linux/mutation_compensation[01;32mieo5099@laninst-HP-Z6-G4-Workstation[00m:[01;34m~/Desktop_linux/mutation_compensation[00m$ [K(base) ]0;ieo5099@laninst-HP-Z6-G4-Workstation: ~/Desktop_linux/mutation_compensation[01;32mieo5099@laninst-HP-Z6-G4-Workstation[00m:[01;34m~/Desktop_linux/mutation_compensation[00m$ [K(base) ]0;ieo5099@laninst-HP-Z6-G4-Workstation: ~/Desktop_linux/mutation_compensation[01;32mieo5099@laninst-HP-Z6-G4-Workstation[00m:[01;34m~/Desktop_linux/mutation_compensation[00m$ ll
+total 28K
+drwxrwxrwx 1 laninst laninst 4,0K set  8 13:48 [0m[34;42m.[0m/
+drwxr-xr-x 1 laninst laninst 4,0K set  8 11:18 [01;34m..[0m/
+drwxr-xr-x 1 laninst laninst 4,0K set  8 13:48 [01;34mcode[0m/
+drwxrwxr-x 1 laninst laninst 4,0K ago 31 11:52 [01;34mdata[0m/
+drwxrwxr-x 1 laninst laninst 4,0K set  8 13:49 [01;34m.git[0m/
+-rw-rw-r-- 1 laninst laninst 2,6K set  8 12:11 README.md
+drwxrwxr-x 1 laninst laninst 4,0K ago 23 10:48 [01;34mresults[0m/
+(base) ]0;ieo5099@laninst-HP-Z6-G4-Workstation: ~/Desktop_linux/mutation_compensation[01;32mieo5099@laninst-HP-Z6-G4-Workstation[00m:[01;34m~/Desktop_linux/mutation_compensation[00m$ clk[K[K[Kll
+total 28K
+drwxrwxrwx 1 laninst laninst 4,0K set  8 13:48 [0m[34;42m.[0m/
+drwxr-xr-x 1 laninst laninst 4,0K set  8 11:18 [01;34m..[0m/
+drwxr-xr-x 1 laninst laninst 4,0K set  8 13:48 [01;34mcode[0m/
+drwxrwxr-x 1 laninst laninst 4,0K ago 31 11:52 [01;34mdata[0m/
+drwxrwxr-x 1 laninst laninst 4,0K set  8 13:49 [01;34m.git[0m/
+-rw-rw-r-- 1 laninst laninst 2,6K set  8 12:11 README.md
+drwxrwxr-x 1 laninst laninst 4,0K ago 23 10:48 [01;34mresults[0m/
+(base) ]0;ieo5099@laninst-HP-Z6-G4-Workstation: ~/Desktop_linux/mutation_compensation[01;32mieo5099@laninst-HP-Z6-G4-Workstation[00m:[01;34m~/Desktop_linux/mutation_compensation[00m$ cd [K[K[Kll[K[Kcd code/
+(base) ]0;ieo5099@laninst-HP-Z6-G4-Workstation: ~/Desktop_linux/mutation_compensation/code[01;32mieo5099@laninst-HP-Z6-G4-Workstation[00m:[01;34m~/Desktop_linux/mutation_compensation/code[00m$ ll
+total 284K
+drwxr-xr-x 1 laninst laninst 4,0K set  8 13:48 [0m[01;34m.[0m/
+drwxrwxrwx 1 laninst laninst 4,0K set  8 13:48 [34;42m..[0m/
+-rwxr-xr-x 1 laninst laninst 9,9K set  8 13:46 [01;32m00_geneLevelAnalysis.R[0m*
+-rwxr-xr-x 1 laninst laninst  20K set  6 18:38 [01;32m01_binLevelAnalysis.R[0m*
+-rwxr-xr-x 1 laninst laninst  40K set  7 14:34 [01;32m02_statisticalAnalysis.R[0m*
+-rwxr-xr-x 1 laninst laninst  19K set  2 11:31 [01;32m03_BRCA-PAAD_analysis.R[0m*
+-rwxr-xr-x 1 laninst laninst  13K set  1 17:53 [01;32m04_timingAnalysis.R[0m*
+-rwxr-xr-x 1 laninst laninst  12K set  7 17:36 [01;32m05_protectionAnalysis.R[0m*
+drwxrwxr-x 1 laninst laninst 4,0K set  8 11:14 [01;34m06_proteinAggregation[0m/
+-rw-r--r-- 1 laninst laninst 152K set  8 13:54 test.R
+(base) ]0;ieo5099@laninst-HP-Z6-G4-Workstation: ~/Desktop_linux/mutation_compensation/code[01;32mieo5099@laninst-HP-Z6-G4-Workstation[00m:[01;34m~/Desktop_linux/mutation_compensation/code[00m$ Rsta[K[Kcript --vanilla  R[K[K01[K'[K0[K[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[K
+[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[Kl
+[0m[01;32m00_geneLevelAnalysis.R[0m*  [01;32m02_statisticalAnalysis.R[0m*  [01;32m04_timingAnalysis.R[0m*      [01;34m06_proteinAggregation[0m/
+[01;32m01_binLevelAnalysis.R[0m*   [01;32m03_BRCA-PAAD_analysis.R[0m*   [01;32m05_protectionAnalysis.R[0m*  test.R
+(base) ]0;ieo5099@laninst-HP-Z6-G4-Workstation: ~/Desktop_linux/mutation_compensation/code[01;32mieo5099@laninst-HP-Z6-G4-Workstation[00m:[01;34m~/Desktop_linux/mutation_compensation/code[00m$ ll
+total 284K
+drwxr-xr-x 1 laninst laninst 4,0K set  8 13:48 [0m[01;34m.[0m/
+drwxrwxrwx 1 laninst laninst 4,0K set  8 13:48 [34;42m..[0m/
+-rwxr-xr-x 1 laninst laninst 9,9K set  8 13:46 [01;32m00_geneLevelAnalysis.R[0m*
+-rwxr-xr-x 1 laninst laninst  20K set  6 18:38 [01;32m01_binLevelAnalysis.R[0m*
+-rwxr-xr-x 1 laninst laninst  40K set  7 14:34 [01;32m02_statisticalAnalysis.R[0m*
+-rwxr-xr-x 1 laninst laninst  19K set  2 11:31 [01;32m03_BRCA-PAAD_analysis.R[0m*
+-rwxr-xr-x 1 laninst laninst  13K set  1 17:53 [01;32m04_timingAnalysis.R[0m*
+-rwxr-xr-x 1 laninst laninst  12K set  7 17:36 [01;32m05_protectionAnalysis.R[0m*
+drwxrwxr-x 1 laninst laninst 4,0K set  8 11:14 [01;34m06_proteinAggregation[0m/
+-rw-r--r-- 1 laninst laninst 152K set  8 13:54 test.R
+(base) ]0;ieo5099@laninst-HP-Z6-G4-Workstation: ~/Desktop_linux/mutation_compensation/code[01;32mieo5099@laninst-HP-Z6-G4-Workstation[00m:[01;34m~/Desktop_linux/mutation_compensation/code[00m$ Rscript --vanilla  00_geneLevelAnalysis.R 
+[?25h[?25h[?25h[?25h
+
+ >> You chose default options: 
+	(1) --tables 'n';
+	(2) --statistics 'y' 
+
+[?25h[?25h[?25h
+
+ > This script 
+	(1) estimates gene amplification frequency and mu score (takes several hours and cores);
+	(2) produces gene-level correlations 
+
+
+[?25h[?25h[?25h[?25h[?25h[?25h[?25h[?25h[?25h[?25h[?25h[?25h[?25h
+ >> (2) analyis: produces gene-level correlations 
+`geom_smooth()` using formula 'y ~ x'
+^C
+Execution halted
+[?25h(base) ]0;ieo5099@laninst-HP-Z6-G4-Workstation: ~/Desktop_linux/mutation_compensation/code[01;32mieo5099@laninst-HP-Z6-G4-Workstation[00m:[01;34m~/Desktop_linux/mutation_compensation/code[00m$ Rscript --vanilla 00_geneLevelAnalysis.R [K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K1_binLevelAnalysis.R 
+[?25h
+
+ > This script 
+	 calculate mu score and amplification frequency for each 1Mbp bin 
+
+[?25h[?25h[?25h[?25h>>>>>>>>>>>>>>>>>>>><<<<<<<<<<<<<<<<<<< 
+>     ---------- LUAD ---------- 
+> Load Mutation File 
+Error in file(file, "rt") : cannot open the connection
+Calls: read.csv -> read.table -> file
+In addition: Warning message:
+In file(file, "rt") :
+  cannot open file 'data/FireBrowse_SNVs/LUAD_mutations.csv': No such file or directory
+Execution halted
+[?25h(base) ]0;ieo5099@laninst-HP-Z6-G4-Workstation: ~/Desktop_linux/mutation_compensation/code[01;32mieo5099@laninst-HP-Z6-G4-Workstation[00m:[01;34m~/Desktop_linux/mutation_compensation/code[00m$ Rscript --vanilla 01_binLevelAnalysis.R 
+[?25h
+
+ > This script 
+	 calculate mu score and amplification frequency for each 1Mbp bin 
+
+[?25h[?25h[?25h[?25h[?25h>>>>>>>>>>>>>>>>>>>><<<<<<<<<<<<<<<<<<< 
+>     ---------- LUAD ---------- 
+> Load Mutation File 
+  done!> Load SCNA File 
+  done!> common patients: 509> Filter for gene properties 
+[34m | 
+ no gene filtering[39m> Filter for Mutations Type 
+ | 
+ no mutation filtering> Start chromosome Loop 
+[1] 1
+[1] 2
+^C
+Warning messages:
+1: In rbind(deparse.level, ...) :
+  number of columns of result, 2, is not a multiple of vector length 3 of arg 1
+2: In `[<-.factor`(`*tmp*`, ri, value = "chr") :
+  invalid factor level, NA generated
+3: In rbind(deparse.level, ...) :
+  number of columns of result, 2, is not a multiple of vector length 3 of arg 1
+4: In `[<-.factor`(`*tmp*`, ri, value = "chr") :
+  invalid factor level, NA generated
+Execution halted
+[?25h(base) ]0;ieo5099@laninst-HP-Z6-G4-Workstation: ~/Desktop_linux/mutation_compensation/code[01;32mieo5099@laninst-HP-Z6-G4-Workstation[00m:[01;34m~/Desktop_linux/mutation_compensation/code[00m$ 
+(base) ]0;ieo5099@laninst-HP-Z6-G4-Workstation: ~/Desktop_linux/mutation_compensation/code[01;32mieo5099@laninst-HP-Z6-G4-Workstation[00m:[01;34m~/Desktop_linux/mutation_compensation/code[00m$ Rscript --vanilla 01_binLevelAnalysis.R 
+[?25h
+
+ > This script 
+	 calculate mu score and amplification frequency for each 1Mbp bin 
+
+[?25h[?25h[?25h[?25h[?25h >>>>>>>>>>>>>>>>>>>><<<<<<<<<<<<<<<<<<< 
+ >     ---------- LUAD ---------- 
+ > Load Mutation File 
+  done! > Load SCNA File 
+  done! > common patients: 509 > Filter for gene properties 
+[34m | 
+ no gene filtering[39m> Filter for Mutations Type 
+ | 
+ no mutation filtering
+> Start chro

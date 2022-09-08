@@ -16,8 +16,7 @@ The first step is to clone this repository (you need git, if you haven't install
 ```bash
 git clone https://github.com/fabio-alfieri/mutation_compensation.git
 ```
-
-### Dowload supplementary data from Zenodo 
+#### Dowload supplementary data from Zenodo 
 Manually download from [LINK HERE] or run:
 [comment]: <> (Put the correct link here with data.zip and results.zip)
 ```bash

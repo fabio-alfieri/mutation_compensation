@@ -15,17 +15,39 @@ suppressMessages({
   library(foreach)
   library(doSNOW)
   library(snow)
+  library(optparse)
 })
+
+option_list = list(
+  make_option(c("-t", "--tables"), type="character", default=NULL, 
+              help="Options are: [y/n]", metavar="character"),
+  make_option(c("-p", "--plots"), type="character", default=NULL, 
+              help="Options are: [y/n]", metavar="character")
+); 
+
+opt_parser = OptionParser(option_list=option_list);
+opt = parse_args(opt_parser);
+
+if (is.null(opt$tables) | is.null(opt$plots)) {
+  # print_help(opt_parser)
+  stop("please specify the analysis you want to perform!", call.=FALSE)
+}
+
+if (!any(opt$tables %in% c("yes","no", "Y", "N", "y", "n"))) {
+  print_help(opt_parser)
+  stop("typo in the analysis flag, plase see above for the available options!", call.=FALSE)
+}
 
 cat("\n\nThis script \n\t(1) estimates gene amplification frequency and mu score (takes several hours and cores);\n\t(2) produces gene-level correlations \n
 [ by default (1) is disables while (2) is running \n  set produce_tables = TRUE if you want (1) analysis ]\n\n")
 
-produce_tables <- F
+
+produce_tables <- FALSE
 produce_statistics <- T
 
 tumor_types <- c(  
   "LUAD", "LUSC", "BRCA", "CESC", "THCA", "HNSC", "PAAD", "COADREAD", "GBMLGG",
-  # #
+  # # 
   "OV", "BLCA",  "PCPG", "PRAD", "KIRC", "MESO", "TGCT",
   "KIRP", "SARC", "LIHC", "ESCA", "STAD", "UCS", "SKCM"
 )

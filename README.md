@@ -1,4 +1,4 @@
-# Code repository for 
+# Code repository
 
 ## Cancer genomes tolerate deleterious coding mutations through somatic copy-number amplifications of wild-type regions
 
@@ -11,6 +11,6 @@ Cancers evolve under the accumulation of thousands of somatic mutations and chro
 
 The first step is to clone this repository (you need git, if you haven't installed it, check [this link](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)):
 ```bash
-git clone [https://github.com/SamGa3/microbiome_reconstruction.git](https://github.com/fabio-alfieri/mutation_compensation.git)
+git clone https://github.com/fabio-alfieri/mutation_compensation.git
 ```
 

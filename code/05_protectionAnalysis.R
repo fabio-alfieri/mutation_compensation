@@ -2,6 +2,15 @@
 # This script computes protection index for each gene and thus perform enrichment
 # analysis (Gene Ontology) on both protected and unprotected gene sets
 
+if (!require("BiocManager", quietly = TRUE)){
+  install.packages("BiocManager")
+}
+if (!require("clusterProfiler", quietly = TRUE)){
+  library(BiocManager)
+  BiocManager::install("clusterProfiler")
+}
+library(clusterProfiler)
+
 suppressMessages({
   library(readxl)
   library(tibble)
@@ -13,17 +22,12 @@ suppressMessages({
   library(dplyr)
   library(ggExtra)
   library(purrr)
-  # BiocManager::install("clusterProfiler")
   library(clusterProfiler)
   library("org.Hs.eg.db")
   library(AnnotationDbi)
 })
 
 setwd("../")
-# if (!require("BiocManager", quietly = TRUE))
-#   install.packages("BiocManager")
-#
-# BiocManager::install("clusterProfiler")
 
 # selected tumor types that showed a positive and significant correlation estimates
 # based on Spearman's (cor: amplifications ~ all_mutations)

@@ -14,15 +14,13 @@ suppressMessages({
   library(dplyr)
   library(ggExtra)
   library(purrr)
-  # if (!require("BiocManager", quietly = TRUE))
-  #   install.packages("BiocManager")
-  #
   # BiocManager::install("clusterProfiler")
-  require(clusterProfiler)
+  library(clusterProfiler)
   library("org.Hs.eg.db")
   library(AnnotationDbi)
 })
 
+setwd("../")
 # if (!require("BiocManager", quietly = TRUE))
 #   install.packages("BiocManager")
 #
@@ -138,7 +136,6 @@ for (tumor_type in tumor_types) {
   )
 }
 
-
 # define a common list of protected and unprotected according the overlap between
 # analyzed cancer types
 
@@ -236,13 +233,18 @@ w <-
   wilcox.test(mean_crispr_effect[mean_crispr_effect$genes %in% protected$V1,]$mean,
               mean_crispr_effect[mean_crispr_effect$genes %in% unprotected$V1,]$mean,
               alternative = "less")
+
+cat(" \n > Producing Fig. 5 with and without outliers \n\n")
+pdf("results/plots/000_paper_plots/00_Fig5c.pdf")
 boxplot(mean_crispr_effect[mean_crispr_effect$genes %in% protected$V1,]$mean,
         mean_crispr_effect[mean_crispr_effect$genes %in% unprotected$V1,]$mean)
 boxplot(mean_crispr_effect[mean_crispr_effect$genes %in% protected$V1,]$mean,
         mean_crispr_effect[mean_crispr_effect$genes %in% unprotected$V1,]$mean,
         outline = F)
-print(w)
 abline(h = 0, lty = "dotted")
+dev.off()
+
+print(w)
 
 
 # GO analysis on protected gene set ----
@@ -359,3 +361,7 @@ fisher.test(rbind(
   table(protected$V1 %in% common_essential$gene),
   table(unprotected$V1 %in% common_essential$gene)
 ))
+
+
+cat("\n\n OUTPUT of the script: \n \t (1) raw tables path: results/tables/00_geneLevelAnalysis/ \n")
+cat("\t (2) paper-like plots path: results/plots/000_paper_plots/ \n\n")

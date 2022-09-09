@@ -1,14 +1,65 @@
-# rm(list=ls())
-gc(full=T)
+# TIMING ANALYSIS using CNAqc
 
-library(ggridges)
-library(tidyr)
-library(readr)
-library(dbplyr)
-library(devtools)
-
-setwd("~/Desktop/mutation_compensation/")
+suppressMessages({
+  library(ggridges)
+  library(tidyr)
+  library(readr)
+  library(dbplyr)
+  library(inborutils)
+  library(devtools)
+})
+  
+setwd("../")
 system(paste0("mkdir -p ", getwd(), "/results/plots/04_timingAnalysis/"))
+
+option_list = list(
+  make_option(c("-t", "--runCNAqc"), type="character", default="n", 
+              help="Options are: [y/n] 
+              set 'y' if you want to produce PCAWG
+              (default 'n')
+              ATTENTION: --runCNAqc set to 'y' requires lots of computational power and lot of time", metavar=""),
+  make_option(c("-s", "--mock"), type="character", default="y", 
+              help="Options are: [y/n]
+              (default 'y') 
+              Performs the exact same analysis with a restricted pool of mutations (n = 100,000)", metavar=""),
+  make_option(c("-c", "--clonal"), type="character", default="n", 
+              help="Options are: [y/n]
+              (default 'n') 
+              Performs the analysis only on clonal mutations", metavar="")
+);
+
+opt_parser = OptionParser(option_list=option_list);
+opt = parse_args(opt_parser);
+
+if(opt$runCNAqc == "n" & opt$mocks == "y"){
+  cat("\n\n >> You chose default options: \n\t(1) --runCNAqc 'n';\n\t(2) --mock 'y' \n\n")
+}
+
+if (is.null(opt$runCNAqc) | is.null(opt$mocks)) {
+  print_help(opt_parser)
+  stop("please specify the analysis you want to perform!", call.=FALSE)
+}
+
+if (!any(opt$runCNAqcv %in% c("y", "n"))) {
+  print_help(opt_parser)
+  stop("typo in the analysis flag, plase see above for the available options!", call.=FALSE)
+}
+
+cat("\n\n > This script \n\t(1) estimates gene amplification frequency and mu score (takes several hours and cores);\n\t(2) produces gene-level correlations \n\n\n")
+
+run_CNAqc_analysis <- F
+if (opt$runCNAqc == "y") {
+  run_CNAqc_analysis <- T
+}
+test <- F
+if (opt$mock == "y") {
+  test <- T
+}
+clonal <- F
+if (opt$clonal == "") {
+  clonal <- T
+}
+
 
 # set to TRUE if you want to re-run the CNAqc phasing analysis on the whole PCAWG dataset
 # otherwise FALSE to use pre-computed PCAWG dataset and only run the timing analysis
@@ -23,20 +74,19 @@ test <- FALSE
 # all mutations will be included (clonal and subclonal)
 clonal <- F
 
-# set the PATH where you downloaded supplementary material
-supplementary_PATH <- "~/Desktop/mutation_compensation/data/misc/"
-
 if(run_CNAqc_analysis & !test){
   # install.packages("devtools")
-  devtools::install_github("caravagnalab/CNAqc")
-  require(CNAqc)
+  if (! require("CNAqc")) {
+    devtools::install_github("caravagnalab/CNAqc")
+  }
+  library(CNAqc)
   
   # load the list of patients within PCAWG database
   patientsPCAWG <- read.table(file = "data/misc/PCAWG_n_snv_cna.txt", header = T)
   load("data/misc/CNAqc_functions.RData")
   
   # run the advanced_phasing() analysis (CNAqc) for each PCAWG patient
-  PCAWG_PATH <- paste0(supplementary_PATH, "mutationTimeR/Caravagna_CNAqc/PCAWG_clonal_analysis/")
+  PCAWG_PATH <- paste0("data/misc/mutationTimeR/Caravagna_CNAqc/PCAWG_clonal_analysis/")
   system("mkdir -p results/tables/04_timingAnalysis/tmp")
   
   for(pcawg_id in patientsPCAWG$pt){
@@ -66,14 +116,14 @@ if(run_CNAqc_analysis & !test){
       n <- n + 1
     })
   }
-  write.table(mutations_wCCF, file = paste0("results/tables/04_timingAnalysis/mutations_wCCF_allTumorTypes.tsv"), sep = "\t")
+  write.table(mutations_wCCF, file = paste0("data/misc/PCAWG_mutations_wCCF_allTumorTypes.tsv"), sep = "\t")
 }
 
 if(test){
-  mutations_wCCF <- read_tsv(paste0(supplementary_PATH, "PCAWG_mutations_wCCF_mockFile.tsv"))
+  mutations_wCCF <- read_tsv(paste0("data/misc/PCAWG_mutations_wCCF_mockFile.tsv"))
 }else{
   # ATTENTION: big dataset (5 GB) !
-  mutations_wCCF <- read_tsv(paste0(supplementary_PATH, "PCAWG_mutations_wCCF_allTumorTypes.tsv"))
+  mutations_wCCF <- read_tsv(paste0("data/misc/PCAWG_mutations_wCCF_allTumorTypes.tsv"))
 }
 
 mutations_wCCF$multiplicity <- as.factor(mutations_wCCF$multiplicity)
@@ -186,7 +236,7 @@ pie(table(coding_timing$timing)/length(coding_timing$timing))
 mutations_wCCF$multiplicity <- as.factor(mutations_wCCF$multiplicity)
 
 # produce histogram of VAF over different karyotypes
-pdf(file = paste0("results/plots/00_paper_plots/00_Fig4",ifelse(clonal,"_clonal","_noClonal"),ifelse(test,"_mockData",""),".pdf"))
+pdf(file = paste0("results/plots/000_paper_plots/00_Fig4",ifelse(clonal,"_clonal","_noClonal"),ifelse(test,"_mockData",""),".pdf"))
 for(kar in c("2:0", "2:1", "2:2", "3:0", "3:1", "3:2", "3:3", "4:0", "4:1", "4:2", "4:3", "5:0", "5:1", "5:2")){
   t <- coding_timing %>% filter(karyotype == kar)
   
@@ -247,6 +297,6 @@ p <- ggplot(w) +
   geom_bar(aes(x = Var1, y = Freq, fill = Var2), stat = "summary") +
   theme_classic()
 
-pdf(file = "results/plots/00_paper_plots/00_SupplementaryFig5.pdf")
+pdf(file = "results/plots/000_paper_plots/00_SupplementaryFig5.pdf")
 print(p)
 dev.off()

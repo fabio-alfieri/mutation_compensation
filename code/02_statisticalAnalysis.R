@@ -10,6 +10,7 @@ suppressMessages({
   require(mgcv)
   require(ggpubr)
   library(optparse)
+  library(dplyr)
   library(utils)
 })
 
@@ -530,8 +531,6 @@ if(produce_statistics){
   print(p1)
   dev.off()
   
-  getOption("device")()
-  
   
   cat(" \n > Producing Fig. S1a \n\n")
   # Figure S1a ----
@@ -552,10 +551,11 @@ if(produce_statistics){
       xlab("Mean mutation score") +
       ylab("Mean deletion frequency"))
   
-  pdf("results/plots/00_paper_plots/00_SupplementaryFig2a.pdf", width = 14, height = 8)
+  pdf("results/plots/000_paper_plots/00_SupplementaryFig2a.pdf", width = 14, height = 8)
   print(p1)
   dev.off()
   
+  cat(" \n > Producing Fig. 1f \n\n")
   # Figure 1f ----
   # correlation between mutation burden and correlation estimate
   corParameters <- read.table("results/tables/02_produceStatistics/02b_statistics_from1to50Mbp_wConditions.txt", header = T)
@@ -581,10 +581,11 @@ if(produce_statistics){
       ylab("Spearman Correlation")
   )
   
-  pdf("results/plots/00_paper_plots/00_Fig1f.pdf", width = 14, height = 8)
+  pdf("results/plots/000_paper_plots/00_Fig1f.pdf", width = 14, height = 8)
   print(p1)
   dev.off()
   
+  cat(" \n > Producing Fig. S1b \n\n")
   # Figure S1b ----
   # correlation between amplification burden and correlation estimate
   x <- as.numeric(join$cna_mean_freq_ampl)
@@ -604,11 +605,11 @@ if(produce_statistics){
       ylab("Spearman Correlation")
   )
   
-  pdf("results/plots/00_paper_plots/00_SupplementaryFig2b.pdf", width = 14, height = 8)
+  pdf("results/plots/000_paper_plots/00_SupplementaryFig2b.pdf", width = 14, height = 8)
   print(p1)
   dev.off()
   
-  # MISSING!!!!!
+  cat(" \n > Producing Fig. 1e \n\n")
   # Figure 1e ----
   # curve of correlation estimates varying correlation length
   levelChr <- read.delim("results/tables/02_produceStatistics/02d_statistics_chromosome.txt", sep = " ")
@@ -665,10 +666,11 @@ if(produce_statistics){
     ggtitle("PANCANCER - Spearman's estimate across different chromosomes lengths") +
     theme_classic()
   
-  pdf("results/plots/00_paper_plots/00_Fig1e.pdf", width = 14, height = 8)
+  pdf("results/plots/000_paper_plots/00_Fig1e.pdf", width = 14, height = 8)
   print(p1)
   dev.off()
     
+  cat(" \n > Producing Fig. 1c \n\n")
   # Figure 1c ----
   corParameters <- read.table("results/tables/02_produceStatistics/02b_statistics_from1to50Mbp_wConditions.txt", header = T)
   corParameters <- corParameters[corParameters$segment_length == 36 & corParameters$condition == "amplifications",]
@@ -687,7 +689,7 @@ if(produce_statistics){
     geom_hline(yintercept = log10(0.05)) +
     theme(legend.position = "none")
   
-  pdf("results/plots/00_paper_plots/00_Fig1c.pdf", width = 14, height = 8)
+  pdf("results/plots/000_paper_plots/00_Fig1c.pdf", width = 14, height = 8)
   print(ggarrange(p1,p2,nrow = 2, ncol = 1))
   dev.off()
   
@@ -718,6 +720,7 @@ if(produce_statistics){
   
   print(ggarrange(p1,p2,nrow = 2, ncol = 1))
   
+  cat(" \n > Producing Fig. 1d \n\n")
   # Figure 1d ----
   deletions <- corParameters[corParameters$condition == "amplifications" | corParameters$condition == "deletions",]
   p1 <- ggplot(deletions, aes(x = as.factor(tumorType), y = corS, fill = as.factor(condition))) +
@@ -728,7 +731,7 @@ if(produce_statistics){
     geom_bar(color = "black", stat = "identity", position=position_dodge()) +
     theme_classic() + scale_fill_brewer(palette="Reds")
   
-  pdf("results/plots/00_paper_plots/00_Fig1d.pdf", width = 14, height = 8)
+  pdf("results/plots/000_paper_plots/00_Fig1d.pdf", width = 14, height = 8)
   print(ggplot(deletions, aes(x = corS, y = condition, fill = as.factor(condition))) +
           geom_boxplot() +
           theme_classic() +
@@ -738,6 +741,7 @@ if(produce_statistics){
   print(ggarrange(p1,p2,nrow = 2, ncol = 1))
   dev.off()
   
+  cat(" \n > Producing Fig. 2a \n\n")
   # figure 2a ----
   haploinsuf <- corParameters[corParameters$condition == "amplifications" | corParameters$condition == "haploinsufficient" | corParameters$condition == "non_haploinsufficient",]
   p1 <- ggplot(haploinsuf, aes(x = as.factor(tumorType), y = corS, fill = as.factor(condition))) +
@@ -748,12 +752,13 @@ if(produce_statistics){
     geom_bar(color = "black", stat = "identity", position=position_dodge()) +
     theme_classic() + scale_fill_brewer(palette="Reds")
   
-  pdf("results/plots/00_paper_plots/00_Fig2a.pdf", width = 10, height = 8)
+  pdf("results/plots/000_paper_plots/00_Fig2a.pdf", width = 10, height = 8)
   print(ggarrange(p1,p2,nrow = 2, ncol = 1))
   dev.off()
   
+  cat(" \n > Producing Fig. 2b \n\n")
   # figure 2b ----
-  pdf("results/plots/00_paper_plots/00_Fig2b.pdf", width = 10, height = 8)
+  pdf("results/plots/000_paper_plots/00_Fig2b.pdf", width = 10, height = 8)
   
   polycadd <- corParameters[corParameters$condition == "amplifications" | corParameters$condition == "polyphen_highlyDamaging" | corParameters$condition == "polyphen_moderatelyDamaging"  | 
                               corParameters$condition == "CADD_moderatelyDamaging" | corParameters$condition == "CADD_highlyDamaging",]
@@ -790,6 +795,7 @@ if(produce_statistics){
   print(ggarrange(p1,p2,nrow = 2, ncol = 1))
   dev.off()
   
+  cat(" \n > Producing Fig. 2c \n\n")
   # figure 2c ----
   aggregat <- corParameters[corParameters$condition == "amplifications" | corParameters$condition == "aggregation_causing" | corParameters$condition == "non_aggregation_causing",]
   p1 <- ggplot(aggregat, aes(x = as.factor(tumorType), y = corS, fill = condition)) +
@@ -800,10 +806,11 @@ if(produce_statistics){
     geom_bar(color = "black", stat = "identity", position=position_dodge()) +
     theme_classic() + scale_fill_brewer(palette="Reds")
   
-  pdf("results/plots/00_paper_plots/00_Fig2c.pdf", width = 10, height = 8)
+  pdf("results/plots/000_paper_plots/00_Fig2c.pdf", width = 10, height = 8)
   print(ggarrange(p1,p2,nrow = 2, ncol = 1))
   dev.off()
   
+  cat(" \n > Producing Fig. 2d \n\n")
   # figure 2d ----
   cancergenes <- corParameters[corParameters$condition == "amplifications" | corParameters$condition == "remove_OG" | 
                                  corParameters$condition == "remove_TSG" | corParameters$condition == "remove_BOTH",]
@@ -815,11 +822,11 @@ if(produce_statistics){
     geom_bar(color = "black", stat = "identity", position=position_dodge()) +
     theme_classic() + scale_fill_brewer(palette="Reds")
   
-  pdf("results/plots/00_paper_plots/00_Fig2d.pdf", width = 10, height = 8)
+  pdf("results/plots/000_paper_plots/00_Fig2d.pdf", width = 10, height = 8)
   print(ggarrange(p1,p2,nrow = 2, ncol = 1))
   dev.off()
 }
 
-cat("\n\nOUTPUT of the script: \n \t (1) raw tables path:", results_table_path,"\n")
-cat("\t (2) raw plots path:", results_plot_path, "\n")
-cat("\t (3) paper-like plots path: results/plots/00_paper_plots/ \n\n")
+cat("\n\n OUTPUT of the script: \n \t (1) raw tables path: results/plots/02_tumorCorrelations/\n")
+cat("\t (2) correlation tables path: results/tables/02_produceStatistics/\n")
+cat("\t (3) paper-like plots path: results/plots/000_paper_plots/ \n\n")

@@ -3,7 +3,6 @@
 # This script produces as output mutation score and amplification frequency for
 # each chromosome (for each tumor type)
 
-cat("\n\n >> Loading libraries \n\n")
 suppressMessages({
   require(ggplot2)
   require(stringr)

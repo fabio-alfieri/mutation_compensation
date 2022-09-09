@@ -1,36 +1,34 @@
 # TIMING ANALYSIS using CNAqc
 
-cat("\n\n >> Loading libraries \n\n")
 suppressMessages({
   library(ggridges)
   library(tidyr)
   library(readr)
   library(dbplyr)
-  library(inborutils)
   library(devtools)
+  library(optparse)
+  library(dplyr)
+  library(ggplot2)
+  library(readr)
 })
 
-setwd("../")
-system(paste0("mkdir -p ", getwd(), "/results/plots/04_timingAnalysis/"))
 
 option_list = list(
   make_option(
-    c("-t", "--runCNAqc"),
+    c("-r", "--runCNAqc"),
     type = "character",
     default = "n",
     
-    help = "Options are: [y/n]
+    help = "Options are: [y/(n)]
               set 'y' if you want to produce PCAWG
-              (default 'n')
               ATTENTION: --runCNAqc set to 'y' requires lots of computational power and lot of time",
     metavar = ""
   ),
   make_option(
-    c("-s", "--mock"),
+    c("-m", "--mock"),
     type = "character",
     default = "y",
-    help = "Options are: [y/n]
-              (default 'y')
+    help = "Options are: [(y)/n]
               Performs the exact same analysis with a restricted pool of mutations (n = 100,000)",
     metavar = ""
   ),
@@ -38,64 +36,55 @@ option_list = list(
     c("-c", "--clonal"),
     type = "character",
     default = "n",
-    help = "Options are: [y/n]
-              (default 'n')
+    help = "Options are: [(y)/n]
               Performs the analysis only on clonal mutations",
     metavar = ""
   )
 )
 
-
 opt_parser = OptionParser(option_list = option_list)
-
 opt = parse_args(opt_parser)
 
 
-if (opt$runCNAqc == "n" & opt$mocks == "y") {
+
+if (opt$runCNAqc == "n" & opt$mock == "y") {
   cat("\n\n >> You chose default options: \n\t(1) --runCNAqc 'n';\n\t(2) --mock 'y' \n\n")
 }
 
-if (is.null(opt$runCNAqc) | is.null(opt$mocks)) {
+if (is.null(opt$runCNAqc) | is.null(opt$mock)) {
   print_help(opt_parser)
   stop("please specify the analysis you want to perform!", call. = FALSE)
-}
-
-if (!any(opt$runCNAqcv %in% c("y", "n"))) {
-  print_help(opt_parser)
-  stop("typo in the analysis flag, plase see above for the available options!",
-       call. = FALSE)
 }
 
 cat(
   "\n\n > This script \n\t(1) estimates gene amplification frequency and mu score (takes several hours and cores);\n\t(2) produces gene-level correlations \n\n\n"
 )
 
-run_CNAqc_analysis <- F
-if (opt$runCNAqc == "y") {
-  run_CNAqc_analysis <- T
-}
-test <- F
-if (opt$mock == "y") {
-  test <- T
-}
-clonal <- F
-if (opt$clonal == "") {
-  clonal <- T
-}
-
+setwd("../")
+system(paste0("mkdir -p ", getwd(), "/results/plots/04_timingAnalysis/"))
 
 # set to TRUE if you want to re-run the CNAqc phasing analysis on the whole PCAWG dataset
 # otherwise FALSE to use pre-computed PCAWG dataset and only run the timing analysis
 # (it may take several hours)
-run_CNAqc_analysis <- FALSE
+run_CNAqc_analysis <- F
+if (opt$runCNAqc == "y") {
+  run_CNAqc_analysis <- T
+}
 
 # set to TRUE to perform the timing analysis on a mock dataset of 100,000 mutations
 # (the actual dataset is about 5GB - may take several minutes to load into R)
-test <- FALSE
+test <- F
+if (opt$mock == "y") {
+  test <- T
+}
 
 # set to TRUE if you want to perform the analysis only on clonal mutations, otherwise
 # all mutations will be included (clonal and subclonal)
 clonal <- F
+if (opt$clonal == "y") {
+  clonal <- T
+}
+
 
 if (run_CNAqc_analysis & !test) {
   # install.packages("devtools")
@@ -111,7 +100,7 @@ if (run_CNAqc_analysis & !test) {
   
   # run the advanced_phasing() analysis (CNAqc) for each PCAWG patient
   PCAWG_PATH <-
-    paste0("data/misc/mutationTimeR/Caravagna_CNAqc/PCAWG_clonal_analysis/")
+    paste0("data/clonal_analysis_PCAWG/")
   system("mkdir -p results/tables/04_timingAnalysis/tmp")
   
   for (pcawg_id in patientsPCAWG$pt) {
@@ -120,6 +109,10 @@ if (run_CNAqc_analysis & !test) {
     
     try({
       library(CNAqc)
+      library(dplyr)
+      library(ggplot2)
+      library(readr)
+      
       pt <- advanced_phasing(pt)
       CCF_table <- pt$phasing
       

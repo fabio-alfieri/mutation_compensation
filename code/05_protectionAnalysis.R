@@ -2,7 +2,6 @@
 # This script computes protection index for each gene and thus perform enrichment
 # analysis (Gene Ontology) on both protected and unprotected gene sets
 
-cat("\n\n >> Loading libraries \n\n")
 suppressMessages({
   library(readxl)
   library(tibble)

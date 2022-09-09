@@ -2,7 +2,6 @@
 #
 # Compensatory events partially explain tissue-specific amplification patterns
 
-cat("\n\n >> Loading libraries \n\n")
 suppressMessages({
   require(ggplot2)
   require(stringr)

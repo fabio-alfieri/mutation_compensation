@@ -2,7 +2,6 @@
 # This script integrates data from TCGA to compute gene specific mutation score
 # and amplification frequency
 
-cat("\n\n >> Loading libraries \n\n")
 suppressMessages({
   library(readxl)
   library(tibble)

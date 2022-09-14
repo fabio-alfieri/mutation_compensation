@@ -41,3 +41,26 @@ mkdir results
 mkdir results/tables
 mkdir results/plots
 ```
+
+#### (5) Run Rscript
+
+
+| Rscipt | Description | Parameters |
+| --- | --- | --- |
+| 00_geneLevelAnalysis.R | produces gene level scores | `--tables` (y/[n]), if set to y it may take several hours, moreover it requires parallelization (see `cores` parameter within the Rscript and set according to your machine (it may take several hours); `--statistics` ([y]/n) |
+| 01_binLevelAnalysis.R | produces bin level scores | --- |
+| 02_statisticalAnalysis.R | Show file differences that haven't been staged | --- |
+| 03_BRCA-PAAD_analysis.R | Show file differences that haven't been staged | --- |
+| 04_timingAnalysis.R | Show file differences that haven't been staged | --- |
+| 05_protectionAnalysis.R | Show file differences that haven't been staged | --- |
+
+
+##### Gene level analysis
+This analysis is divided in two that can be enabled with these parameters: 
+ - `--tables` the first part produces the scores for each gene for each cancer types (it requires 22 cores by default, but can be modified in the R code with the parameters "cores")
+ - `--statistics` the second part 
+```bash
+cd path/to/GitHub/mutation_compensation/code/
+conda activate mutationCompensation
+Rscirpt 00_geneLevelAnalysis.R --tables n --statistics y
+```

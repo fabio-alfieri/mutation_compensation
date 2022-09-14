@@ -25,7 +25,7 @@ option_list = list(
     metavar = ""
   ),
   make_option(
-    c("-m", "--mock"),
+    c("-m", "--test"),
     type = "character",
     default = "y",
     help = "Options are: [(y)/n]
@@ -39,11 +39,11 @@ opt = parse_args(opt_parser)
 
 
 
-if (opt$runCNAqc == "n" & opt$mock == "y") {
-  cat("\n\n >> You chose default options: \n\t(1) --runCNAqc 'n';\n\t(2) --mock 'y' \n\n")
+if (opt$runCNAqc == "n" & opt$test == "y") {
+  cat("\n\n >> You chose default options: \n\t(1) --runCNAqc 'n';\n\t(2) --test 'y' \n\n")
 }
 
-if (is.null(opt$runCNAqc) | is.null(opt$mock)) {
+if (is.null(opt$runCNAqc) | is.null(opt$test)) {
   print_help(opt_parser)
   stop("please specify the analysis you want to perform!", call. = FALSE)
 }
@@ -63,10 +63,10 @@ if (opt$runCNAqc == "y") {
   run_CNAqc_analysis <- T
 }
 
-# set to TRUE to perform the timing analysis on a mock dataset of 100,000 mutations
+# set to TRUE to perform the timing analysis on a test dataset of 100,000 mutations
 # (the actual dataset is about 5GB - may take several minutes to load into R)
 test <- F
-if (opt$mock == "y") {
+if (opt$test == "y") {
   test <- T
 }
 
@@ -289,7 +289,6 @@ mutations_wCCF$multiplicity <-
 # produce histogram of VAF over different karyotypes
 pdf(file = paste0(
   "results/plots/000_paper_plots/00_Fig4",
-  ifelse(clonal, "_clonal", "_noClonal"),
   ifelse(test, "_mockData", ""),
   ".pdf"
 ))
@@ -360,7 +359,7 @@ test_independence <- function(cod, ncod, kar) {
   
   print(t_perc)
   n_mut <- dim(cod)[1] + dim(ncod)[1]
-  return(append(fisher.test(t, alternative = "greater"), Barnard(t), n_mut))
+  return(append(fisher.test(t, alternative = "greater"), n_mut))
 }
 
 ftot <- data.frame()
@@ -394,14 +393,14 @@ for (kar in c(
 }
 
 ftot[, 2:4] <- apply(ftot[, 2:4], 2, as.numeric)
-view(ftot)
-write.table(file = "results/tables/04_timingAnalysis/statistics_coding_noncoding.txt")
+# view(ftot)
+write.table(ftot, file = "results/tables/04_timingAnalysis/statistics_coding_noncoding.txt")
 
 timed_mutations <- rbind(coding_timing, non_coding_timing)
 timed_mutations <-
-  as.data.frame(table(timed_mutations$karyotypeF, timed_mutations$timing))
+  as.data.frame(table(timed_mutations$karyotype, timed_mutations$timing))
 
-p <- ggplot(w) +
+p <- ggplot(timed_mutations) +
   geom_bar(aes(x = Var1, y = Freq, fill = Var2), stat = "summary") +
   theme_classic()
 

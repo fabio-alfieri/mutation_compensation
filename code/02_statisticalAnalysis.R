@@ -20,9 +20,9 @@ option_list = list(
     type = "character",
     default = "y",
     help = "Options are: ([y]/n)
-              It requires some minutes (up to 1 h). 
-              It produces bin level correlation tables for different segment
-              lengths and conditions.",
+                It requires some minutes (up to 1 h). 
+                It produces bin level correlation tables for different segment
+                lengths and conditions.",
     metavar = ""
   ),
   make_option(
@@ -30,7 +30,7 @@ option_list = list(
     type = "character",
     default = "y",
     help = "Options are: ([y]/n)
-            It produces statistics and paper-like plots.",
+                It produces statistics and paper-like plots.",
     metavar = ""
   )
 )

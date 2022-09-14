@@ -24,10 +24,10 @@ option_list = list(
     type = "character",
     default = "n",
     help = "Options are: (y/[n])
-              ATTENTION:  If 'y', it may take several hours and requires parallelization 
-              (see cores parameter within the Rscript and set according to your machine). 
-              Set 'n' to skip this step, but only if you already downloaded the preprocessed 
-              data contained results.zip folder.",
+                ATTENTION:  If 'y', it may take several hours and requires parallelization 
+                (see cores parameter within the Rscript and set according to your machine). 
+                Set 'n' to skip this step, but only if you already downloaded the preprocessed 
+                data contained results.zip folder.",
     metavar = ""
   ),
   make_option(
@@ -35,7 +35,7 @@ option_list = list(
     type = "character",
     default = "y",
     help = "Options are: ([y]/n)
-              If 'y' calculates gene level correlations; otherwise it skips this part.",
+                If 'y' calculates gene level correlations; otherwise it skips this part.",
     metavar = ""
   )
 )

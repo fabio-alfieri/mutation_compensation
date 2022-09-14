@@ -44,7 +44,8 @@ mkdir results/plots
 
 #### Run Rscript
 
-To run the Rscripts you should activate the conda environment and then remotely launch the script:
+To run the Rscripts you should activate the conda environment and then  launch the script:
+
 ```bash
 conda activate mutationCompensation
 cd path/to/GitHub/mutation_compensation/code/
@@ -52,6 +53,7 @@ Rscript 02_statisticalAnalysis.R --help
 Rscript 02_statisticalAnalysis.R --tables y --statistics y
 ```
 
+Script and detailed parameters:
 
 | Rscipt | Description | Parameters |
 | --- | --- | --- |

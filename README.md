@@ -49,9 +49,9 @@ mkdir results/tables
 mkdir results/plots
 ```
 
-#### Run R script
+#### Run the analysis
 
-To run the R scripts you should activate the conda environment and then  launch the script:
+In order to run the R scripts you should activate the conda environment and then launch the script:
 
 ```bash
 conda activate mutationCompensation

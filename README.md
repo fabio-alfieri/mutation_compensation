@@ -9,9 +9,8 @@ Using 8,690 primary tumor samples from The Cancer Genome Atlas (TCGA) dataset, w
 
 ### Reproduce analysis and figures
 
-#### Clone this repository
+#### Clone the repository
 
-Clone this repository:
 ```bash
 git clone https://github.com/fabio-alfieri/mutation_compensation.git
 ```

@@ -33,5 +33,8 @@ conda env create -f conda/mutation_compensation.yml
 
 #### (4) Run create the folders
 ```bash
-
+cd path/to/GitHub/mutation_compensation/
+mkdir results
+mkdir results/tables
+mkdir results/plots
 ```

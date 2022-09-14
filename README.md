@@ -14,13 +14,17 @@ Cancers evolve under the accumulation of thousands of somatic mutations and chro
 
 #### (1) Clone this repository
 
-The first step is to clone this repository (you need git, if you haven't installed it, check [this link](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)):
+The first step is to clone this repository:
 ```bash
 git clone https://github.com/fabio-alfieri/mutation_compensation.git
 ```
 #### (2) Dowload supplementary data from Zenodo 
 
 Download data.zip from [Zenodo](https://doi.org/10.5281/zenodo.7065200), put it in the cloned GitHub folder and unzip it.
+```bash
+mv downloads/data.zip path/to/GitHub/mutation_compensation/
+unzip data.zip
+```
 
 #### (3) Dowload supplementary data from Zenodo 
 

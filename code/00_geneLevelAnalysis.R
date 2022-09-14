@@ -23,17 +23,19 @@ option_list = list(
     c("-t", "--tables"),
     type = "character",
     default = "n",
-    help = "Options are: [y/n]
-              (default 'n')
-              ATTENTION: --tables set to 'y' requires lots of computational power",
+    help = "Options are: (y/[n])
+              ATTENTION:  If 'y', it may take several hours and requires parallelization 
+              (see cores parameter within the Rscript and set according to your machine). 
+              Set 'n' to skip this step, but only if you already downloaded the preprocessed 
+              data contained results.zip folder.",
     metavar = ""
   ),
   make_option(
     c("-s", "--statistics"),
     type = "character",
     default = "y",
-    help = "Options are: [y/n]
-              (default 'y')",
+    help = "Options are: ([y]/n)
+              If 'y' calculates gene level correlations; otherwise it skips this part.",
     metavar = ""
   )
 )

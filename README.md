@@ -22,6 +22,7 @@ cd path/to/GitHub/mutation_compensation/
 wget -O data.zip https://zenodo.org/record/7079304/files/data.zip?download=1
 wget -O results.zip https://zenodo.org/record/7079304/files/results.zip?download=1
 unzip data.zip
+unzip results.zip
 ```
 
 #### Dowload supplementary data from Zenodo 

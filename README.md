@@ -62,5 +62,5 @@ Script and detailed parameters:
 | 02_statisticalAnalysis.R | produce correlations ranging different segmentation lengths | `--tables` ([y]/n), it may take some time (up to 1h) depending on your machine; `--statistics` ([y]/n), produces statistics and paper--like plots (Figg.1-2) |
 | 03_BRCA-PAAD_analysis.R | produces BRCA and PAAD analysis using OG and GO scores | no params |
 | 04_timingAnalysis.R | produces CNAqc and timing analysis on PCAWG dataset | `--runCNAqc` (y/[n]), if set to y it may take several hours; `--test` (y/[n]), if set to y it uses a small dataset (100,000 mutations) instaed of the 5.5GB one |
-| 05_protectionAnalysis.R | Show file differences that haven't been staged | --- |
+| 05_protectionAnalysis.R | retrieves the tables for protected and unprotected gene sets and perform Gene Ontology analysis | no params |
 

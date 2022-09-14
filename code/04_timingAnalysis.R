@@ -20,8 +20,8 @@ option_list = list(
     default = "n",
     
     help = "Options are: (y/[n])
-              set 'y' if you want to produce PCAWG
-              ATTENTION: --runCNAqc set to 'y' requires lots of computational power and lot of time",
+               set 'y' if you want to produce PCAWG timed mutations
+               ATTENTION: --runCNAqc set to 'y' requires lots of computational power and lot of time",
     metavar = ""
   ),
   make_option(
@@ -29,7 +29,7 @@ option_list = list(
     type = "character",
     default = "y",
     help = "Options are: ([y]/n)
-              Performs the exact same analysis with a restricted pool of mutations (n = 100,000)",
+                Performs the exact same analysis with a restricted pool of mutations (n = 100,000)",
     metavar = ""
   )
 )

@@ -1,4 +1,5 @@
 # GENE-PROTECTION ANALYSIS
+#
 # This script computes protection index for each gene and thus perform enrichment
 # analysis (Gene Ontology) on both protected and unprotected gene sets
 

@@ -30,7 +30,7 @@ option_list = list(
     type = "character",
     default = "y",
     help = "Options are: ([y]/n)
-                It produces statistics and paper-like plots.",
+                It produces statistics and plots.",
     metavar = ""
   )
 )

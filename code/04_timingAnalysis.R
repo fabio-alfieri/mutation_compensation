@@ -20,8 +20,9 @@ option_list = list(
     default = "n",
     
     help = "Options are: (y/[n])
-               set 'y' if you want to produce PCAWG timed mutations
-               ATTENTION: --runCNAqc set to 'y' requires lots of computational power and lot of time",
+                set 'y' if you want to produce PCAWG timed mutations
+                ATTENTION: --runCNAqc set to 'y' requires lots of computational 
+                power and lot of time.",
     metavar = ""
   ),
   make_option(
@@ -29,7 +30,8 @@ option_list = list(
     type = "character",
     default = "y",
     help = "Options are: ([y]/n)
-                Performs the exact same analysis with a restricted pool of mutations (n = 100,000)",
+                Performs the exact same analysis with a restricted pool 
+                of mutations (n = 100,000) to make faster the analysis.",
     metavar = ""
   )
 )
@@ -140,11 +142,11 @@ if (run_CNAqc_analysis & !test) {
 
 if (test) {
   mutations_wCCF <-
-    read_tsv(paste0("data/misc/PCAWG_mutations_wCCF_mockFile.tsv"))
+    read_tsv(paste0("data/misc/PCAWG_mutations_wCCF_allTumorTypes_test.tsv"))
 } else{
   # ATTENTION: big dataset (5 GB) !
   mutations_wCCF <-
-    read_tsv(paste0("/home/ieo5099/mountHD/Desktop2/mutations_wCCF_allTumorTypes.tsv"))
+    read_tsv(paste0("data/misc/PCAWG_mutations_wCCF_allTumorTypes_OLD.tsv"))
 }
 
 mutations_wCCF$multiplicity <-

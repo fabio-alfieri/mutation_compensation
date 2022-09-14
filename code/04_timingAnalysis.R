@@ -113,6 +113,7 @@ if (run_CNAqc_analysis & !test) {
       library(ggplot2)
       library(readr)
       
+      # run phasing analysis using CNAqc https://caravagnalab.github.io/CNAqc/
       pt <- advanced_phasing(pt)
       CCF_table <- pt$phasing
       
@@ -134,6 +135,7 @@ if (run_CNAqc_analysis & !test) {
     })
   }
   
+  # merge single patient phased mutation dataset in a single dataset
   mutations_wCCF <- data.frame(stringsAsFactors = F)
   n <- 0
   for (file in paste0(patientsPCAWG$pt, "_CCF.rds")) {

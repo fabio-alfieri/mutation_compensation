@@ -9,9 +9,8 @@ if (!require("clusterProfiler", quietly = TRUE)){
   library(BiocManager)
   BiocManager::install("clusterProfiler")
 }
-library(clusterProfiler)
-
 suppressMessages({
+  library(clusterProfiler)
   library(readxl)
   library(tibble)
   library(ggplot2)

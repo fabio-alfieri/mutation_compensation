@@ -19,4 +19,3 @@ dependencies:
   - r-ggridges
   - r-devtools
   - r-biocmanager
-prefix: /home/fabio/miniconda3/envs/mutationCompensation

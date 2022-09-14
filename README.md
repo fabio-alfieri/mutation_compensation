@@ -55,10 +55,6 @@ mkdir results/plots
 | 05_protectionAnalysis.R | Show file differences that haven't been staged | --- |
 
 
-##### Gene level analysis
-This analysis is divided in two that can be enabled with these parameters: 
- - `--tables` the first part produces the scores for each gene for each cancer types (it requires 22 cores by default, but can be modified in the R code with the parameters "cores")
- - `--statistics` the second part 
 ```bash
 cd path/to/GitHub/mutation_compensation/code/
 conda activate mutationCompensation

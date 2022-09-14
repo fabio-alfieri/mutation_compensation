@@ -66,7 +66,7 @@ Script and detailed parameters:
 | --- | --- | --- |
 | 00_geneLevelAnalysis.R | produces gene level scores and correlations | `--tables` (y/[n]), produces gene-level score tables. If y, it may take several hours and it requires parallelization (see `cores` parameter within the Rscript and set according to your machine). Set n to skip this step, but only if you already downloaded the preprocessed data contained results.zip folder; `--statistics` ([y]/n), calculates gene level correlations |
 | 01_binLevelAnalysis.R | produces bin level scores with multiple conditions | no params |
-| 02_statisticalAnalysis.R | produce correlations ranging different segmentation lengths | `--tables` ([y]/n), it may take some time (up to 1h) depending on your machine; `--statistics` ([y]/n), produces statistics and paper-like plots |
+| 02_statisticalAnalysis.R | produce correlations using different segmentation lengths and conditions | `--tables` ([y]/n), it may take several minutes (up to about 1h) depending on your machine; `--statistics` ([y]/n), produces statistics and paper-like plots |
 | 03_BRCA-PAAD_analysis.R | produces BRCA and PAAD analysis using OG and GO scores | no params |
 | 04_timingAnalysis.R | produces CNAqc and timing analysis on PCAWG dataset | `--runCNAqc` (y/[n]), if set to y it may take several hours; `--test` (y/[n]), if set to y it uses a small dataset (100,000 mutations) instaed of the 5.5GB one |
 | 05_protectionAnalysis.R | retrieves the tables for protected and unprotected gene sets and perform Gene Ontology analysis | no params |

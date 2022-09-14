@@ -9,22 +9,22 @@ Using 8,690 primary tumor samples from The Cancer Genome Atlas (TCGA) dataset, w
 
 ### Reproduce analysis and figures
 
-#### (1) Clone this repository
+#### Clone this repository
 
 Clone this repository:
 ```bash
 git clone https://github.com/fabio-alfieri/mutation_compensation.git
 ```
-#### (2) Dowload supplementary data from Zenodo 
+#### Dowload supplementary data from Zenodo 
 
 Download from [here](https://doi.org/10.5281/zenodo.7065200) (Zenodo) the data.zip, put it in the cloned GitHub folder and unzip it:
 ```bash
 cd path/to/GitHub/mutation_compensation/
-wget -r https://zenodo.org/record/7065200/files/data.zip?download=1
+wget -O data.zip https://zenodo.org/record/7065200/files/data.zip?download=1
 unzip data.zip
 ```
 
-#### (3) Dowload supplementary data from Zenodo 
+#### Dowload supplementary data from Zenodo 
 
 If not, [install Conda](https://docs.conda.io/projects/conda/en/latest/commands/install.html), and create the environment for the analysis:
 ```bash
@@ -32,7 +32,7 @@ cd path/to/GutHub/mutation_compensation/
 conda env create -f conda/mutation_compensation.yml
 ```
 
-#### (4) Run create the folders
+#### Run create the folders
 
 Create results folders and subfolders
 ```bash
@@ -40,4 +40,23 @@ cd path/to/GitHub/mutation_compensation/
 mkdir results
 mkdir results/tables
 mkdir results/plots
+```
+
+#### Run Rscript
+
+
+| Rscipt | Description | Parameters |
+| --- | --- | --- |
+| 00_geneLevelAnalysis.R | produces gene level scores | `--tables` (y/[n]), if set to y it may take several hours, moreover it requires parallelization (see `cores` parameter within the Rscript and set according to your machine (it may take several hours); `--statistics` ([y]/n), produces gene level correlations |
+| 01_binLevelAnalysis.R | produces bin level scores with multiple conditions | no params |
+| 02_statisticalAnalysis.R | produce correlations ranging different segmentation lengths | `--tables` ([y]/n), it may take some time (up to 1h) depending on your machine; `--statistics` ([y]/n), produces statistics and paper--like plots (Figg.1-2) |
+| 03_BRCA-PAAD_analysis.R | produces BRCA and PAAD analysis using OG and GO scores | no params |
+| 04_timingAnalysis.R | produces CNAqc and timing analysis on PCAWG dataset | --- |
+| 05_protectionAnalysis.R | Show file differences that haven't been staged | --- |
+
+
+```bash
+cd path/to/GitHub/mutation_compensation/code/
+conda activate mutationCompensation
+Rscirpt 00_geneLevelAnalysis.R --tables n --statistics y
 ```

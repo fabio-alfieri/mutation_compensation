@@ -15,14 +15,19 @@ Using 8,690 primary tumor samples from The Cancer Genome Atlas (TCGA) dataset, w
 ```bash
 git clone https://github.com/fabio-alfieri/mutation_compensation.git
 ```
-#### Dowload supplementary data from Zenodo 
+#### Download supplementary data from Zenodo 
 
-Download from [here](https://doi.org/10.5281/zenodo.7065200) (Zenodo) the data.zip (required) and the results.zip (optional), put it in the cloned GitHub folder and unzip it:
+Download from [here](https://doi.org/10.5281/zenodo.7065200) (Zenodo) the data.zip (required), put it in the cloned GitHub folder and unzip it:
 ```bash
 cd path/to/GitHub/mutation_compensation/
 wget -O data.zip https://zenodo.org/record/7079304/files/data.zip?download=1
-wget -O results.zip https://zenodo.org/record/7079304/files/results.zip?download=1
 unzip data.zip
+```
+
+To skip time- and computational-consuming steps, you can download the preprocessed outputs, the results.zip
+```bash
+cd path/to/GitHub/mutation_compensation/
+wget -O results.zip https://zenodo.org/record/7079304/files/results.zip?download=1
 unzip results.zip
 ```
 

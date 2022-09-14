@@ -17,7 +17,7 @@ git clone https://github.com/fabio-alfieri/mutation_compensation.git
 ```
 #### (2) Dowload supplementary data from Zenodo 
 
-Download from here data.zip from [Zenodo](https://doi.org/10.5281/zenodo.7065200), put it in the cloned GitHub folder and unzip it:
+Download from [here](https://doi.org/10.5281/zenodo.7065200) (Zenodo) the data.zip, put it in the cloned GitHub folder and unzip it:
 ```bash
 cd path/to/GitHub/mutation_compensation/
 wget -r https://zenodo.org/record/7065200/files/data.zip?download=1

@@ -64,7 +64,7 @@ Script and detailed parameters:
 
 | Rscript | Description | Parameters |
 | --- | --- | --- |
-| 00_geneLevelAnalysis.R | produces gene level scores | `--tables` (y/[n]), if set to y it may take several hours, moreover it requires parallelization (see `cores` parameter within the Rscript and set according to your machine (it may take several hours); `--statistics` ([y]/n), produces gene level correlations |
+| 00_geneLevelAnalysis.R | produces gene level scores | `--tables` (y/[n]), if set to y it may take several hours, moreover it requires parallelization (see `cores` parameter within the Rscript and set according to your machine (it may take several hours)); `--statistics` ([y]/n), produces gene level correlations |
 | 01_binLevelAnalysis.R | produces bin level scores with multiple conditions | no params |
 | 02_statisticalAnalysis.R | produce correlations ranging different segmentation lengths | `--tables` ([y]/n), it may take some time (up to 1h) depending on your machine; `--statistics` ([y]/n), produces statistics and paper-like plots |
 | 03_BRCA-PAAD_analysis.R | produces BRCA and PAAD analysis using OG and GO scores | no params |

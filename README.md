@@ -4,17 +4,14 @@
 [![](https://img.shields.io/badge/doi-10.1101/2021.02.13.429885-rec.svg)](https://doi.org/10.1101/2021.03.13.429885)
 
 ### Abstract
-make it short!
 
-Cancers evolve under the accumulation of thousands of somatic mutations and chromosomal aberrations. Most protein-coding genes lack detectable signals of selection suggesting that most mutations are neutral events with no effects on cancer fitness. Conversely, in silico evolutionary simulations, in vitro and in vivo proliferation assays and whole-genome CRISPR-based knock-out screens within tumor cell lines demonstrated the deleterious effects of most mutations and gene KO (reduced in vitro proliferation and in vivo tumor growth).  This raises the question of how tumors tolerate such large amounts of deleterious mutations and why we cannot detect strong signals of negative selection acting on cancer-essential genes. Using 8,690 primary tumor samples from The Cancer Genome Atlas (TCGA) dataset, we performed an unbiased relationship analysis between somatic amplification and mutation frequency under different conditions and cancer types. We demonstrated that copy-number amplifications frequently cover mutation prone regions, increasing genomic tolerance towards the deleterious impact of mutations by creating extra safe copies of wild-type regions, eventually protecting the genes. We showed that these potential compensatory events are highly influenced by gene and mutation properties, with haploinsufficient genes show a higher tendency to be protected from mutations via amplifications. Moreover, over-representation analysis of unprotected gene sets revealed unessential and cancer-unrelated function enrichment; conversely, protected gene sets contain cellular essential and cancer-associated functions. A deeper understanding of these tumor genome-shaping compensatory events could reveal new cancer vulnerabilities and might guide novel therapeutic intervention.
-
+Using 8,690 primary tumor samples from The Cancer Genome Atlas (TCGA) dataset, we performed an unbiased relationship analysis between somatic amplification and mutation frequency under different conditions and cancer types. We demonstrated that copy number amplifications frequently cover mutation-prone regions: this increases genomic tolerance towards the deleterious impact of mutations by creating extra safe copies of wild-type regions and hence protecting the genes. We showed that these potential compensatory events are highly influenced by gene and mutation properties, e.g., haploinsufficient genes showed a higher tendency to be protected from mutations via amplifications. Moreover, over-representation analysis of unprotected gene sets revealed unessential and cancer-unrelated function enrichment, as opposed to protected gene sets which contain cellular essential functions. A deeper understanding of these tumor genome-shaping compensatory events could reveal new cancer vulnerabilities and might guide novel therapeutic intervention.
 
 ### Reproduce analysis and figures
 
-
 #### (1) Clone this repository
 
-The first step is to clone this repository:
+Clone this repository:
 ```bash
 git clone https://github.com/fabio-alfieri/mutation_compensation.git
 ```
@@ -30,9 +27,11 @@ unzip data.zip
 
 If not, [install Conda](https://docs.conda.io/projects/conda/en/latest/commands/install.html), and create the environment for the analysis.
 ```bash
+cd path/to/GutHub/mutation_compensation/
 conda env create -f conda/mutation_compensation.yml
 ```
 
 #### (4) Run create the folders
 ```bash
+
 ```

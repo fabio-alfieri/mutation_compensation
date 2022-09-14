@@ -24,6 +24,11 @@ Download data.zip from [Zenodo](https://doi.org/10.5281/zenodo.7065200), put it 
 
 #### (3) Dowload supplementary data from Zenodo 
 
-If not, install [Conda]
+If not, [install Conda](https://docs.conda.io/projects/conda/en/latest/commands/install.html), and create the environment for the analysis.
+```bash
+conda env create -f conda/mutation_compensation.yml
+```
+
+#### (4) Run create the folders
 ```bash
 ```

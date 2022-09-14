@@ -19,16 +19,18 @@ option_list = list(
     c("-t", "--tables"),
     type = "character",
     default = "y",
-    help = "Options are: [y/n]
-              (default 'y')",
+    help = "Options are: ([y]/n)
+              It requires some minutes (up to 1 h). 
+              It produces bin level correlation tables for different segment
+              lengths and conditions.",
     metavar = ""
   ),
   make_option(
     c("-s", "--statistics"),
     type = "character",
     default = "y",
-    help = "Options are: [y/n]
-              (default 'y')",
+    help = "Options are: ([y]/n)
+            It produces statistics and paper-like plots.",
     metavar = ""
   )
 )
@@ -41,11 +43,6 @@ opt = parse_args(opt_parser)
 
 if (opt$tables == "y" & opt$statistics == "y") {
   cat("\n\n >> You chose default options: \n\t(1) --tables 'y';\n\t(2) --statistics 'y' \n\n")
-}
-
-if (is.null(opt$tables) | is.null(opt$statistics)) {
-  print_help(opt_parser)
-  stop("please specify the analysis you want to perform!", call. = FALSE)
 }
 
 if (!any(opt$tables %in% c("y", "n"))) {

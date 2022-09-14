@@ -1,4 +1,4 @@
-name: mutationCompensation
+name: mutation_compensation
 channels:
   - conda-forge
   - bioconda
@@ -19,3 +19,5 @@ dependencies:
   - r-ggridges
   - r-devtools
   - r-biocmanager
+  - r-optparse
+  - r-ggpubr

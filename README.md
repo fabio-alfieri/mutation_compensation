@@ -41,7 +41,7 @@ conda env create -f conda/mutation_compensation.yml
 
 #### Create folders
 
-Create results folders and subfolders
+If you choose not to download the results.zip, please create the "results" folder and subfolders:
 ```bash
 cd path/to/GitHub/mutation_compensation/
 mkdir results

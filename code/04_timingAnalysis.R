@@ -72,6 +72,8 @@ if (opt$test == "y") {
   test <- T
 }
 
+system("mkdir -p results/plots/000_paper_plots/")
+
 if (run_CNAqc_analysis & !test) {
   # install.packages("devtools")
   if (!require("CNAqc")) {

@@ -17,23 +17,23 @@ git clone https://github.com/fabio-alfieri/mutation_compensation.git
 ```
 #### Download supplementary data from Zenodo 
 
-Download from [here](https://doi.org/10.5281/zenodo.7065200) (Zenodo) the data.zip (required), put it in the cloned GitHub folder and unzip it:
+Download [here](https://doi.org/10.5281/zenodo.7079304) (Zenodo) the data.zip (required), put it in the cloned GitHub folder and unzip it:
 ```bash
 cd path/to/GitHub/mutation_compensation/
 wget -O data.zip https://zenodo.org/record/7079304/files/data.zip?download=1
 unzip data.zip
 ```
 
-To skip time- and computational-consuming steps, you can download the preprocessed outputs, the results.zip
+To skip time- and computational-consuming steps, you can download the preprocessed outputs, the results.zip. In this case, put it in the cloned GitHub folder and unzip it:
 ```bash
 cd path/to/GitHub/mutation_compensation/
 wget -O results.zip https://zenodo.org/record/7079304/files/results.zip?download=1
 unzip results.zip
 ```
 
-#### Dowload supplementary data from Zenodo 
+#### Create conda environment
 
-If not, [install Conda](https://docs.conda.io/projects/conda/en/latest/commands/install.html), and create the environment for the analysis:
+If you don't have conda installed locally, please [install Conda](https://docs.conda.io/projects/conda/en/latest/user-guide/index.html), and create the environment for the analysis:
 ```bash
 cd path/to/GutHub/mutation_compensation/
 conda env create -f conda/mutation_compensation.yml

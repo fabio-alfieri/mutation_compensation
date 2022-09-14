@@ -320,7 +320,7 @@ if (produce_statistics) {
     dev.off()
   }
   
-  cat("\n\n > Spearman's correlations: \n")
+  cat("\n\n > Spearman's correlations for GENE-LEVEL analysis: \n")
   print(statistics)[-c(3, 4, 6)]
   
   results_table_statistics_path <-
@@ -332,7 +332,6 @@ if (produce_statistics) {
     quote = F,
     row.names = F
   )
-  
 }
 
 cat("\n\n > OUTPUT of the script: \n \t (1) raw tables path:",

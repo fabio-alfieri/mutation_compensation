@@ -31,14 +31,6 @@ option_list = list(
     help = "Options are: [(y)/n]
               Performs the exact same analysis with a restricted pool of mutations (n = 100,000)",
     metavar = ""
-  ),
-  make_option(
-    c("-c", "--clonal"),
-    type = "character",
-    default = "n",
-    help = "Options are: [(y)/n]
-              Performs the analysis only on clonal mutations",
-    metavar = ""
   )
 )
 
@@ -77,14 +69,6 @@ test <- F
 if (opt$mock == "y") {
   test <- T
 }
-
-# set to TRUE if you want to perform the analysis only on clonal mutations, otherwise
-# all mutations will be included (clonal and subclonal)
-clonal <- F
-if (opt$clonal == "y") {
-  clonal <- T
-}
-
 
 if (run_CNAqc_analysis & !test) {
   # install.packages("devtools")
@@ -160,16 +144,11 @@ if (test) {
 } else{
   # ATTENTION: big dataset (5 GB) !
   mutations_wCCF <-
-    read_tsv(paste0("data/misc/PCAWG_mutations_wCCF_allTumorTypes.tsv"))
+    read_tsv(paste0("/home/ieo5099/mountHD/Desktop2/mutations_wCCF_allTumorTypes.tsv"))
 }
 
 mutations_wCCF$multiplicity <-
   as.factor(mutations_wCCF$multiplicity)
-
-if (clonal) {
-  # filter only clonal mutations (CCF >= 1)
-  mutations_wCCF <- mutations_wCCF[mutations_wCCF$CCF >= 1, ]
-}
 
 # define coding and non-coding mutations ----
 mutations_wCCF$multiplicity <-

@@ -1042,7 +1042,7 @@ if (produce_statistics) {
   dev.off()
   
   
-  cat(" \n > Producing Fig. S1a \n\n")
+  cat(" \n > Producing Fig. S2a \n\n")
   # Figure S1a ----
   # correlation between mean mutation score and deletion frequency
   x <- as.numeric(toPlot$mut_norm)

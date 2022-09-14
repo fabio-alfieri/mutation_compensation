@@ -62,7 +62,7 @@ Rscript 02_statisticalAnalysis.R --tables y --statistics y
 
 Script and detailed parameters:
 
-| Rscipt | Description | Parameters |
+| Rscript | Description | Parameters |
 | --- | --- | --- |
 | 00_geneLevelAnalysis.R | produces gene level scores | `--tables` (y/[n]), if set to y it may take several hours, moreover it requires parallelization (see `cores` parameter within the Rscript and set according to your machine (it may take several hours); `--statistics` ([y]/n), produces gene level correlations |
 | 01_binLevelAnalysis.R | produces bin level scores with multiple conditions | no params |

@@ -146,11 +146,11 @@ if (run_CNAqc_analysis & !test) {
 
 if (test) {
   mutations_wCCF <-
-    read_tsv(paste0("data/misc/PCAWG_mutations_wCCF_allTumorTypes_test.tsv"))
+    read.csv(paste0("data/misc/PCAWG_mutations_wCCF_allTumorTypes_test.tsv"), sep = "\t")
 } else{
   # ATTENTION: big dataset (5 GB) !
   mutations_wCCF <-
-    read_tsv(paste0("data/misc/PCAWG_mutations_wCCF_allTumorTypes_OLD.tsv"))
+    read.csv(paste0("data/misc/PCAWG_mutations_wCCF_allTumorTypes_OLD.tsv"), sep = "\t")
 }
 
 mutations_wCCF$multiplicity <-

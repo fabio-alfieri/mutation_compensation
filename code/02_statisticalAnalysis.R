@@ -966,8 +966,8 @@ if (produce_statistics) {
     length_total_del <-
       sum(scna_del$length) / length(levels(factor(scna$patient_id)))
     
-    tier <-
-      read.table(
+    tier <-re
+      read.csv(
         paste0(
           "results/tables/02_produceStatistics/amplifications_",
           tumor_type,

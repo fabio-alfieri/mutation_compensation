@@ -319,6 +319,10 @@ for (kar in c(
     
     p <- non_coding_timing %>% filter(karyotype == kar)
     
+    if(dim(p)[1] == 0 | dim(t)[1] == 0){
+      next()
+    }
+    
     par(mfrow = c(1, 2))
     print(
       ggplot(mutations_wCCF %>% filter(karyotype == kar)) +

@@ -54,7 +54,7 @@ mkdir results/plots
 In order to run the R scripts you should activate the conda environment and then launch the script:
 
 ```bash
-conda activate mutationCompensation
+conda activate mutation_compensation
 cd path/to/GitHub/mutation_compensation/code/
 Rscript 02_statisticalAnalysis.R --help
 Rscript 02_statisticalAnalysis.R --tables y --statistics y

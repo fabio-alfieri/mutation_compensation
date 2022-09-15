@@ -6,6 +6,7 @@ suppressMessages({
   library(readr)
   library(dbplyr)
   library(devtools)
+  library(tidyverse)
   library(optparse)
   library(dplyr)
   library(ggplot2)

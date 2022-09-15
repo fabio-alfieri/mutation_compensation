@@ -19,6 +19,7 @@ suppressMessages({
   library(optparse)
 })
 
+# set optparse parameters 
 option_list = list(
   make_option(
     c("-t", "--tables"),
@@ -49,11 +50,6 @@ opt = parse_args(opt_parser)
 
 if (opt$tables == "n" & opt$statistics == "y") {
   cat("\n\n >> You chose default options: \n\t(1) --tables 'n';\n\t(2) --statistics 'y' \n\n")
-}
-
-if (is.null(opt$tables) | is.null(opt$statistics)) {
-  print_help(opt_parser)
-  stop("please specify the analysis you want to perform!", call. = FALSE)
 }
 
 if (!any(opt$tables %in% c("y", "n"))) {

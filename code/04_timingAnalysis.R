@@ -13,6 +13,7 @@ suppressMessages({
 })
 
 
+# set optparse parameters 
 option_list = list(
   make_option(
     c("-r", "--runCNAqc"),

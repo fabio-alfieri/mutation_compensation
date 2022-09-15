@@ -14,6 +14,7 @@ suppressMessages({
   library(utils)
 })
 
+# set optparse parameters 
 option_list = list(
   make_option(
     c("-t", "--tables"),
@@ -970,8 +971,9 @@ if (produce_statistics) {
         paste0(
           "results/tables/02_produceStatistics/amplifications_",
           tumor_type,
-          "_1Mbp_table.txt"
-        )
+          "_1Mbp_table.tsv"
+        ),
+        sep = "\t"
       )
     toPlot <- rbind(
       toPlot,

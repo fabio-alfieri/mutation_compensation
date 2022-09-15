@@ -10,6 +10,9 @@ if (!require("clusterProfiler", quietly = TRUE)){
   library(BiocManager)
   BiocManager::install("clusterProfiler")
 }
+if (!require("org.Hs.eg.db", quietly = TRUE)){
+  install.packages("org.Hs.eg.db")
+}
 suppressMessages({
   library(clusterProfiler)
   library(readxl)

@@ -53,7 +53,7 @@ if (is.null(opt$runCNAqc) | is.null(opt$test)) {
 }
 
 cat(
-  "\n\n > This script \n\t(1) estimates gene amplification frequency and mu score (takes several hours and cores);\n\t(2) produces gene-level correlations \n\n\n"
+  "\n\n > This script \n\t(1) phasing analysis using CNAqc (takes several hours);\n\t(2) timing analysis and outputs \n\n\n"
 )
 
 setwd("../")
@@ -144,6 +144,7 @@ if (run_CNAqc_analysis & !test) {
   )
 }
 
+cat(paste0(" \n > Loading ",ifelse(test, "MOCK file containing", "file containing")," PCAWG mutation \n\n"))
 if (test) {
   mutations_wCCF <-
     read.csv(paste0("data/misc/PCAWG_mutations_wCCF_allTumorTypes_test.tsv"), sep = "\t")

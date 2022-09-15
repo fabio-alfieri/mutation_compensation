@@ -314,27 +314,28 @@ for (kar in c(
   "5:1",
   "5:2"
 )) {
-  t <- coding_timing %>% filter(karyotype == kar)
-  
-  p <- non_coding_timing %>% filter(karyotype == kar)
-  
-  par(mfrow = c(1, 2))
-  print(
-    ggplot(mutations_wCCF %>% filter(karyotype == kar)) +
-      geom_histogram(
-        aes(x = VAF / purity, fill = multiplicity),
-        alpha = 0.3,
-        binwidth = 0.01
-      ) +
-      theme_bw() +
-      xlim(0, 1.3) +
-      ggtitle(paste("PCAWG - karyotype", kar))
-  )
-  pie(table(t$timing) / sum(table(t$timing)),
-      main = paste(kar, "- coding mutations"))
-  pie(table(p$timing) / sum(table(p$timing)),
-      main = paste(kar, "- non-coding mutations"))
-  
+  try({
+    t <- coding_timing %>% filter(karyotype == kar)
+    
+    p <- non_coding_timing %>% filter(karyotype == kar)
+    
+    par(mfrow = c(1, 2))
+    print(
+      ggplot(mutations_wCCF %>% filter(karyotype == kar)) +
+        geom_histogram(
+          aes(x = VAF / purity, fill = multiplicity),
+          alpha = 0.3,
+          binwidth = 0.01
+        ) +
+        theme_bw() +
+        xlim(0, 1.3) +
+        ggtitle(paste("PCAWG - karyotype", kar))
+    )
+    pie(table(t$timing) / sum(table(t$timing)),
+        main = paste(kar, "- coding mutations"))
+    pie(table(p$timing) / sum(table(p$timing)),
+        main = paste(kar, "- non-coding mutations"))
+  })
 }
 dev.off()
 
@@ -385,22 +386,24 @@ for (kar in c(
   "5:1",
   "5:2"
 )) {
-  print(kar)
-  f <- test_independence(coding_timing, non_coding_timing, kar)
-  
-  ftot <-
-    rbind(ftot,
-          cbind(
-            karyotype = kar,
-            odds.ratio = f$estimate,
-            p.value = f$p.value,
-            n_muts = f[[8]]
-          ))
+  try({
+    print(kar)
+    f <- test_independence(coding_timing, non_coding_timing, kar)
+    
+    ftot <-
+      rbind(ftot,
+            cbind(
+              karyotype = kar,
+              odds.ratio = f$estimate,
+              p.value = f$p.value,
+              n_muts = f[[8]]
+            ))
+  })
 }
 
 ftot[, 2:4] <- apply(ftot[, 2:4], 2, as.numeric)
-# view(ftot)
-write.table(ftot, file = "results/tables/04_timingAnalysis/statistics_coding_noncoding.txt")
+print(ftot)
+write.table(ftot, file = paste0("results/tables/04_timingAnalysis/statistics_coding_noncoding",ifelse(test,"_test",""),".txt"))
 
 timed_mutations <- rbind(coding_timing, non_coding_timing)
 timed_mutations <-
@@ -410,6 +413,6 @@ p <- ggplot(timed_mutations) +
   geom_bar(aes(x = Var1, y = Freq, fill = Var2), stat = "summary") +
   theme_classic()
 
-pdf(file = "results/plots/000_paper_plots/00_SupplementaryFig5.pdf")
+pdf(file = paste0("results/plots/000_paper_plots/00_SupplementaryFig5",ifelse(test,"_test",""),".pdf"))
 print(p)
 dev.off()

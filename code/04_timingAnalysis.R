@@ -286,13 +286,14 @@ timing_kar <- function(ta) {
 non_coding_timing <- timing_kar(non_coding)
 coding_timing <- timing_kar(coding)
 
-pie(table(non_coding_timing$timing) / length(non_coding_timing$timing))
-pie(table(coding_timing$timing) / length(coding_timing$timing))
+# pie(table(non_coding_timing$timing) / length(non_coding_timing$timing))
+# pie(table(coding_timing$timing) / length(coding_timing$timing))
 
 mutations_wCCF$multiplicity <-
   as.factor(mutations_wCCF$multiplicity)
 
 # produce histogram of VAF over different karyotypes
+cat(" \n > Producing Fig. 4 \n\n")
 pdf(file = paste0(
   "results/plots/000_paper_plots/00_Fig4",
   ifelse(test, "_mockData", ""),
@@ -417,6 +418,7 @@ p <- ggplot(timed_mutations) +
   geom_bar(aes(x = Var1, y = Freq, fill = Var2), stat = "summary") +
   theme_classic()
 
+cat(" \n > Producing Fig. S5 \n\n")
 pdf(file = paste0("results/plots/000_paper_plots/00_SupplementaryFig5",ifelse(test,"_test",""),".pdf"))
 print(p)
 dev.off()

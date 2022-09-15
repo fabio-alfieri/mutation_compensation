@@ -86,14 +86,15 @@ suppressWarnings({
     for (tumor_type in tumor_types) {
       merged_1 <- 36
       bin_values <-
-        read.table(
+        read.csv(
           file = paste0(
             "results/tables/02_produceStatistics/amplifications_",
             tumor_type,
             "_",
             merged_1,
-            "Mbp_table.txt"
-          )
+            "Mbp_table.tsv"
+          ),
+          sep = "\t"
         )
       
       bin_values$bin_id_merged36 <-
@@ -323,14 +324,15 @@ suppressWarnings({
           "\n\n"
         )
         bin_values <-
-          read.table(
+          read.csv(
             file = paste0(
               "results/tables/02_produceStatistics/amplifications_",
               tumor_type_control,
               "_",
               merged_1,
-              "Mbp_table.txt"
-            )
+              "Mbp_table.tsv"
+            ),
+            sep = "\t"
           )
         bin_values$bin_id_merged36 <-
           paste0(bin_values$chr, "_", bin_values$resize)

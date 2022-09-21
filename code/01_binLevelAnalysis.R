@@ -609,7 +609,7 @@ for (mutation_type in mutation_types) {
   }
 }
 
+
 cat(
   "\n\n OUTPUT of the script: \n \t (1) raw tables path: results/tables/01_binLevelAnalysis/ \n"
 )
- 

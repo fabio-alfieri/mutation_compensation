@@ -73,15 +73,12 @@ fixed_bin_length <-
   1000000 # segmentation length (set at default 1 Mbp)
 
 for (mutation_type in mutation_types) {
-  # set the result folder according to mutation_type
+  # set/create the result folder according to mutation_type
   results_table_path <-
     paste0("results/tables/01_binLevelAnalysis/",
            mutation_type,
            "_vs_CN/")
   system(paste0("mkdir -p ", results_table_path))
-  
-  # folder for chromosomes segmented in bins
-  chromosomes_location <- "data/ChromosomeGeneStructure/"
   
   ## >> 1st Loop: cancer types << ----
   for (tumor_type in tumor_types) {
@@ -116,8 +113,10 @@ for (mutation_type in mutation_types) {
       scna[scna$patient_id %in% snv$patient_id,]
     common_patients <-
       levels(as.factor(snv[snv$patient_id %in% scna$patient_id,]$patient_id))
+    # keep only non copy-neutral segments (amplified or deleted)
     scna <-
       scna[scna$Segment_Mean >= 0.2 | scna$Segment_Mean <= -0.2,]
+    
     cat("\n  done!")
     cat("\n > common patients:", length(common_patients))
     
@@ -282,7 +281,7 @@ for (mutation_type in mutation_types) {
       gc(full = TRUE)
       print(chr)
       
-      ## 2nd loop: load chromosome regions ----
+      ## 2nd loop: load chromosome region lengths ----
       chr_info <-
         read.table("data/misc/chr_info_h19.txt", header = TRUE)
       chr_arms <-
@@ -311,6 +310,7 @@ for (mutation_type in mutation_types) {
       temp_cna_length <- NULL
       i <- 1
       
+      # this function assign each CNA event to segments 
       whichbin <- function(data, end, i) {
         if (any(data$Start < end) == TRUE) {
           temp2 <- data[data$Start < end,]
@@ -324,6 +324,7 @@ for (mutation_type in mutation_types) {
         return(temp2)
       }
       
+      # apply the whichbin() function
       for (i in 1:n_bins) {
         if (nrow(temp_cna) == 0) {
           break
@@ -336,10 +337,13 @@ for (mutation_type in mutation_types) {
         end <- end + length_bin
       }
       
+      # keep CNA events higher that 0,5 Mbp (half of bin size)
       temp_cna_length <-
         temp_cna_length[temp_cna_length$length > fixed_bin_length / 2,]
       amplified_patients <-
         levels(factor(temp_cna_length$patient_id))
+      
+      # produce the table
       write.table(
         amplified_patients,
         file = paste0(
@@ -351,7 +355,7 @@ for (mutation_type in mutation_types) {
         )
       )
       
-      ## 2nd loop: compute chromosome and chromosome-arm amplification frequency ----
+      ## 2nd loop: compute chromosome and arm amplification frequencies ----
       temp_cna_length_backup <- temp_cna_length
       temp_cna_length <-
         temp_cna_length %>% filter(Segment_Mean >= 0.2)
@@ -445,8 +449,7 @@ for (mutation_type in mutation_types) {
       bin_gene <-
         read.table(
           paste0(
-            chromosomes_location,
-            "chr_",
+            "data/ChromosomeGeneStructure/chr_",
             chr,
             "_binSize_",
             fixed_bin_length,
@@ -454,7 +457,7 @@ for (mutation_type in mutation_types) {
           )
         )
       
-      ## 2nd loop: compute amplification/deletiion frequencies ----
+      ## 2nd loop: compute amplification and deletion frequencies ----
       chr_bins <- data.frame(bins = 1:n_bins)
       
       temp_cna_length <- temp_cna_length_backup

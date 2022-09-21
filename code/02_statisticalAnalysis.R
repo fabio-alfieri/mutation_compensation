@@ -60,13 +60,13 @@ cat(
     \n\t (2) produces correlations and figures \n\n\n"
 )
 
-produce_tables <- T
+produce_tables <- TRUE
 if (opt$tables == "n") {
-  produce_tables <- F
+  produce_tables <- FALSE
 }
-produce_statistics <- T
+produce_statistics <- TRUE
 if (opt$statistics == "n") {
-  produce_statistics <- F
+  produce_statistics <- FALSE
 }
 
 setwd("../")
@@ -100,7 +100,7 @@ tumor_types <- c(
 
 if (produce_tables) {
   if (F) {
-    # compute extremes uncovered by CN sequencing method
+    # compute extremes uncovered by CN sequencing method (AffymetrixSNP6.0)
     averageChrCoverage <- data.frame()
     for (tumor_type in tumor_types[1:8]) {
       scna <-
@@ -132,22 +132,22 @@ if (produce_tables) {
   
   extremes <- "remove" # "remove" o ""
   # extremes were removed because CNAs and SNVs comes from different
-  # sequencing methods: chromosome extremes only contains SNVs, but no CNAs.
+  # sequencing methods, thus chromosome extremes only contains SNVs, but no CNAs.
   averageChrCoverage <-
     read.table("data/FireBrowse_CNAs/averageChrCoverage.txt")
   averageChrCoverage <- averageChrCoverage[c(1:22), ]
   
+  # initialize tables
   # output table directory
   results_table_path <-
     paste0("results/tables/02_produceStatistics/")
   system(paste0("mkdir -p ", results_table_path))
-  
   # plot table directory
   results_plot_path <-
     paste0("results/plots/02_tumorCorrelations/")
   system(paste0("mkdir -p ", results_plot_path))
   
-  # initialize tables
+  # initialize parameters
   parameters_chr <- data.frame()
   parameters_arm <- data.frame()
   parameters <- data.frame()
@@ -167,32 +167,19 @@ if (produce_tables) {
     } else{
       conditions <- c(
         "amplifications"
-        ,
-        "deletions"
-        ,
-        "aggregation_causing"
-        ,
-        "non_aggregation_causing"
-        ,
-        "missense"
-        ,
-        "remove_OG"
-        ,
-        "remove_TSG"
-        ,
-        "remove_BOTH"
-        ,
-        "polyphen_highlyDamaging"
-        ,
-        "polyphen_moderatelyDamaging"
-        ,
-        "CADD_highlyDamaging"
-        ,
-        "CADD_moderatelyDamaging"
-        ,
-        "haploinsufficient"
-        ,
-        "non_haploinsufficient"
+        ,"deletions"
+        ,"aggregation_causing"
+        ,"non_aggregation_causing"
+        ,"missense"
+        ,"remove_OG"
+        ,"remove_TSG"
+        ,"remove_BOTH"
+        ,"polyphen_highlyDamaging"
+        ,"polyphen_moderatelyDamaging"
+        ,"CADD_highlyDamaging"
+        ,"CADD_moderatelyDamaging"
+        ,"haploinsufficient"
+        ,"non_haploinsufficient"
       )
     }
     

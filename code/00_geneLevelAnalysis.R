@@ -62,13 +62,13 @@ cat(
   "\n\n > This script \n\t(1) estimates gene amplification frequency and mu score (takes several hours and cores);\n\t(2) produces gene-level correlations \n\n\n"
 )
 
-produce_tables <- F
+produce_tables <- FALSE
 if (opt$tables == "y") {
-  produce_tables <- T
+  produce_tables <- TRUE
 }
-produce_statistics <- T
+produce_statistics <- TRUE
 if (opt$statistics == "n") {
-  produce_statistics <- F
+  produce_statistics <- FALSE
 }
 
 tumor_types <- c(
@@ -107,7 +107,7 @@ system(paste0("mkdir -p ", results_table_path))
 results_plots_path <- "results/plots/00_geneLevelAnalysis/"
 system(paste0("mkdir -p ", results_plots_path))
 
-# WARNING (only for (1) analysis)
+# WARNING (only if 'produce_tables == TRUE' analysis)
 cores <- 22 # set cores based on your core availability
 # only used when produce_table == T
 
@@ -123,7 +123,7 @@ if (produce_tables) {
     snv <-
       read.csv(file = paste0("data/FireBrowse_SNVs/", tumor_type, "_mutations.csv"))
     snv <-
-      snv[!duplicated(snv[, c(6, 7, 8, 9, 17)]),] # remove dupicated mutations in the same patient
+      snv[!duplicated(snv[, c(6, 7, 8, 9, 17)]),] # remove duplicated mutations in the same patient
     cat("  done!\n\n")
     
     # load CNAs file
@@ -144,11 +144,13 @@ if (produce_tables) {
     scna <- scna[scna$patient_id %in% snv$patient_id,]
     common_patients <-
       levels(as.factor(snv[snv$patient_id %in% scna$patient_id,]$patient_id))
+    # keep only non copy-neutral segments (amplified or deleted)
     scna <-
       scna[scna$Segment_Mean >= 0.2 | scna$Segment_Mean <= -0.2,]
     cat("  done!\n\n")
     cat("> common patients:", length(common_patients), "\n")
     
+    # protein coding genes
     proteins <-
       read.table("data/misc/protein-coding_gene.txt", header = FALSE)
     # downloaded from: ftp://ftp.ncbi.nlm.nih.gov/pub/CCDS/
@@ -174,41 +176,48 @@ if (produce_tables) {
       readRDS(file = paste0("data/TCGA_tpm/", tumor_type, "_tpm.rds.gz"))
     cat("  done!\n\n")
     
-    # amplifications analysis
+    # amplification/mutation analysis
     cl <- makeCluster(cores)
     registerDoSNOW(cl)
     
     cat("> start parallalization with", cores, "cores \n")
     # for each gene assess the number of
     results <- foreach(chr = 1:22, .combine = "rbind") %dopar% {
+      # create chromosome-specific tmp tables
       temp_coding <- coding_regions[coding_regions$chromosome == chr, ]
       temp_mut <- snv_filt[snv_filt$Chromosome == chr, ]
       temp_cna <- scna[scna$Chromosome == chr, ]
       n_genes <- dim(temp_coding)[1]
+      
       result <- data.frame()
       for (i in 1:nrow(temp_coding)) {
         gene_name <- temp_coding$gene[i]
-        # extract CNA in this gene
+        
+        # extract CNA for gene (i)
         cna_gene <-
           temp_cna[as.numeric(temp_cna$Start) <= as.numeric(temp_coding[i, ]$cds_from) &
                      as.numeric(temp_cna$End) >= as.numeric(temp_coding[i, ]$cds_to), ]
-        # assess the frequency of the amplification
         amplified_pts <- levels(factor(cna_gene$patient_id))
         CN_pts <-
           common_patients[!common_patients %in% amplified_pts]
         
+        # retrieve gene TPM
         gene_tpm <-
           tpm[tpm$patient_id %in% CN_pts &
                 tpm$`Approved symbol` == gene_name, ]
         gene_tpm <- mean(gene_tpm$tpm_counts, na.rm = T)
         
+        # calculate amplification frequency
         freq_ampl <-
           length(levels(factor(cna_gene$patient_id))) / as.numeric(total_pts)
         
+        # calculate mutation number
         n_mut_all <-
           dim(temp_mut[as.numeric(temp_mut$Start_Position) >= as.numeric(temp_coding[i, ]$cds_from) &
                          as.numeric(temp_mut$Start_Position) <= as.numeric(temp_coding[i, ]$cds_to), ])[1] /
           total_pts
+        
+        # calculate other variables (gene length, number of patients and mutations)
         gene_length <-
           as.numeric(temp_coding$cds_to[i]) - as.numeric(temp_coding$cds_from[i])
         n_mut_norm <- n_mut_all / gene_length
@@ -219,6 +228,8 @@ if (produce_tables) {
         mutations_CN <-
           temp_mut_CN[as.numeric(temp_mut_CN$Start_Position) >= as.numeric(temp_coding[i, ]$cds_from) &
                         as.numeric(temp_mut_CN$Start_Position) <= as.numeric(temp_coding[i, ]$cds_to), ]
+        
+        # calculate the normalized mutation score
         n_mut_all_CN <- dim(mutations_CN)[1] / n_pt_CN
         n_mut_CN_norm <- n_mut_all_CN / temp_coding[i, "length"]
         
@@ -253,7 +264,7 @@ if (produce_tables) {
     
     # produce the tables
     write.csv(results,
-              file = paste0(results_table_path, tumor_type, "_geneLevel_TRY.csv"))
+              file = paste0(results_table_path, tumor_type, "_geneLevel.csv"))
   }
 }
 

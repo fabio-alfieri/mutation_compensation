@@ -72,7 +72,7 @@ for (tumor_type in tumor_types) {
     genelevel[genelevel$GeneTPM >= quantile(genelevel$GeneTPM, prob = c(0:100 /
                                                                           100)[5]), ]
   
-  # calcualte the mutation score
+  # calculate the mutation score
   genelevel$mutation.score <-
     1 - log10(genelevel$MutationsDiploid_norm) / min(log10(genelevel$MutationsDiploid_norm))
   

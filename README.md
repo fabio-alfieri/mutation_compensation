@@ -12,7 +12,7 @@ Using 8,690 primary tumor samples from The Cancer Genome Atlas (TCGA) dataset, w
 
 ### Reproduce analysis and figures
 
-The available code was run on tested and run on Ubuntu (version 22.04.01), using R (4.2.1) and Python (3.9.12).
+The available code was run on tested and run on Ubuntu (22.04.01 LTS), using R (4.2.1) and Python (3.9.12).
 
 #### Clone the repository
 

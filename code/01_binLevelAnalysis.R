@@ -162,7 +162,7 @@ for (mutation_type in mutation_types) {
     if (mutation_type == "haploinsufficient") {
       cat("\n Filter for haploinsufficient genes")
       pLI_scores <-
-        readxl::read_xlsx("data/pLI_scores.xlsx", sheet = 2)
+        readxl::read_xlsx("data/misc/pLI_scores.xlsx", sheet = 2)
       pLI_scores <-
         pLI_scores[!is.na(pLI_scores$chr),] # remove genes within X and Y chromosomes
       pLI_scores_intolerant <- pLI_scores[pLI_scores$pLI >= 0.2,]

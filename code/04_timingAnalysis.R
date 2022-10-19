@@ -151,7 +151,7 @@ if (test) {
 } else{
   # ATTENTION: big dataset (5 GB) !
   mutations_wCCF <-
-    read.csv(paste0("data/misc/PCAWG_mutations_wCCF_allTumorTypes_OLD.tsv"), sep = "\t")
+    read.csv(paste0("data/misc/PCAWG_mutations_wCCF_allTumorTypes.tsv"), sep = "\t")
 }
 
 mutations_wCCF$multiplicity <-

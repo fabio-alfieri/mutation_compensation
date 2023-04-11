@@ -74,6 +74,6 @@ Script and detailed parameters:
 | 02_statisticalAnalysis_TCGA.R | it produces correlations using different segmentation lengths and conditions | `--tables` ([y]/n), it may take several minutes depending on your machine; `--statistics` ([y]/n), produces statistics and plots |
 | 02_statisticalAnalysis_PCAWG.R | it produces correlations using different segmentation lengths and conditions | no parameters |
 | 03_BRCA-PAAD_analysis.R | it produces BRCA and PAAD analyses using OG and GO scores | no parameters |
-| 04_timingAnalysis.R | it produces CNAqc and timing analyses on PCAWG dataset using the timing method | `--runCNAqc` (y/[n]), if set to 'y' it may take several hours; `--test` (y/[n]), if set to 'y' it uses a small dataset (100,000 mutations) instead of the 5.5GB one |
-| 04_bufferingAnalysis.R | it produces the analyses on PCAWG dataset using the buffering method | no parameters |
-| 05_protectionAnalysis.R | rit etrieves the tables for protected and unprotected gene sets and perform Gene Ontology analyses |  `--runPermutations` (y/[n]), if set to 'y' it may take some time; it runs 10,000 permutations to caculate the distribution percentile of Pi scores |
+| 04_timingAnalysis.R | it produces CNAqc and timing analyses on PCAWG dataset | `--runCNAqc` (y/[n]), if set to 'y' it may take several hours; `--test` (y/[n]), if set to 'y' it uses a small dataset (100,000 mutations) instead of the 5.5GB one |
+| 04_bufferingAnalysis.R | it produces the buffering analyses on PCAWG dataset | no parameters |
+| 05_protectionAnalysis.R | it etrieves the tables for protected and unprotected gene sets and perform Gene Ontology analyses |  `--runPermutations` (y/[n]), if set to 'y' it may take some time; it runs 10,000 permutations to caculate the distribution percentile of Pi scores |

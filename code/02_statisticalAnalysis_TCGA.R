@@ -99,7 +99,6 @@ tumor_types <- c(
 )
 
 segment_cutoffs <- c(20)
-
 all_conditions <- data.frame()
 
 if (produce_tables) {
@@ -1389,7 +1388,6 @@ if (produce_statistics) {
   dev.off()
   
   cat(" \n > Producing Fig. 1c \n\n")
-  
   # Figure 1c ----
   corParameters <-
     read.table(
@@ -1414,7 +1412,6 @@ if (produce_statistics) {
              stat = "identity",
              position = position_dodge()) +
     theme_classic() + scale_fill_brewer(palette = "Blues") +
-    ggtitle("Figure 1c") +
     theme(legend.position = "none")
   p2 <-
     ggplot(amplifications, aes(
@@ -1458,8 +1455,14 @@ if (produce_statistics) {
     alternative = "greater"
   )
   wilcox.test(
-    corParameters[corParameters$condition == "CADD_moderatelyDamaging", ]$corS,
-    corParameters[corParameters$condition == "CADD_highlyDamaging", ]$corS,
+    corParameters[corParameters$condition == "expressed_no0", ]$corS,
+    corParameters[corParameters$condition == "non_expressed_no0", ]$corS,
+    paired = T,
+    alternative = "greater"
+  )
+  wilcox.test(
+    corParameters[corParameters$condition == "CADD_moderatelyDamaging_phred", ]$corS,
+    corParameters[corParameters$condition == "CADD_highlyDamaging_phred", ]$corS,
     paired = T,
     alternative = "less"
   )
@@ -1478,6 +1481,12 @@ if (produce_statistics) {
   wilcox.test(
     corParameters[corParameters$condition == "haploinsufficient", ]$corS,
     corParameters[corParameters$condition == "non_haploinsufficient", ]$corS,
+    paired = T,
+    alternative = "greater"
+  )
+  wilcox.test(
+    corParameters[corParameters$condition == "haploinsufficient_GHIS", ]$corS,
+    corParameters[corParameters$condition == "non_haploinsufficient_GHIS", ]$corS,
     paired = T,
     alternative = "greater"
   )
@@ -1526,8 +1535,7 @@ if (produce_statistics) {
     geom_bar(color = "black",
              stat = "identity",
              position = position_dodge()) +
-    theme_classic() + scale_fill_brewer(palette = "Blues") +
-    ggtitle("Figure 1d")
+    theme_classic() + scale_fill_brewer(palette = "Blues")
   p2 <-
     ggplot(deletions, aes(
       x = as.factor(tumorType),
@@ -1553,18 +1561,21 @@ if (produce_statistics) {
       geom_boxplot() +
       theme_classic() +
       scale_fill_brewer(palette = "Reds") +
-      ggtitle("Figure 1d") +
       geom_jitter()
   )
   print(ggarrange(p1, p2, nrow = 2, ncol = 1))
   dev.off()
   
-  cat(" \n > Producing Fig. 2a \n\n")
-  # figure 2a ----
+  
+  
+  cat(" \n > Producing Fig. 2a-b \n\n")
+  # figure 2a-b ----
   haploinsuf <-
     corParameters[corParameters$condition == "amplifications" |
                     corParameters$condition == "haploinsufficient" |
-                    corParameters$condition == "non_haploinsufficient", ]
+                    corParameters$condition == "non_haploinsufficient" |
+                    corParameters$condition == "haploinsufficient_GHIS" |
+                    corParameters$condition == "non_haploinsufficient_GHIS", ]
   p1 <-
     ggplot(haploinsuf, aes(
       x = as.factor(tumorType),
@@ -1574,8 +1585,7 @@ if (produce_statistics) {
     geom_bar(color = "black",
              stat = "identity",
              position = position_dodge()) +
-    theme_classic() + scale_fill_brewer(palette = "Blues") +
-    ggtitle("Figure 2a")
+    theme_classic() + scale_fill_brewer(palette = "Blues")
   p2 <-
     ggplot(haploinsuf, aes(
       x = as.factor(tumorType),
@@ -1595,10 +1605,47 @@ if (produce_statistics) {
   print(ggarrange(p1, p2, nrow = 2, ncol = 1))
   dev.off()
   
-  cat(" \n > Producing Fig. 2b \n\n")
-  # figure 2b ----
+  cat(" \n > Producing Fig. 2c-d \n\n")
+  # figure 2c-d----
+  haploinsuf <-
+    corParameters[corParameters$condition == "amplifications" |
+                    corParameters$condition == "expressed_no0" |
+                    corParameters$condition == "non_expressed_no0", ]
+  p1 <-
+    ggplot(haploinsuf, aes(
+      x = as.factor(tumorType),
+      y = corS,
+      fill = as.factor(condition)
+    )) +
+    geom_bar(color = "black",
+             stat = "identity",
+             position = position_dodge()) +
+    theme_classic() + scale_fill_brewer(palette = "Blues")
+  p2 <-
+    ggplot(haploinsuf, aes(
+      x = as.factor(tumorType),
+      y = log10(p.corS),
+      fill = condition
+    )) +
+    geom_bar(color = "black",
+             stat = "identity",
+             position = position_dodge()) +
+    theme_classic() + scale_fill_brewer(palette = "Reds")
+  
   pdf(
-    "results/plots/000_paper_plots/00_Fig2b.pdf",
+    "results/plots/000_paper_plots/00_Fig2c.pdf",
+    width = 10,
+    height = 8
+  )
+  print(ggarrange(p1, p2, nrow = 2, ncol = 1))
+  dev.off()
+  
+  
+  
+  cat(" \n > Producing Fig. 2e-f \n\n")
+  # figure 2e-f ----
+  pdf(
+    "results/plots/000_paper_plots/00_Fig2e.pdf",
     width = 10,
     height = 8
   )
@@ -1618,8 +1665,7 @@ if (produce_statistics) {
     geom_bar(color = "black",
              stat = "identity",
              position = position_dodge()) +
-    theme_classic() + scale_fill_brewer(palette = "Blues") +
-    ggtitle("Figure 2b")
+    theme_classic() + scale_fill_brewer(palette = "Blues")
   p2 <-
     ggplot(polycadd, aes(
       x = as.factor(tumorType),
@@ -1646,8 +1692,7 @@ if (produce_statistics) {
     geom_bar(color = "black",
              stat = "identity",
              position = position_dodge()) +
-    theme_classic() + scale_fill_brewer(palette = "Blues") +
-    ggtitle("Figure 2b - CADD")
+    theme_classic() + scale_fill_brewer(palette = "Blues")
   p2 <-
     ggplot(cadd, aes(
       x = as.factor(tumorType),
@@ -1674,8 +1719,7 @@ if (produce_statistics) {
     geom_bar(color = "black",
              stat = "identity",
              position = position_dodge()) +
-    theme_classic() + scale_fill_brewer(palette = "Blues") +
-    ggtitle("Figure 2b - Polyphen")
+    theme_classic() + scale_fill_brewer(palette = "Blues")
   p2 <-
     ggplot(polyphen, aes(
       x = as.factor(tumorType),
@@ -1690,8 +1734,47 @@ if (produce_statistics) {
   print(ggarrange(p1, p2, nrow = 2, ncol = 1))
   dev.off()
   
-  cat(" \n > Producing Fig. 2c \n\n")
-  # figure 2c ----
+  
+  
+  cat(" \n > Producing Fig. 2g-h \n\n")
+  # figure 2g-h----
+  haploinsuf <-
+    corParameters[corParameters$condition == "amplifications" |
+                    corParameters$condition == "synonymous" |
+                    corParameters$condition == "non_synonymous", ]
+  p1 <-
+    ggplot(haploinsuf, aes(
+      x = as.factor(tumorType),
+      y = corS,
+      fill = as.factor(condition)
+    )) +
+    geom_bar(color = "black",
+             stat = "identity",
+             position = position_dodge()) +
+    theme_classic() + scale_fill_brewer(palette = "Blues")
+  p2 <-
+    ggplot(haploinsuf, aes(
+      x = as.factor(tumorType),
+      y = log10(p.corS),
+      fill = condition
+    )) +
+    geom_bar(color = "black",
+             stat = "identity",
+             position = position_dodge()) +
+    theme_classic() + scale_fill_brewer(palette = "Reds")
+  
+  pdf(
+    "results/plots/000_paper_plots/00_Fig2g.pdf",
+    width = 10,
+    height = 8
+  )
+  print(ggarrange(p1, p2, nrow = 2, ncol = 1))
+  dev.off()
+  
+  
+  
+  cat(" \n > Producing Fig. 2i-j \n\n")
+  # figure 2i-j ----
   aggregat <-
     corParameters[corParameters$condition == "amplifications" |
                     corParameters$condition == "aggregation_causing" |
@@ -1705,8 +1788,7 @@ if (produce_statistics) {
     geom_bar(color = "black",
              stat = "identity",
              position = position_dodge()) +
-    theme_classic() + scale_fill_brewer(palette = "Blues") +
-    ggtitle("Figure 2c")
+    theme_classic() + scale_fill_brewer(palette = "Blues")
   p2 <-
     ggplot(aggregat, aes(
       x = as.factor(tumorType),
@@ -1719,15 +1801,17 @@ if (produce_statistics) {
     theme_classic() + scale_fill_brewer(palette = "Reds")
   
   pdf(
-    "results/plots/000_paper_plots/00_Fig2c.pdf",
+    "results/plots/000_paper_plots/00_Fig2i.pdf",
     width = 10,
     height = 8
   )
   print(ggarrange(p1, p2, nrow = 2, ncol = 1))
   dev.off()
   
-  cat(" \n > Producing Fig. 2d \n\n")
-  # figure 2d ----
+  
+  
+  cat(" \n > Producing Fig. 2k-l \n\n")
+  # figure 2k-l ----
   cancergenes <-
     corParameters[corParameters$condition == "amplifications" |
                     corParameters$condition == "remove_OG" |
@@ -1742,8 +1826,7 @@ if (produce_statistics) {
     geom_bar(color = "black",
              stat = "identity",
              position = position_dodge()) +
-    theme_classic() + scale_fill_brewer(palette = "Blues") +
-    ggtitle("Figure 2d")
+    theme_classic() + scale_fill_brewer(palette = "Blues")
   p2 <-
     ggplot(cancergenes, aes(
       x = as.factor(tumorType),
@@ -1756,7 +1839,7 @@ if (produce_statistics) {
     theme_classic() + scale_fill_brewer(palette = "Reds")
   
   pdf(
-    "results/plots/000_paper_plots/00_Fig2d.pdf",
+    "results/plots/000_paper_plots/00_Fig2k.pdf",
     width = 10,
     height = 8
   )

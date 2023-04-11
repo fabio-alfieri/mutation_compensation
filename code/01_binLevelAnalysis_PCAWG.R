@@ -15,9 +15,10 @@ suppressMessages({
   library(parallel)
 })
   
-setwd("~/mountHD/noncoding/")
+# setwd("~/mountHD/noncoding/")
+setwd("../")
 
-scratchMS <- "/home/ieo5099/mountHPC/scratch/MS/falfieri/PCAWG/"
+scratchMS <- "/home/ieo5099/mountHPC/scratch/MS/falfieri/PCAWG/" # replace with correct directory
 fixed_bin_length <- 1000000
 
 results_table_path <- "results/tables/01_binLevel_PCAWG/"

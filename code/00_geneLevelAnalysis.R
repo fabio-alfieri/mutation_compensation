@@ -65,11 +65,11 @@ cat(
 
 produce_tables <- T
 if (opt$tables == "y") {
-  produce_tables <- TRUE
+  produce_tables <- R
 }
 produce_statistics <- F
 if (opt$statistics == "n") {
-  produce_statistics <- FALSE
+  produce_statistics <- T
 }
 
 tumor_types <- c(
@@ -100,8 +100,6 @@ tumor_types <- c(
 )
 
 setwd("../")
-
-mutation_type <- ""
 
 # path for gene-level analysis output
 results_table_path <- "results/tables/00_geneLevelAnalysis/"
@@ -156,16 +154,6 @@ if (produce_tables) {
     cat("  done!\n\n")
     cat("> common patients:", length(common_patients), "\n")
     
-    if(mutation_type == "damaging"){
-      snv_filt <- snv_filt[as.numeric(snv_filt$CADD_raw) >= 3.5,]
-      snv_filt <- snv_filt[!is.na(snv_filt$Chromosome),]
-    }
-    if(mutation_type == "non_damaging"){
-      snv_filt <- snv_filt[as.numeric(snv_filt$CADD_raw) < 3.5,]
-      snv_filt <- snv_filt[!is.na(snv_filt$Chromosome),]
-    }
-    
-    
     # protein coding genes
     proteins <-
       read.table("data/misc/protein-coding_gene.txt", header = FALSE)
@@ -174,6 +162,7 @@ if (produce_tables) {
       read.table("data/misc/CCDS.current_hg19.txt",
                  header = TRUE,
                  sep = "\t")
+    
     # filter just protein coding genes
     coding_regions <-
       coding_regions[coding_regions$gene %in% proteins$V1, ]

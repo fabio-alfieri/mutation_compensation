@@ -22,3 +22,4 @@ dependencies:
   - r-optparse
   - r-ggpubr
   - r-tidyverse
+  - r-parallel

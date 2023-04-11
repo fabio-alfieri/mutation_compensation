@@ -83,6 +83,7 @@ stat_signif <- data.frame()
 cat(" \n > Calculate OG and GO scores and produce Fig. S3\n\n")
 suppressWarnings({
   suppressMessages({
+    model_comparison <- data.frame()
     for (tumor_type in tumor_types) {
       merged_1 <- 36
       bin_values <-
@@ -306,8 +307,12 @@ suppressWarnings({
       
       merged <- full_join(merged, OG.scores, by = "bin_id_merged36")
       
+      # merged[,c(14:18)] <- apply(merged[,c(14:18)], 2, as.numeric)
       merged$cna_freq_ampl <-
         ifelse(is.na(merged$cna_freq_ampl), 0, merged$cna_freq_ampl)
+      # lm <- lm(merged$cna_freq_ampl ~ log10(merged$mutations_norm) + 
+      #            merged$og.score + merged$go.score)
+      # summary(lm)
       
       if (CTR == T) {
         # CONTROL: swap amplifications
@@ -338,11 +343,14 @@ suppressWarnings({
           paste0(bin_values$chr, "_", bin_values$resize)
         
         merged$cna_freq_ampl_CTR <- bin_values$cna_freq_ampl
+        merged$mutations_norm_CTR <- bin_values$mutations_norm
         
         merged$og.go.score <-
           as.numeric(merged$og.score) + as.numeric(merged$go.score)
         merged$mutation.score <-
           1 - log10(merged$mutations_norm) / min(log10(merged$mutations_norm))
+        merged$mutation.score_CTR <-
+          1 - log10(merged$mutations_norm_CTR) / min(log10(merged$mutations_norm_CTR))
         merged$og.go.score.mutations.norm <-
           merged$mutation.score + (as.numeric(merged$og.go.score))
         
@@ -352,23 +360,40 @@ suppressWarnings({
         ctr <- cor.test(merged$og.go.score.mutations.norm,
                         merged$cna_freq_ampl_CTR,
                         method = "spearman")
+        ctr_mut <- cor.test(merged$mutation.score,
+                          merged$cna_freq_ampl,
+                          method = "spearman")
+        ctr_swap.mut <- cor.test(merged$mutation.score_CTR,
+                            merged$cna_freq_ampl,
+                            method = "spearman")
         # plot(merged$og.go.score.mutations.norm, merged$cna_freq_ampl)
+        
+        cor.test(merged$cna_freq_ampl, merged$mutation.score_CTR,
+                 method = "spearman")
         
         stat_estimates_CTR <- rbind(stat_estimates_CTR,
                                     cbind(
                                       tumor_type,
                                       rbind(test$estimate,
-                                            ctr$estimate),
-                                      condition = rbind("test",
-                                                        "CTR_swap.amplification")
+                                            ctr$estimate,
+                                            ctr_mut$estimate,
+                                            ctr_swap.mut$estimate),
+                                      condition = rbind("ampl_CTR~OG.Go.mu_CTR",
+                                                        "ampl_OTHER~OG.Go.mu_CTR",
+                                                        "ampl_CTR~mu_CTR",
+                                                        "ampl_CTR~mu_OTHER")
                                     ))
         stat_signif_CTR <- rbind(stat_signif_CTR,
                                  cbind(
                                    tumor_type,
                                    rbind(test$p.value,
-                                         ctr$p.value),
-                                   condition = rbind("test.p",
-                                                     "CTR_swap.amplification.p")
+                                         ctr$p.value,
+                                         ctr_mut$p.value,
+                                         ctr_swap.mut$p.value),
+                                   condition = rbind("ampl_CTR~OG.Go.mu_CTR.p",
+                                                     "ampl_OTHER~OG.Go.mu_CTR.p",
+                                                     "ampl_CTR~mu_CTR.p",
+                                                     "ampl_CTR~mu_OTHER.p")
                                  ))
       }
       
@@ -394,13 +419,134 @@ suppressWarnings({
       cor.test(merged$cna_freq_ampl, merged$mutation.score, method = "spearman")
       # plot(merged$cna_freq_ampl, as.numeric(merged$mutation.score))
       
-      
       merged$og.go.score.mutations.norm <-
         merged$mutation.score + (as.numeric(merged$og.go.score))
       mu.og.go_score <- cor.test(merged$og.go.score.mutations.norm,
                                  merged$cna_freq_ampl,
                                  method = "spearman")
       # plot(merged$og.go.score.mutations.norm, merged$cna_freq_ampl)
+      
+      lmm.mu <- lm(cna_freq_ampl ~ 
+                       as.numeric(mutation.score), data = merged)
+      lmm.go.og <- lm(cna_freq_ampl ~ 
+                     as.numeric(go.score) +
+                       as.numeric(og.score), data = merged)
+      lmm.go.og.mu <- lm(cna_freq_ampl ~ 
+                       as.numeric(go.score) +
+                       as.numeric(og.score) +
+                       as.numeric(mutation.score), data = merged)
+      
+      # lmtest::lrtest(lmm.mu, lmm.go.og)
+      lmtest::lrtest(lmm.go.og, lmm.go.og.mu)
+      
+      lmm.mu <- summary(lmm.mu)
+      lmm.go.og <- summary(lmm.go.og)
+      lmm.go.og.mu <- summary(lmm.go.og.mu)
+      
+      lmm.mu_p <- pf(lmm.mu$fstatistic[1],
+              lmm.mu$fstatistic[2],
+              lmm.mu$fstatistic[3],lower.tail=F)
+      lmm.go.og_p <- pf(lmm.go.og$fstatistic[1],
+                        lmm.go.og$fstatistic[2],
+                        lmm.go.og$fstatistic[3],lower.tail=F)
+      lmm.go.og.mu_p <- pf(lmm.go.og.mu$fstatistic[1],
+                           lmm.go.og.mu$fstatistic[2],
+                           lmm.go.og.mu$fstatistic[3],lower.tail=F)
+      # glmm.mu <- glm(cna_freq_ampl ~ 
+      #               as.numeric(mutations_norm), data = merged, family = binomial)
+      # glmm.mu.goog <- glm(cna_freq_ampl ~ 
+      #               as.numeric(mutations_norm) +
+      #               as.numeric(og.go.score), data = merged, family = binomial)
+      # glmm.mu.go.og <- glm(cna_freq_ampl ~ 
+      #               as.numeric(mutations_norm) +
+      #                 as.numeric(go.score) +
+      #                 as.numeric(og.score), data = merged, family = binomial)
+      # 
+      # simpler.model1 <- glm(cna_freq_ampl ~ 
+      #                        as.numeric(og.go.score), 
+      #                      data = merged, family = binomial)
+      # simpler.model2 <- glm(cna_freq_ampl ~ 
+      #                        as.numeric(go.score) +
+      #                         as.numeric(og.score), 
+      #                      data = merged, family = binomial)
+      # 
+      # lmtest::lrtest(glmm.mu.goog, glmm.mu.go.og)
+      # lmtest::lrtest(glmm.mu, glmm.mu.go.og)
+      # 
+      # lmtest::lrtest(simpler.model1, glmm.mu.go.og)
+      # lmtest::lrtest(simpler.model2, glmm.mu.go.og)
+      # 
+      # summary(simpler.model2)
+      # sqrt(sum(simpler.model1$residuals^2)/length(simpler.model1$residuals))
+      # sqrt(sum(simpler.model2$residuals^2)/length(simpler.model2$residuals))
+      # sqrt(sum(glmm.mu.go.og$residuals^2)/length(glmm.mu.go.og$residuals))
+      # sqrt(sum(glmm.mu.goog$residuals^2)/length(glmm.mu.goog$residuals))
+      # 
+      # plot(merged$cna_freq_ampl, merged$og.go.score.mutations.norm)
+      
+      
+      mutation.score <- merged$mutation.score
+      og.score <- merged$og.score
+      go.score <- merged$go.score
+      cna_freq_ampl <- merged$cna_freq_ampl
+      
+      monotonic_finalmodel <- lm(rank(cna_freq_ampl) ~ 
+                                   rank(mutation.score) 
+                                 + rank(og.score) 
+                                 + rank(go.score))
+      summary(monotonic_finalmodel)
+      # monotonic_finalmodel <- lm(rank(cna_freq_ampl) ~ poly(rank(mutation.score), 1) +  
+      #                              poly(rank(og.score), 1) +  poly(rank(go.score), 1))
+      # summary(monotonic_finalmodel)
+      monotonic_mumodel <- lm(rank(cna_freq_ampl) ~ rank(mutation.score))
+      summary(monotonic_mumodel)
+      monotonic_oggomodel <- lm(rank(cna_freq_ampl) ~ rank(og.score) +  rank(go.score))
+      summary(monotonic_oggomodel)
+
+      lmtest::lrtest(monotonic_finalmodel, monotonic_oggomodel)
+      
+      monotonic_finalmodel <- summary(monotonic_finalmodel)
+      monotonic_mumodel <- summary(monotonic_mumodel)
+      monotonic_oggomodel <- summary(monotonic_oggomodel)
+      
+      monotonic_finalmodel_p <- pf(monotonic_finalmodel$fstatistic[1],
+                                   monotonic_finalmodel$fstatistic[2],
+                                   monotonic_finalmodel$fstatistic[3],lower.tail=F)
+      monotonic_mumodel_p <- pf(monotonic_mumodel$fstatistic[1],
+                                monotonic_mumodel$fstatistic[2],
+                                monotonic_mumodel$fstatistic[3],lower.tail=F)
+      monotonic_oggomodel_p <- pf(monotonic_oggomodel$fstatistic[1],
+                                  monotonic_oggomodel$fstatistic[2],
+                                  monotonic_oggomodel$fstatistic[3],lower.tail=F)
+      
+      model_comparison <- rbind(model_comparison, 
+                                cbind(mu = sqrt(lmm.mu$r.squared), 
+                                      mu.p = lmm.mu_p,
+                                      og.go = sqrt(lmm.go.og$r.squared),
+                                      og.go.p = lmm.go.og_p,
+                                      final = sqrt(lmm.go.og.mu$r.squared),
+                                      final.p = lmm.go.og.mu_p,
+                                      tumor_type = tumor_type,
+                                      type = "linear"),
+                             cbind(mu = sqrt(monotonic_mumodel$r.squared),
+                                   mu.p = monotonic_mumodel_p,
+                                   og.go = sqrt(monotonic_oggomodel$r.squared),
+                                   og.go.p = monotonic_oggomodel_p,
+                                   final = sqrt(monotonic_finalmodel$r.squared),
+                                   final.p = monotonic_finalmodel_p,
+                                   tumor_type = tumor_type,
+                                   type = "rank"))
+      
+      # do the normal lm model
+            
+      library(scam)
+      ggplot(merged, aes(x = cna_freq_ampl, y = as.numeric(og.go.score.mutations.norm))) +
+        geom_point() +
+        geom_smooth(method = 'scam',
+                    formula = y ~ s(x, k = 4, bs = 'mdc'),
+                    se = T) +
+        geom_smooth()
+        # geom_smooth(method = "gam")
       
       merged[, 14:22] <- apply(merged[, 14:22], 2, as.numeric)
       
@@ -576,6 +722,7 @@ suppressWarnings({
   })
 })
 
+
 colnames(stat_estimates) <- c("tumor_types", "rho", "condition")
 stat_estimates$rho <- as.numeric(stat_estimates$rho)
 
@@ -600,6 +747,72 @@ dev.off()
 if (CTR == T) {
   cat(" \n > Producing Fig. S4 \n\n")
   
+  model_comparison_toplot <- as.data.frame(rbind(cbind(t(t(model_comparison[,1])), 
+                                                       t(t(model_comparison[,8])), 
+                                                       t(t(model_comparison[,7])), 
+                                                       colnames(model_comparison)[1]),
+                                                 cbind(t(t(model_comparison[,3])), 
+                                                       t(t(model_comparison[,8])), 
+                                                       t(t(model_comparison[,7])), 
+                                                       colnames(model_comparison)[3]),
+                                                 cbind(t(t(model_comparison[,5])), 
+                                                       t(t(model_comparison[,8])), 
+                                                       t(t(model_comparison[,7])), 
+                                                       colnames(model_comparison)[5])))
+  model_comparison_pval_toplot <- as.data.frame(rbind(cbind(t(t(model_comparison[,2])), 
+                                                            t(t(model_comparison[,8])), 
+                                                            t(t(model_comparison[,7])), 
+                                                            colnames(model_comparison)[2]),
+                                                      cbind(t(t(model_comparison[,4])), 
+                                                            t(t(model_comparison[,8])), 
+                                                            t(t(model_comparison[,7])), 
+                                                            colnames(model_comparison)[4]),
+                                                      cbind(t(t(model_comparison[,6])), 
+                                                            t(t(model_comparison[,8])), 
+                                                            t(t(model_comparison[,7])), 
+                                                            colnames(model_comparison)[6])))
+  
+  model_comparison_toplot$V4 <- as.factor(model_comparison_toplot$V4)
+  levels(model_comparison_toplot$V4) <- c("ampl.freq ~ GO + OG + mu",
+                                          "ampl.freq ~ mu",
+                                          "ampl.freq ~ GO + OG")
+  
+  p1 <- ggplot(model_comparison_toplot[model_comparison_toplot$V2 == "linear",], aes(y = paste0(V3, "_", V2), x = as.numeric(V1), fill = V4)) +
+    geom_bar(stat = "identity", position = "dodge") +
+    theme_classic() +
+    ylab("") +
+    xlab("Correlation estimate") +
+    scale_fill_brewer(palette = "Blues")
+  p2 <- ggplot(model_comparison_pval_toplot[model_comparison_pval_toplot$V2 == "linear",], aes(y = paste0(V3, "_", V2), x = log10(as.numeric(V1)), fill = V4)) +
+    geom_bar(stat = "identity", position = "dodge") +
+    theme_classic() +
+    ylab("") +
+    xlab("log10 ( p-value )") +
+    scale_fill_brewer(palette = "Reds") +
+    theme(legend.position = "none")
+  g1 <- ggarrange(p2, p1, nrow = 1, widths = c(0.8,1))
+  
+  p1 <- ggplot(model_comparison_toplot[model_comparison_toplot$V2 == "rank",], aes(y = paste0(V3, "_", V2), x = as.numeric(V1), fill = V4)) +
+    geom_bar(stat = "identity", position = "dodge") +
+    theme_classic() +
+    ylab("") +
+    xlab("Correlation estimate") +
+    scale_fill_brewer(palette = "Blues")
+  p2 <- ggplot(model_comparison_pval_toplot[model_comparison_pval_toplot$V2 == "rank",], aes(y = paste0(V3, "_", V2), x = log10(as.numeric(V1)), fill = V4)) +
+    geom_bar(stat = "identity", position = "dodge") +
+    theme_classic() +
+    ylab("") +
+    xlab("log10 ( p-value )") +
+    scale_fill_brewer(palette = "Reds") +
+    theme(legend.position = "none")
+  g2 <- ggarrange(p2, p1, nrow = 1, widths = c(0.8,1))
+  
+  pdf(file = "potential_reviews/00_actualRevisions/PAAD_BRCA_reviewer4.pdf", 
+      width = 11)
+  ggarrange(g1, g2, ncol = 1)
+  dev.off()
+  
+  
   colnames(stat_estimates_CTR) <-
     c("tumor_types", "rho", "condition")
   stat_estimates_CTR$rho <- as.numeric(stat_estimates_CTR$rho)
@@ -608,18 +821,31 @@ if (CTR == T) {
     c("tumor_types", "p.val", "condition")
   stat_signif_CTR$p.val <- as.numeric(stat_signif_CTR$p.val)
   
+  stat_estimates_CTR$condition <- factor(stat_estimates_CTR$condition, 
+                                         levels = c("ampl_CTR~mu_OTHER",
+                                                    "ampl_CTR~mu_CTR",
+                                                    "ampl_OTHER~OG.Go.mu_CTR",
+                                                    "ampl_CTR~OG.Go.mu_CTR"))
+  stat_signif_CTR$condition <- factor(stat_signif_CTR$condition, 
+                                      levels = c("ampl_CTR~mu_OTHER.p",
+                                                 "ampl_CTR~mu_CTR.p",
+                                                 "ampl_OTHER~OG.Go.mu_CTR.p",
+                                                 "ampl_CTR~OG.Go.mu_CTR.p"))
+  
   p1 <-
     ggplot(stat_estimates_CTR, aes(x = as.factor(tumor_types), y = rho)) +
     geom_bar(stat = "identity", position = "dodge", aes(fill = as.factor(condition))) +
-    theme_classic() + scale_fill_brewer(palette = "Blues")
+    theme_classic() + scale_fill_brewer(palette = "Blues") +
+    coord_flip() #+ theme(legend.position = "none")
   
   p2 <-
     ggplot(stat_signif_CTR, aes(x = as.factor(tumor_types), y = log10(p.val))) +
     geom_bar(stat = "identity", position = "dodge", aes(fill = as.factor(condition))) +
-    theme_classic() + scale_fill_brewer(palette = "Reds")
+    theme_classic() + scale_fill_brewer(palette = "Reds") +
+    coord_flip() + theme(legend.position = "none")
   
   pdf("results/plots/000_paper_plots/00_SupplementaryFig4.pdf",
-      height = 10)
-  print(ggarrange(p1, p2, ncol = 1))
+      height = 10, width = 14)
+  print(ggarrange(p2, p1, ncol = 2))
   dev.off()
 }

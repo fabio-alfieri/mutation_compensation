@@ -64,7 +64,7 @@ Rscript 02_statisticalAnalysis.R --help
 Rscript 02_statisticalAnalysis.R --tables y --statistics y
 ```
 
-Script and detailed parameters:
+Scripts and detailed parameters:
 
 | Rscript | Description | Parameters |
 | --- | --- | --- |

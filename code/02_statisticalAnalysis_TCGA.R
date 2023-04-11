@@ -157,8 +157,7 @@ if (produce_tables) {
   tierfinal <- data.frame()
   
   # segmentation lengths (default is 36Mbp)
-  segment_lengths <- c(#15,18,20,22,25,28,30,33,
-                       36)
+  segment_lengths <- c(15,18,20,22,25,28,30,33,36)
   
   for(segment_cutoff_muts in segment_cutoffs_muts){
     cat("\n > MUTATION segment_mean cutoff: ", segment_cutoff_muts)
@@ -178,63 +177,32 @@ if (produce_tables) {
         } else{
           conditions <- c(
             "amplifications"
-            # ,"no_hypermut"
-            # ,"deletions"
-            # ,"missense"
             
-            # ,"expressed_GTEX_TPM"
-            # ,"non_expressed_GTEX_TPM"
-            # ,"expressed_GTEX"
-            # ,"non_expressed_GTEX"
-            # ,"expressed010"
-            # ,"non_expressed010"
-            # ,"expressed015"
-            # ,"non_expressed015"
-            # ,"expressed025"
-            # ,"non_expressed025"
-            # ,"expressed_no0"
-            # ,"non_expressed_no0"
+            ,"expressed_no0"
+            ,"non_expressed_no0"
 
-            # ,"silent"
-            # ,"synonymous"
-            # ,"non_synonymous"
+            ,"silent"
+            ,"synonymous"
+            ,"non_synonymous"
             
-            # ,"all_mutations_mutsWithinCNA"
-            # ,"removeWGD"
-            # ,"deletions"
+            ,"aggregation_causing"
+            ,"non_aggregation_causing"
 
-            # ,"aggregation_causing"
-            # ,"non_aggregation_causing"
+            ,"missense"
+            ,"remove_OG"
+            ,"remove_TSG"
+            ,"remove_BOTH"
 
-            # ,"missense"
-            # ,"remove_OG"
-            # ,"remove_TSG"
-            # ,"remove_BOTH"
-            # 
-            # ,"polyphen_highlyDamaging"
-            # ,"polyphen_moderatelyDamaging"
-            # ,"CADD_highlyDamaging"
-            # ,"CADD_moderatelyDamaging"
-
-            # ,"polyphen_highlyDamaging_new"
-            # ,"polyphen_moderatelyDamaging_new"
-            # ,"CADD_highlyDamaging_phred"
-            # ,"CADD_moderatelyDamaging_phred"
+            ,"polyphen_highlyDamaging"
+            ,"polyphen_moderatelyDamaging"
+            ,"CADD_highlyDamaging_phred"
+            ,"CADD_moderatelyDamaging_phred"
 
             ,"haploinsufficient"
             ,"non_haploinsufficient"
             ,"haploinsufficient_GHIS"
             ,"non_haploinsufficient_GHIS"
-            #
-            # ,"haploinsufficient_synonymous"
-            # ,"non_haploinsufficient_synonymous"
-            # ,"haploinsufficient_non_synonymous"
-            # ,"non_haploinsufficient_non_synonymous"
-            
-            # ,"haploinsufficient_damaging"
-            # ,"haploinsufficient_nondamaging"
-            # # 
-            # ,"non_haploinsufficient_damaging"
+            ,"haploinsufficient_synonymous"
           )
         }
         

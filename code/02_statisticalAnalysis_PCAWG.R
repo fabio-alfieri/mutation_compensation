@@ -3,9 +3,6 @@
 # This script produces as output mutation score and amplification frequency for
 # each chromosome (for each tumor type) with different bin sizes and conditions
 
-# rm(list=ls())
-gc(full=T)
-
 suppressMessages({
   require(ggplot2)
   require(stringr)
@@ -73,7 +70,6 @@ if (opt$statistics == "n") {
 }
 
 setwd("../")
-# setwd("~/mountHD/noncoding")
 
 tumor_types <- paste0(c(
   "Breast",
@@ -95,7 +91,7 @@ normLEN <- F
 intron_intergenic <- T
 
 if (F) {
-  columns <- read.table("/home/ieo5099/mountHPC/scratch/MS/falfieri/PCAWG/patient_per_tumortype.tsv",
+  columns <- read.table("data/PCAWG/patient_per_tumortype.tsv",
                         skip = 1)
   tumor_types <- levels(factor(columns$V1))
   tumor_types <- as.data.frame(cbind(do.call(rbind, str_split(tumor_types, "-")), tumor_types))

@@ -175,33 +175,41 @@ if (produce_tables) {
             ,"deletions")
         } else{
           conditions <- c(
-            "amplifications"
-            
-            ,"expressed_no0"
-            ,"non_expressed_no0"
-
-            ,"silent"
-            ,"synonymous"
-            ,"non_synonymous"
+            "all_mutations"
             
             ,"aggregation_causing"
             ,"non_aggregation_causing"
-
-            ,"missense"
+            
+            ,"expressed_no0"
+            ,"non_expressed_no0"
+            
+            ,"synonymous"
+            ,"non_synonymous"
+            # "silent"
+            
+            # "missense"
             ,"remove_OG"
             ,"remove_TSG"
             ,"remove_BOTH"
-
+            
             ,"polyphen_highlyDamaging"
             ,"polyphen_moderatelyDamaging"
             ,"CADD_highlyDamaging_phred"
             ,"CADD_moderatelyDamaging_phred"
-
+            
             ,"haploinsufficient"
             ,"non_haploinsufficient"
             ,"haploinsufficient_GHIS"
             ,"non_haploinsufficient_GHIS"
-            ,"haploinsufficient_synonymous"
+            
+            # "haploinsufficient_damaging"
+            # "haploinsufficient_nondamaging"
+            # "non_haploinsufficient_damaging"
+            
+            # "haploinsufficient_synonymous"
+            # "non_haploinsufficient_synonymous"
+            # "haploinsufficient_non_synonymous"
+            # "non_haploinsufficient_non_synonymous"
           )
         }
         

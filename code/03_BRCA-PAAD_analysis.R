@@ -21,8 +21,6 @@ averageChrCoverage <-
   read.table("data/FireBrowse_CNAs/averageChrCoverage.txt")
 averageChrCoverage <- averageChrCoverage[c(1:22),]
 
-length_bin_CNA <- 1000000
-
 cat(" \n > Calculate correlations between mu score and amplification frequency at 36Mbp\n\n")
 genes_in_bin <- data.frame()
 suppressMessages({
@@ -32,9 +30,7 @@ suppressMessages({
         paste0(
           "data/ChromosomeGeneStructure/chr_",
           chr,
-          "_binSize_",
-          length_bin_CNA,
-          ".txt"
+          "_binSize_1000000.txt"
         )
       )
     bin_gene <- bin_gene[bin_gene$gene_count != 0,]

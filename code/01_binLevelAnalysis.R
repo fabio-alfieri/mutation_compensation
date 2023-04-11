@@ -52,7 +52,7 @@ tumor_types <- c(
 )
     
 mutation_types <- c(
-  # "all_mutations"
+  "all_mutations"
   
   # "aggregation_causing"
   # "non_aggregation_causing"

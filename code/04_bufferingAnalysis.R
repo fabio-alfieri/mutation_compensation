@@ -1,12 +1,17 @@
-# rm(list=ls())
-gc(full=T)
+# BUFFERING ANALYSIS
 
-library(data.table)
-library(stringr)
-library(ggplot2)
-library(dplyr)
+suppressMessages({
+  library(data.table)
+  library(stringr)
+  library(ggplot2)
+  library(dplyr)
+  library(parallel)
+})
 
-setwd("/home/ieo5099/Desktop_linux/mutation_compensation/")
+cat("\n\n > This script provides the degree of buffering of mutations within different segment's allele copy number \n\n")
+
+setwd("../")
+# setwd("/home/ieo5099/Desktop_linux/mutation_compensation/")
 
 mutations_wCCF <-
   fread(paste0("data/misc/PCAWG_mutations_wCCF_allTumorTypes.tsv"), sep = "\t",
@@ -206,9 +211,6 @@ buffering_kar <- function(ta) {
   
   ta <-
     rbind(
-      # ta1.0,
-      # ta1.1,
-      # ta2.0,
       ta2.1,
       ta2.2,
       ta3.0,
@@ -312,7 +314,6 @@ ggplot(final_merged_timing, aes(x = Var1, y = prop/2, fill = Var2)) +
   xlab("Tumor types") +
   ylab("%")
 dev.off()
-
 
 # w diploid ----
 noncoding_timing <- buffering_wdiploid_kar(noncoding)

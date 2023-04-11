@@ -3,6 +3,9 @@
 # This script produces as output mutation score and amplification frequency for
 # each chromosome (for each tumor type)
 
+# rm(list=ls())
+gc(full=T)
+
 suppressMessages({
   library(readxl)
   library(tibble)
@@ -14,6 +17,7 @@ suppressMessages({
   library(dplyr)
   library(ggExtra)
   library(crayon)
+  library(parallel)
 })
 
 cat("\n\n > This script calculates mu score and amplification frequency for each 1Mbp bin \n\n")
@@ -22,20 +26,20 @@ cat(
 )
 
 setwd("../")
+# setwd("/home/ieo5099/Desktop_linux/mutation_compensation/")
 
 tumor_types <- c(
-  "SKCM",
+  "BRCA",
   "LUAD",
   "LUSC",
-  "BRCA",
   "CESC",
   "THCA",
   "HNSC",
   "PAAD",
   "COADREAD",
   "GBMLGG",
-  # #
-  "OV",
+  # # #
+  "SKCM",
   "BLCA",
   "PCPG",
   "PRAD",
@@ -47,55 +51,137 @@ tumor_types <- c(
   "LIHC",
   "ESCA",
   "STAD",
-  "UCS"
+  "UCS",
+  "OV"
 )
-
+    
 mutation_types <- c(
-  "all_mutations",
-  "aggregation_causing",
-  "non_aggregation_causing",
-  "missense",
-  "remove_OG",
-  "remove_TSG",
-  "remove_BOTH",
-  "polyphen_highlyDamaging",
-  "polyphen_moderatelyDamaging",
-  "CADD_highlyDamaging",
-  "CADD_moderatelyDamaging",
-  "haploinsufficient",
-  "non_haploinsufficient"
+  # "all_mutations"
+  # "no_hypermut"
+  # "all_mutations_mutsWithinCNA"
+  # "removeWGD"
+
+  # "haploinsufficient_GHIS"
+  # "non_haploinsufficient_GHIS"
+  
+  # "aggregation_causing"
+  # "non_aggregation_causing"
+  
+  # "expressed010"
+  # "non_expressed010"
+  # "expressed_no0"
+  # "non_expressed_no0"
+  # "expressed_GTEX"
+  # "non_expressed_GTEX"
+  # "expressed_GTEX_TPM"
+  # "non_expressed_GTEX_TPM"
+
+  # "synonymous"
+  # "non_synonymous"
+  # "silent"
+  
+  # "missense"
+  # "remove_OG"
+  # "remove_TSG"
+  # "remove_BOTH"
+  
+  # "polyphen_highlyDamaging"
+  # "polyphen_moderatelyDamaging"
+  # "polyphen_highlyDamaging_new"
+  # "polyphen_moderatelyDamaging_new"
+  # "CADD_highlyDamaging"
+  # ,"CADD_moderatelyDamaging"
+  # "CADD_highlyDamaging_phred"
+  # ,"CADD_moderatelyDamaging_phred"
+  
+  # "haploinsufficient"
+  # "non_haploinsufficient"
+  # "haploinsufficient_damaging"
+  # "haploinsufficient_nondamaging"
+  # "non_haploinsufficient_damaging"
+  
+  # "haploinsufficient_synonymous"
+  # "non_haploinsufficient_synonymous"
+  # "haploinsufficient_non_synonymous"
+  # "non_haploinsufficient_non_synonymous"
+  
+  # NOT WORKING
+  # "haploinsufficient_expressed"
+  # "haploinsufficient_non_expressed"
+  # "non_haploinsufficient_expressed"
+  # "non_haploinsufficient_non_expressed"
+  
+  # "haploinsufficient_diffCutoff"
+  # "non_haploinsufficient_diffCutoff"
 )
 
 cat("\n\n Gene and mutation types are:\n\n")
 print(mutation_types)
 
-fixed_bin_length <-
-  1000000 # segmentation length (set at default 1 Mbp)
+fixed_bin_length <- 1000000 # segmentation length (set at 1 Mbp)
+
+# 5 10 20 30
+segment_cutoff <- 20
+cat("\n\n segment cutoff:", segment_cutoff, "\n\n")
+stringent_mutations <- F
+
+cores <- 15
+# cores <- length(tumor_types)-8
+
+# produce HAPLOINSUFFICIENT_GHIS score table
+# ghis <- as.data.frame(readxl::read_xlsx("data/misc/nar-03716-met-n-2014-File006.xlsx", sheet = 3))
+# colnames(ghis) <- c("ENSEMBL", "GHIS")
+# library(org.Hs.eg.db)
+# genes <- as.vector(ghis[,1])
+# annots <- select(org.Hs.eg.db, keys=genes,
+#                  columns="SYMBOL", keytype="ENSEMBL")
+# result <- merge(ghis, annots, by.x="ENSEMBL", by.y="ENSEMBL")
+# colnames(result) <- c("ENSEMBL", "GHIS", "Hugo_Symbol")
+# write.table(result, file = "data/misc/ghis_scores.tsv", sep = "\t", quote = F, row.names = F)
+
 
 for (mutation_type in mutation_types) {
+  # compute mutations even in amplified and deleted regions
+  if(mutation_type == "all_mutations_mutsWithinCNA"){
+    mut_withinCNA <- T
+  }else{
+    mut_withinCNA <- F
+  }
+  
   # set/create the result folder according to mutation_type
   results_table_path <-
     paste0("results/tables/01_binLevelAnalysis/",
            mutation_type,
-           "_vs_CN/")
+           "_vs_CN",ifelse(segment_cutoff=="20","",paste0("_0",segment_cutoff)),"/")                                                             ###### ADDED 025 HERE!!!!
   system(paste0("mkdir -p ", results_table_path))
   
   ## >> 1st Loop: cancer types << ----
-  for (tumor_type in tumor_types) {
+  # for (tumor_type in tumor_types) {
+  mclapply(tumor_types, mc.cores = cores, function(tumor_type){
     ## 1st Loop: load sCNAs and SNVs files ----
     cat(" \n\n\n >>>>>>>>>>>>>>>>>>>><<<<<<<<<<<<<<<<<<< \n")
     cat(" >     ----------", paste0(tumor_type, " ---------- \n"))
     
     # Load SNVs file
-    cat("\n > Load Mutation File \n")
+    cat("\n > Load", tumor_type, "Mutation File \n")
     snv <-
       read.csv(file = paste0("data/FireBrowse_SNVs/", tumor_type, "_mutations.csv"))
     snv <-
-      snv[!duplicated(snv[, c(6, 7, 8, 9, 17)]),] # remove dupicated mutations in the same patient
-    cat("  done!")
+      snv[!duplicated(snv[, c(6, 7, 8, 9, 17)]),] # remove duplicated mutations in the same patient
+    # cat("  done!")
+    
+    # filter for hypermutated patients
+    if(mutation_type == "no_hypermut"){
+      # based on definition --
+      snv <- snv[snv$patient_id %in% 
+                   names(table(snv$patient_id)[table(snv$patient_id)/691 <= 6]),]
+      # based on quantile --
+      # snv <- snv[snv$patient_id %in% names(table(snv$patient_id) <= 
+      #                                        quantile(sort(table(snv$patient_id)), prob = .95)),]
+    }
     
     # Load CNAs file
-    cat("\n > Load SCNA File \n")
+    cat("\n > Load", tumor_type, "SCNA File \n")
     scna <-
       read.delim(
         paste0(
@@ -111,23 +197,286 @@ for (mutation_type in mutation_types) {
     # keep patients with both snv and scna data
     scna <-
       scna[scna$patient_id %in% snv$patient_id,]
+    
+    if(mutation_type == "removeWGD"){
+      absolute <- read_tsv(file = "potential_reviews/07_TEST_add_geneExpr/TCGA_mastercalls.abs_tables_JSedit.fixed.txt")
+      # hist(absolute[substr(absolute$sample, 1, 12) %in% common_patients,]$`Genome doublings`)
+      scna <- scna[scna$patient_id %in% substr(absolute[absolute$ploidy < 3,]$sample, 1, 12),]
+      snv_filt <- snv_filt[snv_filt$patient_id %in% substr(absolute[absolute$ploidy < 3,]$sample, 1, 12),]
+    }
+    
     common_patients <-
       levels(as.factor(snv[snv$patient_id %in% scna$patient_id,]$patient_id))
     # keep only non copy-neutral segments (amplified or deleted)
     scna <-
-      scna[scna$Segment_Mean >= 0.2 | scna$Segment_Mean <= -0.2,]
+      scna[scna$Segment_Mean >= as.numeric(segment_cutoff)/100 | 
+             scna$Segment_Mean <= -as.numeric(segment_cutoff)/100,]
     
-    cat("\n  done!")
-    cat("\n > common patients:", length(common_patients))
+    # cat("\n  done!")
+    # cat("\n > common", tumor_type, "patients:", length(common_patients))
     
     ## 1st Loop: filter for gene properties ----
-    cat("\n > Filter for gene properties \n")
+    # cat("\n > Filter for gene properties \n")
     if (mutation_type == "all_mutations") {
-      cat(" no gene filtering")
+      # cat(" no gene filtering")
     }
     
+    if (mutation_type == "expressed010") {
+      # cat("\n Filter for gene type: expressed \n")
+      tpm <- readRDS(file = "data/TCGA_tpm/PANCANCER_tpm_mean.rds.gz")
+      tpm <- tpm[[tumor_type]]
+      tpm <- tpm[tpm$median > quantile(tpm$median, prob = 0.05),]
+      snv_filt <-
+        snv_filt[snv_filt$Hugo_Symbol %in% tpm$`Approved symbol`,]
+      cat("Removed", dim(snv)[1] - dim(snv_filt)[1], "mutations")
+    }
+    if (mutation_type == "non_expressed010") {
+      # cat("\n Filter for gene type: expressed \n")
+      tpm <- readRDS(file = "data/TCGA_tpm/PANCANCER_tpm_mean.rds.gz")
+      tpm <- tpm[[tumor_type]]
+      tpm <- tpm[tpm$median <= quantile(tpm$median, prob = 0.05),]
+      snv_filt <-
+        snv_filt[snv_filt$Hugo_Symbol %in% tpm$`Approved symbol`,]
+      cat("Removed", dim(snv)[1] - dim(snv_filt)[1], "mutations")
+    }
+    if (mutation_type == "expressed_no0") {
+      # cat("\n Filter for gene type: expressed \n")
+      tpm <- readRDS(file = "data/TCGA_tpm/PANCANCER_tpm_mean.rds.gz")
+      tpm <- tpm[[tumor_type]]
+      tpm <- tpm[tpm$median != 0,]
+      snv_filt <-
+        snv_filt[snv_filt$Hugo_Symbol %in% tpm$`Approved symbol`,]
+      cat("Removed", dim(snv)[1] - dim(snv_filt)[1], "mutations")
+    }
+    if (mutation_type == "non_expressed_no0") {
+      # cat("\n Filter for gene type: expressed \n")
+      tpm <- readRDS(file = "data/TCGA_tpm/PANCANCER_tpm_mean.rds.gz")
+      tpm <- tpm[[tumor_type]]
+      tpm <- tpm[tpm$median == 0,]
+      snv_filt <-
+        snv_filt[snv_filt$Hugo_Symbol %in% tpm$`Approved symbol`,]
+      cat("Removed", dim(snv)[1] - dim(snv_filt)[1], "mutations")
+    }
+    
+    
+    if (mutation_type == "non_expressed_GTEX"){
+      if (!exists("gtex_annot")){
+        suppressMessages({
+          library(org.Hs.eg.db)
+          library("annotables") 
+        })
+        gtex <- read.table("potential_reviews/GTEx_Analysis_2017-06-05_v8_RNASeQCv1.1.9_gene_median_tpm.gct",
+                           sep = "\t")
+        colnames(gtex) <- gtex[1,]
+        gtex <- gtex[-1,]
+        gtex_annot <- gtex %>% 
+          dplyr::inner_join(grch37, by = c("Description" = "symbol")) %>%
+          dplyr::filter(biotype == "protein_coding")
+      }
+      if (tumor_type == "COADREAD"){
+        # hist(as.numeric(gtex_annot$`Colon - Transverse`), breaks = 100000, xlim = c(0,10))
+        snv_filt <-
+          snv_filt[snv_filt$Hugo_Symbol %in% 
+                     gtex_annot[gtex_annot$`Colon - Sigmoid` == 0,]$Description,]
+        # cat("Removed", dim(snv)[1] - dim(snv_filt)[1], "mutations")
+      }else if (tumor_type == "LUSC" | tumor_type == "LUAD"){
+        snv_filt <-
+          snv_filt[snv_filt$Hugo_Symbol %in% 
+                     gtex_annot[gtex_annot$Lung == 0,]$Description,]
+      }else if (tumor_type == "HNSC"){
+        snv_filt <-
+          snv_filt[snv_filt$Hugo_Symbol %in% 
+                     gtex_annot[gtex_annot$`Esophagus - Mucosa` == 0,]$Description,]
+      }else if (tumor_type == "PAAD"){
+        snv_filt <-
+          snv_filt[snv_filt$Hugo_Symbol %in% 
+                     gtex_annot[gtex_annot$Pancreas == 0,]$Description,]
+      }else if (tumor_type == "GBMLGG"){
+        snv_filt <-
+          snv_filt[snv_filt$Hugo_Symbol %in% 
+                     gtex_annot[gtex_annot$`Brain - Cortex` == 0,]$Description,]
+      }else if (tumor_type == "CESC"){
+        # gtex$`Cervix - Ectocervix`
+        snv_filt <-
+          snv_filt[snv_filt$Hugo_Symbol %in% 
+                     gtex_annot[gtex_annot$`Cervix - Endocervix` == 0,]$Description,]
+      }else if (tumor_type == "BRCA"){
+        snv_filt <-
+          snv_filt[snv_filt$Hugo_Symbol %in% 
+                     gtex_annot[gtex_annot$`Breast - Mammary Tissue` == 0,]$Description,]
+      }else if (tumor_type == "THCA"){
+        snv_filt <-
+          snv_filt[snv_filt$Hugo_Symbol %in% 
+                     gtex_annot[gtex_annot$Thyroid == 0,]$Description,]
+      }
+    }
+    if (mutation_type == "non_expressed_GTEX_TPM"){
+      if (!exists("gtex_annot")){
+        suppressMessages({
+        library(org.Hs.eg.db)
+        library("annotables") 
+          })
+        gtex <- read.table("potential_reviews/GTEx_Analysis_2017-06-05_v8_RNASeQCv1.1.9_gene_median_tpm.gct",
+                           sep = "\t")
+        colnames(gtex) <- gtex[1,]
+        gtex <- gtex[-1,]
+        gtex_annot <- gtex %>% 
+          dplyr::inner_join(grch37, by = c("Description" = "symbol")) %>%
+          dplyr::filter(biotype == "protein_coding")
+      }
+      tpm <- readRDS(file = "data/TCGA_tpm/PANCANCER_tpm_mean.rds.gz")
+      tpm <- tpm[[tumor_type]]
+      tpm <- tpm[tpm$median == 0,]
+      snv_filt <-
+        snv_filt[snv_filt$Hugo_Symbol %in% tpm$`Approved symbol`,]
+      if (tumor_type == "COADREAD"){
+        # hist(as.numeric(gtex_annot$`Colon - Transverse`), breaks = 100000, xlim = c(0,10))
+        snv_filt <-
+          snv_filt[snv_filt$Hugo_Symbol %in% 
+                     gtex_annot[gtex_annot$`Colon - Sigmoid` == 0,]$Description,]
+        # cat("Removed", dim(snv)[1] - dim(snv_filt)[1], "mutations")
+      }else if (tumor_type == "LUSC" | tumor_type == "LUAD"){
+        snv_filt <-
+          snv_filt[snv_filt$Hugo_Symbol %in% 
+                     gtex_annot[gtex_annot$Lung == 0,]$Description,]
+      }else if (tumor_type == "HNSC"){
+        snv_filt <-
+          snv_filt[snv_filt$Hugo_Symbol %in% 
+                     gtex_annot[gtex_annot$`Esophagus - Mucosa` == 0,]$Description,]
+      }else if (tumor_type == "PAAD"){
+        snv_filt <-
+          snv_filt[snv_filt$Hugo_Symbol %in% 
+                     gtex_annot[gtex_annot$Pancreas == 0,]$Description,]
+      }else if (tumor_type == "GBMLGG"){
+        snv_filt <-
+          snv_filt[snv_filt$Hugo_Symbol %in% 
+                     gtex_annot[gtex_annot$`Brain - Cortex` == 0,]$Description,]
+      }else if (tumor_type == "CESC"){
+        # gtex$`Cervix - Ectocervix`
+        snv_filt <-
+          snv_filt[snv_filt$Hugo_Symbol %in% 
+                     gtex_annot[gtex_annot$`Cervix - Endocervix` == 0,]$Description,]
+      }else if (tumor_type == "BRCA"){
+        snv_filt <-
+          snv_filt[snv_filt$Hugo_Symbol %in% 
+                     gtex_annot[gtex_annot$`Breast - Mammary Tissue` == 0,]$Description,]
+      }else if (tumor_type == "THCA"){
+        snv_filt <-
+          snv_filt[snv_filt$Hugo_Symbol %in% 
+                     gtex_annot[gtex_annot$Thyroid == 0,]$Description,]
+      }
+    }
+    if (mutation_type == "expressed_GTEX"){
+      if (!exists("gtex_annot")){
+        suppressMessages({
+          library(org.Hs.eg.db)
+          library("annotables") 
+        })
+        gtex <- read.table("potential_reviews/GTEx_Analysis_2017-06-05_v8_RNASeQCv1.1.9_gene_median_tpm.gct",
+                           sep = "\t")
+        colnames(gtex) <- gtex[1,]
+        gtex <- gtex[-1,]
+        gtex_annot <- gtex %>% 
+          dplyr::inner_join(grch37, by = c("Description" = "symbol")) %>%
+          dplyr::filter(biotype == "protein_coding")
+      }
+      if (tumor_type == "COADREAD"){
+        # hist(as.numeric(gtex_annot$`Colon - Transverse`), breaks = 100000, xlim = c(0,10))
+        snv_filt <-
+          snv_filt[snv_filt$Hugo_Symbol %in% 
+                     gtex_annot[gtex_annot$`Colon - Sigmoid` != 0,]$Description,]
+        # cat("Removed", dim(snv)[1] - dim(snv_filt)[1], "mutations")
+      }else if (tumor_type == "LUSC" | tumor_type == "LUAD"){
+        snv_filt <-
+          snv_filt[snv_filt$Hugo_Symbol %in% 
+                     gtex_annot[gtex_annot$Lung != 0,]$Description,]
+      }else if (tumor_type == "HNSC"){
+        snv_filt <-
+          snv_filt[snv_filt$Hugo_Symbol %in% 
+                     gtex_annot[gtex_annot$`Esophagus - Mucosa` != 0,]$Description,]
+      }else if (tumor_type == "PAAD"){
+        snv_filt <-
+          snv_filt[snv_filt$Hugo_Symbol %in% 
+                     gtex_annot[gtex_annot$Pancreas != 0,]$Description,]
+      }else if (tumor_type == "GBMLGG"){
+        snv_filt <-
+          snv_filt[snv_filt$Hugo_Symbol %in% 
+                     gtex_annot[gtex_annot$`Brain - Cortex` != 0,]$Description,]
+      }else if (tumor_type == "CESC"){
+        # gtex$`Cervix - Ectocervix`
+        snv_filt <-
+          snv_filt[snv_filt$Hugo_Symbol %in% 
+                     gtex_annot[gtex_annot$`Cervix - Endocervix` != 0,]$Description,]
+      }else if (tumor_type == "BRCA"){
+        snv_filt <-
+          snv_filt[snv_filt$Hugo_Symbol %in% 
+                     gtex_annot[gtex_annot$`Breast - Mammary Tissue` != 0,]$Description,]
+      }else if (tumor_type == "THCA"){
+        snv_filt <-
+          snv_filt[snv_filt$Hugo_Symbol %in% 
+                     gtex_annot[gtex_annot$Thyroid != 0,]$Description,]
+      }
+    }
+    if (mutation_type == "expressed_GTEX_TPM"){
+      if (!exists("gtex_annot")){
+        suppressMessages({
+          library(org.Hs.eg.db)
+          library("annotables") 
+        })
+        gtex <- read.table("potential_reviews/GTEx_Analysis_2017-06-05_v8_RNASeQCv1.1.9_gene_median_tpm.gct",
+                           sep = "\t")
+        colnames(gtex) <- gtex[1,]
+        gtex <- gtex[-1,]
+        gtex_annot <- gtex %>% 
+          dplyr::inner_join(grch37, by = c("Description" = "symbol")) %>%
+          dplyr::filter(biotype == "protein_coding")
+      }
+      tpm <- readRDS(file = "data/TCGA_tpm/PANCANCER_tpm_mean.rds.gz")
+      tpm <- tpm[[tumor_type]]
+      tpm <- tpm[tpm$median != 0,]
+      snv_filt <-
+        snv_filt[snv_filt$Hugo_Symbol %in% tpm$`Approved symbol`,]
+      if (tumor_type == "COADREAD"){
+        # hist(as.numeric(gtex_annot$`Colon - Transverse`), breaks = 100000, xlim = c(0,10))
+        snv_filt <-
+          snv_filt[snv_filt$Hugo_Symbol %in% 
+                     gtex_annot[gtex_annot$`Colon - Sigmoid` != 0,]$Description,]
+        # cat("Removed", dim(snv)[1] - dim(snv_filt)[1], "mutations")
+      }else if (tumor_type == "LUSC" | tumor_type == "LUAD"){
+        snv_filt <-
+          snv_filt[snv_filt$Hugo_Symbol %in% 
+                     gtex_annot[gtex_annot$Lung != 0,]$Description,]
+      }else if (tumor_type == "HNSC"){
+        snv_filt <-
+          snv_filt[snv_filt$Hugo_Symbol %in% 
+                     gtex_annot[gtex_annot$`Esophagus - Mucosa` != 0,]$Description,]
+      }else if (tumor_type == "PAAD"){
+        snv_filt <-
+          snv_filt[snv_filt$Hugo_Symbol %in% 
+                     gtex_annot[gtex_annot$Pancreas != 0,]$Description,]
+      }else if (tumor_type == "GBMLGG"){
+        snv_filt <-
+          snv_filt[snv_filt$Hugo_Symbol %in% 
+                     gtex_annot[gtex_annot$`Brain - Cortex` != 0,]$Description,]
+      }else if (tumor_type == "CESC"){
+        # gtex$`Cervix - Ectocervix`
+        snv_filt <-
+          snv_filt[snv_filt$Hugo_Symbol %in% 
+                     gtex_annot[gtex_annot$`Cervix - Endocervix` != 0,]$Description,]
+      }else if (tumor_type == "BRCA"){
+        snv_filt <-
+          snv_filt[snv_filt$Hugo_Symbol %in% 
+                     gtex_annot[gtex_annot$`Breast - Mammary Tissue` != 0,]$Description,]
+      }else if (tumor_type == "THCA"){
+        snv_filt <-
+          snv_filt[snv_filt$Hugo_Symbol %in% 
+                     gtex_annot[gtex_annot$Thyroid != 0,]$Description,]
+      }
+    }
+    
+    
     if (mutation_type == "remove_OG") {
-      cat("\n Filter for gene type: OGs \n")
+      # cat("\n Filter for gene type: OGs \n")
       OGs <-
         read.csv(file = "data/CancerGenes/OG_list.tsv", sep = "\t")
       snv_filt <-
@@ -136,7 +485,7 @@ for (mutation_type in mutation_types) {
       rm(OGs)
     }
     if (mutation_type == "remove_TSG") {
-      cat("\n Filter for gene type: TSGs \n")
+      # cat("\n Filter for gene type: TSGs \n")
       TSGs <-
         read.csv(file = "data/CancerGenes/TSG_list.tab", sep = "\t")
       snv_filt <-
@@ -145,7 +494,7 @@ for (mutation_type in mutation_types) {
       rm(TSGs)
     }
     if (mutation_type == "remove_BOTH") {
-      cat("\n Filter for gene type: both TSGs and OGs \n")
+      # cat("\n Filter for gene type: both TSGs and OGs \n")
       OGs <-
         read.csv(file = "data/CancerGenes/OG_list.tsv", sep = "\t")
       TSGs <-
@@ -159,7 +508,38 @@ for (mutation_type in mutation_types) {
       rm(TSGs)
     }
     
-    if (mutation_type == "haploinsufficient") {
+    
+    if (mutation_type == "haploinsufficient_GHIS") {
+      cat("\n Filter for haploinsufficient GHIS genes")
+      ghis_scores <- read.table("data/misc/ghis_scores.tsv")
+      colnames(ghis_scores) <- ghis_scores[1,]
+      ghis_scores <- ghis_scores[-1,]
+      ghis_scores$GHIS <- as.numeric(ghis_scores$GHIS)
+      
+      ghis_scores_intolerant <- ghis_scores[ghis_scores$GHIS >= 0.5,]
+      snv_filt <-
+        snv_filt[snv_filt$Hugo_Symbol %in% ghis_scores_intolerant$Hugo_Symbol,]
+      snv_filt <- snv_filt[!is.na(snv_filt$Chromosome),]
+      snv_filt <- unique(snv_filt)
+    }
+    if (mutation_type == "non_haploinsufficient_GHIS") {
+      cat("\n Filter for haploinsufficient GHIS genes")
+      ghis_scores <- read.table("data/misc/ghis_scores.tsv")
+      colnames(ghis_scores) <- ghis_scores[1,]
+      ghis_scores <- ghis_scores[-1,]
+      ghis_scores$GHIS <- as.numeric(ghis_scores$GHIS)
+      
+      ghis_scores_tolerant <- ghis_scores[ghis_scores$GHIS < 0.5,]
+      snv_filt <-
+        snv_filt[snv_filt$Hugo_Symbol %in% ghis_scores_tolerant$Hugo_Symbol,]
+      snv_filt <- snv_filt[!is.na(snv_filt$Chromosome),]
+      snv_filt <- unique(snv_filt)
+    }
+    
+    
+    if (mutation_type == "haploinsufficient" | 
+        mutation_type == "haploinsufficient_synonymous" |
+        mutation_type == "haploinsufficient_non_synonymous") {
       cat("\n Filter for haploinsufficient genes")
       pLI_scores <-
         readxl::read_xlsx("data/misc/pLI_scores.xlsx", sheet = 2)
@@ -171,10 +551,12 @@ for (mutation_type in mutation_types) {
       snv_filt <- snv_filt[!is.na(snv_filt$Chromosome),]
       snv_filt <- unique(snv_filt)
     }
-    if (mutation_type == "non_haploinsufficient") {
+    if (mutation_type == "non_haploinsufficient"| 
+        mutation_type == "non_haploinsufficient_synonymous" |
+        mutation_type == "non_haploinsufficient__non_synonymous") {
       cat("\n Filter for non-haploinsufficient genes")
       pLI_scores <-
-        readxl::read_xlsx("data/pLI_scores.xlsx", sheet = 2)
+        readxl::read_xlsx("data/misc/pLI_scores.xlsx", sheet = 2)
       pLI_scores <-
         pLI_scores[!is.na(pLI_scores$chr),] # remove genes within X and Y chromosomes
       pLI_scores_tolerant <- pLI_scores[pLI_scores$pLI < 0.2,]
@@ -183,15 +565,87 @@ for (mutation_type in mutation_types) {
       snv_filt <- snv_filt[!is.na(snv_filt$Chromosome),]
       snv_filt <- unique(snv_filt)
     }
+    if (mutation_type == "haploinsufficient_diffCutoff") {
+      cat("\n Filter for haploinsufficient genes")
+      pLI_scores <-
+        readxl::read_xlsx("data/misc/pLI_scores.xlsx", sheet = 2)
+      pLI_scores <-
+        pLI_scores[!is.na(pLI_scores$chr),] # remove genes within X and Y chromosomes
+      pLI_scores_intolerant <- pLI_scores[pLI_scores$pLI >= 0.9,]
+      snv_filt <-
+        snv_filt[snv_filt$Hugo_Symbol %in% pLI_scores_intolerant$gene,]
+      snv_filt <- snv_filt[!is.na(snv_filt$Chromosome),]
+      snv_filt <- unique(snv_filt)
+    }
+    if (mutation_type == "non_haploinsufficient_diffcutoff") {
+      cat("\n Filter for non-haploinsufficient genes")
+      pLI_scores <-
+        readxl::read_xlsx("data/misc/pLI_scores.xlsx", sheet = 2)
+      pLI_scores <-
+        pLI_scores[!is.na(pLI_scores$chr),] # remove genes within X and Y chromosomes
+      pLI_scores_tolerant <- pLI_scores[pLI_scores$pLI < 0.1,]
+      snv_filt <-
+        snv_filt[snv_filt$Hugo_Symbol %in% pLI_scores_tolerant$gene,]
+      snv_filt <- snv_filt[!is.na(snv_filt$Chromosome),]
+      snv_filt <- unique(snv_filt)
+    }
+    
+    if (mutation_type == "haploinsufficient_damaging") {
+      # cat("\n Filter for haploinsufficient_damaging genes")
+      pLI_scores <-
+        readxl::read_xlsx("data/misc/pLI_scores.xlsx", sheet = 2)
+      pLI_scores <-
+        pLI_scores[!is.na(pLI_scores$chr),] # remove genes within X and Y chromosomes
+      pLI_scores_intolerant <- pLI_scores[pLI_scores$pLI >= 0.2,]
+      snv_filt <-
+        snv_filt[snv_filt$Hugo_Symbol %in% pLI_scores_intolerant$gene,]
+      snv_filt <- snv_filt[!is.na(snv_filt$Chromosome),]
+      snv_filt <- unique(snv_filt)
+      # damaging CADD
+      snv_filt <- snv_filt[as.numeric(snv_filt$CADD_phred) >= 20,]
+      snv_filt <- snv_filt[!is.na(snv_filt$Chromosome),]
+    }
+    if (mutation_type == "haploinsufficient_nondamaging") {
+      # cat("\n Filter for haploinsufficient_nondamaging genes")
+      pLI_scores <-
+        readxl::read_xlsx("data/misc/pLI_scores.xlsx", sheet = 2)
+      pLI_scores <-
+        pLI_scores[!is.na(pLI_scores$chr),] # remove genes within X and Y chromosomes
+      pLI_scores_intolerant <- pLI_scores[pLI_scores$pLI >= 0.2,]
+      snv_filt <-
+        snv_filt[snv_filt$Hugo_Symbol %in% pLI_scores_intolerant$gene,]
+      snv_filt <- snv_filt[!is.na(snv_filt$Chromosome),]
+      snv_filt <- unique(snv_filt)
+      # non-damaging CADD 
+      snv_filt <- snv_filt[as.numeric(snv_filt$CADD_raw) < 3.5,]
+      snv_filt <- snv_filt[!is.na(snv_filt$Chromosome),]
+    }
+    
+    if (mutation_type == "non_haploinsufficient_damaging") {
+      # cat("\n Filter for haploinsufficient_nondamaging genes")
+      pLI_scores <-
+        readxl::read_xlsx("data/misc/pLI_scores.xlsx", sheet = 2)
+      pLI_scores <-
+        pLI_scores[!is.na(pLI_scores$chr),] # remove genes within X and Y chromosomes
+      pLI_scores_intolerant <- pLI_scores[pLI_scores$pLI < 0.2,]
+      snv_filt <-
+        snv_filt[snv_filt$Hugo_Symbol %in% pLI_scores_intolerant$gene,]
+      snv_filt <- snv_filt[!is.na(snv_filt$Chromosome),]
+      snv_filt <- unique(snv_filt)
+      # non-damaging CADD 
+      snv_filt <- snv_filt[as.numeric(snv_filt$CADD_phred) >= 20,]
+      snv_filt <- snv_filt[!is.na(snv_filt$Chromosome),]
+    }
+    
     
     ## 1st Loop: filter for mutation properties ----
-    cat("\n > Filter for Mutations Type \n")
+    # cat("\n > Filter for Mutations Type \n")
     if (mutation_type == "all_mutations") {
-      cat("\n no mutation filtering\n")
+      # cat("\n no mutation filtering\n")
     }
     
     if (mutation_type == "polyphen_highlyDamaging") {
-      cat("\n Filter for polyphen_highlyDamaging mutations")
+      # cat("\n Filter for polyphen_highlyDamaging mutations")
       mean(as.numeric(snv_filt$Polyphen2_HVAR_score), na.rm = T)
       snv_filt <- snv_filt[!is.na(snv_filt$Polyphen2_HVAR_score),]
       snv_filt <-
@@ -199,34 +653,81 @@ for (mutation_type in mutation_types) {
       snv_filt <- snv_filt[!is.na(snv_filt$Chromosome),]
       snv_filt <- unique(snv_filt)
     }
+    if (mutation_type == "polyphen_highlyDamaging_new") {
+      # cat("\n Filter for polyphen_highlyDamaging mutations")
+      mean(as.numeric(snv_filt$Polyphen2_HVAR_score), na.rm = T)
+      snv_filt <- snv_filt[!is.na(snv_filt$Polyphen2_HVAR_score),]
+      snv_filt <-
+        snv_filt[as.numeric(snv_filt$Polyphen2_HVAR_score) >= 0.15,]
+      snv_filt <- snv_filt[!is.na(snv_filt$Chromosome),]
+      snv_filt <- unique(snv_filt)
+    }
     if (mutation_type == "polyphen_moderatelyDamaging") {
-      cat("\n Filter for polyphen_moderatelyDamaging mutations")
+      # cat("\n Filter for polyphen_moderatelyDamaging mutations")
       snv_filt <- snv_filt[!is.na(snv_filt$Polyphen2_HVAR_score),]
       snv_filt <-
         snv_filt[as.numeric(snv_filt$Polyphen2_HVAR_score) <= 0.3,]
       snv_filt <- snv_filt[!is.na(snv_filt$Chromosome),]
       snv_filt <- unique(snv_filt)
     }
+    if (mutation_type == "polyphen_moderatelyDamaging_new") {
+      # cat("\n Filter for polyphen_moderatelyDamaging mutations")
+      snv_filt <- snv_filt[!is.na(snv_filt$Polyphen2_HVAR_score),]
+      snv_filt <-
+        snv_filt[as.numeric(snv_filt$Polyphen2_HVAR_score) <= 0.15,]
+      snv_filt <- snv_filt[!is.na(snv_filt$Chromosome),]
+      snv_filt <- unique(snv_filt)
+    }
     
     if (mutation_type == "CADD_highlyDamaging") {
-      cat("\n Filter for CADD_highlyDamaging mutations")
-      plot(density(as.numeric(snv_filt$CADD_raw), na.rm = T))
-      abline(col = "red", v = mean(as.numeric(snv_filt$CADD_raw), na.rm = T))
-      abline(col = "blue", v = 2)
+      # cat("\n Filter for CADD_highlyDamaging mutations")
+      # plot(density(as.numeric(snv_filt$CADD_raw), na.rm = T))
+      # abline(col = "red", v = mean(as.numeric(snv_filt$CADD_raw), na.rm = T))
+      # abline(col = "blue", v = 2)
       # snv_filt <- snv_filt[!is.na(as.numeric(snv_filt$CADD_raw)),]
+      snv_filt <- snv_filt[as.numeric(snv_filt$CADD_phred) >= 20,]
       snv_filt <- snv_filt[as.numeric(snv_filt$CADD_raw) >= 3.5,]
       snv_filt <- snv_filt[!is.na(snv_filt$Chromosome),]
     }
+    if (mutation_type == "CADD_highlyDamaging_phred") {
+      snv_filt <- snv_filt[as.numeric(snv_filt$CADD_phred) >= 20,]
+      snv_filt <- snv_filt[!is.na(snv_filt$Chromosome),]
+    }
     if (mutation_type == "CADD_moderatelyDamaging") {
-      cat("\n Filter for CADD_moderatelyDamaging mutations")
+      # cat("\n Filter for CADD_moderatelyDamaging mutations")
       # snv_filt <- snv_filt[!is.na(as.numeric(snv_filt$CADD_raw)),]
-      snv_filt <- snv_filt[as.numeric(snv_filt$CADD_raw) <= 3.5,]
+      snv_filt <- snv_filt[as.numeric(snv_filt$CADD_phred) < 20,]
+      snv_filt <- snv_filt[as.numeric(snv_filt$CADD_raw) < 3.5,]
+      snv_filt <- snv_filt[!is.na(snv_filt$Chromosome),]
+    }
+    if (mutation_type == "CADD_moderatelyDamaging_phred") {
+      # cat("\n Filter for CADD_moderatelyDamaging mutations")
+      # snv_filt <- snv_filt[!is.na(as.numeric(snv_filt$CADD_raw)),]
+      snv_filt <- snv_filt[as.numeric(snv_filt$CADD_phred) < 20,]
+      snv_filt <- snv_filt[!is.na(snv_filt$Chromosome),]
+    }
+    
+    if (mutation_type == "synonymous" | 
+        mutation_type == "haploinsufficient_synonymous" |
+        mutation_type == "non_haploinsufficient_synonymous") {
+      print("filter for syn")
+      snv_filt <- snv_filt[snv_filt$Consequence == "synonymous_variant",]
+      # snv_filt <- snv_filt[snv_filt$Variant_Classification == "Silent",]
+      snv_filt <- snv_filt[!is.na(snv_filt$Chromosome),]
+    }
+    if (mutation_type == "non_synonymous" | 
+        mutation_type == "haploinsufficient_non_synonymous" |
+        mutation_type == "non_haploinsufficient_non_synonymous") {
+      print("filter for non_syn")
+      snv_filt <- snv_filt[snv_filt$Consequence != "synonymous_variant",]
+      # snv_filt <- snv_filt[snv_filt$Consequence == "missense_variant",]
+      # snv_filt <- snv_filt[snv_filt$Variant_Classification == "Missense_Mutation",]
       snv_filt <- snv_filt[!is.na(snv_filt$Chromosome),]
     }
     
     
     if (mutation_type == "aggregation_causing") {
-      cat("\n Filter for aggregation_causing mutations")
+      # cat("\n Filter for aggregation_causing mutations")
       snv_filt <-
         snv_filt[snv_filt$Aggregation > 5000 &
                    snv_filt$FoldChange > 1,]
@@ -235,7 +736,7 @@ for (mutation_type in mutation_types) {
       print(paste0("Aggregating mutations: ", dim(snv_filt)))
     }
     if (mutation_type == "non_aggregation_causing") {
-      cat("\n Filter for non_aggregation_causing mutations")
+      # cat("\n Filter for non_aggregation_causing mutations")
       snv_filt <-
         snv_filt[!(snv_filt$Aggregation > 5000 &
                      snv_filt$FoldChange > 1),]
@@ -256,8 +757,9 @@ for (mutation_type in mutation_types) {
     }
     if (mutation_type == "missense") {
       cat(" Filter for non_aggregation_causing mutations")
-      snv_filt <-
-        snv_filt[snv_filt$Variant_Classification == "Missense_Mutation",]
+      
+      snv_filt <- snv_filt[snv_filt$Consequence == "missense_variant" | 
+                             snv_filt$Variant_Classification == "Missense_Mutation",]
       snv_filt <- snv_filt[!is.na(snv_filt$Chromosome),]
     }
     
@@ -270,7 +772,7 @@ for (mutation_type in mutation_types) {
     
     
     ##  initialize table for chromosome and arm amplification frequencies ----
-    cat("\n\n >> Start chromosome Loop \n")
+    cat("\n\n >> Start", tumor_type, "chromosome Loop \n")
     freq_ampl_chr <- t(data.frame("p", "p+q", "q"))
     colnames(freq_ampl_chr) <- "arms"
     rownames(freq_ampl_chr) <- NULL
@@ -279,7 +781,7 @@ for (mutation_type in mutation_types) {
     ## >> 2nd Loop: chromosome << ----
     for (chr in 1:22) {
       gc(full = TRUE)
-      print(chr)
+      # print(chr)
       
       ## 2nd loop: load chromosome region lengths ----
       chr_info <-
@@ -343,94 +845,26 @@ for (mutation_type in mutation_types) {
       amplified_patients <-
         levels(factor(temp_cna_length$patient_id))
       
-      # produce the table
-      write.table(
-        amplified_patients,
-        file = paste0(
-          results_table_path,
-          tumor_type,
-          "_amplified_pts_chr",
-          chr,
-          ".txt"
+      if(stringent_mutations != T){
+        # produce the table
+        write.table(
+          amplified_patients,
+          file = paste0(
+            results_table_path,
+            tumor_type,
+            "_amplified_pts_chr",
+            chr,
+            ".txt"
+          )
         )
-      )
+      }
       
       ## 2nd loop: compute chromosome and arm amplification frequencies ----
       temp_cna_length_backup <- temp_cna_length
       temp_cna_length <-
-        temp_cna_length %>% filter(Segment_Mean >= 0.2)
+        temp_cna_length %>% filter(Segment_Mean >= as.numeric(segment_cutoff)/100)
       
-      arm <- data.frame()
-      for (i in 1:nrow(temp_cna_length)) {
-        p <-
-          chr_arms[chr_arms$chromosme == paste0("chr", chr),]$start[1]:chr_arms[chr_arms$chromosme == paste0("chr", chr),]$end[1] #p
-        q <-
-          chr_arms[chr_arms$chromosme == paste0("chr", chr),]$start[2]:chr_arms[chr_arms$chromosme == paste0("chr", chr),]$end[2] #q
-        
-        if (temp_cna_length[i,]$classified != "chromosomal") {
-          cna <-
-            temp_cna_length[i,]$start_bin:(temp_cna_length[i,]$start_bin + temp_cna_length[i,]$bin_length)
-          
-          if (sum(cna %in% p) > sum(cna %in% q)) {
-            arm <-
-              rbind(
-                arm,
-                cbind(
-                  patient_id = temp_cna_length[i,]$patient_id,
-                  classified = temp_cna_length[i,]$classified,
-                  arm = "p"
-                )
-              )
-          } else{
-            arm <-
-              rbind(
-                arm,
-                cbind(
-                  patient_id = temp_cna_length[i,]$patient_id,
-                  classified = temp_cna_length[i,]$classified,
-                  arm = "q"
-                )
-              )
-          }
-        } else{
-          arm <-
-            rbind(
-              arm,
-              cbind(
-                patient_id = temp_cna_length[i,]$patient_id,
-                classified = temp_cna_length[i,]$classified,
-                arm = "p+q"
-              )
-            )
-        }
-      }
-      
-      temp_cna_length <- cbind(temp_cna_length, arm = arm$arm)
-      
-      temp_cna_length[temp_cna_length$classified == "arm" &
-                        temp_cna_length$arm == "q" &
-                        temp_cna_length$start_bin + temp_cna_length$bin_length > chr_arms[chr_arms$chromosme == paste0("chr", chr),]$end[1] &
-                        temp_cna_length$start_bin < 0.5 * chr_arms[chr_arms$chromosme == paste0("chr", chr),]$end[1],]$arm <-
-        rep("p+q", length(temp_cna_length[temp_cna_length$classified == "arm" &
-                                            temp_cna_length$arm == "q" &
-                                            temp_cna_length$start_bin +
-                                            temp_cna_length$bin_length > chr_arms[chr_arms$chromosme == paste0("chr", chr),]$end[1] &
-                                            temp_cna_length$start_bin < 0.5 *
-                                            chr_arms[chr_arms$chromosme == paste0("chr", chr),]$end[1],]$arm))
-      
-      ampl <-
-        as.data.frame(rbind(as.data.frame(
-          table(temp_cna_length[temp_cna_length$Segment_Mean > 0 &
-                                  temp_cna_length$classified != "focal",]$arm) / length(common_patients)
-        )))
-      
-      if (nrow(ampl) != 0) {
-        colnames(ampl) <- c("arms", "Freq")
-        ampl <-
-          rbind(c(arms = c("chr", chr), Freq = as.numeric(chr)), ampl)
-        freq_ampl_chr <-
-          full_join(freq_ampl_chr, ampl,  by = "arms")
-      } else{
+      if(dim(temp_cna_length)[1] == 0){
         ampl <-
           cbind(rbind("p", "p+q", "q", "chr"),
                 rbind(
@@ -443,7 +877,93 @@ for (mutation_type in mutation_types) {
         ampl <- as.data.frame(ampl)
         freq_ampl_chr <-
           full_join(freq_ampl_chr, ampl,  by = "arms")
+      }else{
+        arm <- data.frame()
+        for (i in 1:nrow(temp_cna_length)) {
+          p <-
+            chr_arms[chr_arms$chromosme == paste0("chr", chr),]$start[1]:chr_arms[chr_arms$chromosme == paste0("chr", chr),]$end[1] #p
+          q <-
+            chr_arms[chr_arms$chromosme == paste0("chr", chr),]$start[2]:chr_arms[chr_arms$chromosme == paste0("chr", chr),]$end[2] #q
+          
+          if (temp_cna_length[i,]$classified != "chromosomal") {
+            cna <-
+              temp_cna_length[i,]$start_bin:(temp_cna_length[i,]$start_bin + temp_cna_length[i,]$bin_length)
+            
+            if (sum(cna %in% p) > sum(cna %in% q)) {
+              arm <-
+                rbind(
+                  arm,
+                  cbind(
+                    patient_id = temp_cna_length[i,]$patient_id,
+                    classified = temp_cna_length[i,]$classified,
+                    arm = "p"
+                  )
+                )
+            } else{
+              arm <-
+                rbind(
+                  arm,
+                  cbind(
+                    patient_id = temp_cna_length[i,]$patient_id,
+                    classified = temp_cna_length[i,]$classified,
+                    arm = "q"
+                  )
+                )
+            }
+          } else{
+            arm <-
+              rbind(
+                arm,
+                cbind(
+                  patient_id = temp_cna_length[i,]$patient_id,
+                  classified = temp_cna_length[i,]$classified,
+                  arm = "p+q"
+                )
+              )
+          }
+        }
+        
+        temp_cna_length <- cbind(temp_cna_length, arm = arm$arm)
+        
+        temp_cna_length[temp_cna_length$classified == "arm" &
+                          temp_cna_length$arm == "q" &
+                          temp_cna_length$start_bin + temp_cna_length$bin_length > chr_arms[chr_arms$chromosme == paste0("chr", chr),]$end[1] &
+                          temp_cna_length$start_bin < 0.5 * chr_arms[chr_arms$chromosme == paste0("chr", chr),]$end[1],]$arm <-
+          rep("p+q", length(temp_cna_length[temp_cna_length$classified == "arm" &
+                                              temp_cna_length$arm == "q" &
+                                              temp_cna_length$start_bin +
+                                              temp_cna_length$bin_length > chr_arms[chr_arms$chromosme == paste0("chr", chr),]$end[1] &
+                                              temp_cna_length$start_bin < 0.5 *
+                                              chr_arms[chr_arms$chromosme == paste0("chr", chr),]$end[1],]$arm))
+        
+        ampl <-
+          as.data.frame(rbind(as.data.frame(
+            table(temp_cna_length[temp_cna_length$Segment_Mean > 0 &
+                                    temp_cna_length$classified != "focal",]$arm) / length(common_patients)
+          )))
+        
+        if (nrow(ampl) != 0) {
+          colnames(ampl) <- c("arms", "Freq")
+          ampl <-
+            rbind(c(arms = c("chr", chr), Freq = as.numeric(chr)), ampl)
+          freq_ampl_chr <-
+            full_join(freq_ampl_chr, ampl,  by = "arms")
+        } else{
+          ampl <-
+            cbind(rbind("p", "p+q", "q", "chr"),
+                  rbind(
+                    p = NA,
+                    q = NA,
+                    'p+q' = NA,
+                    chr = chr
+                  ))
+          colnames(ampl) <- c("arms", "Freq")
+          ampl <- as.data.frame(ampl)
+          freq_ampl_chr <-
+            full_join(freq_ampl_chr, ampl,  by = "arms")
+        }
       }
+      
       
       ## 2nd loop: load segmented chromosome/gene structure ----
       bin_gene <-
@@ -511,17 +1031,17 @@ for (mutation_type in mutation_types) {
           classified = temp_cna_length[temp_cna_length$bin_length > 0.5,]$classified,
           patient = temp_cna_length[temp_cna_length$bin_length > 0.5,]$patient_id,
           cna_length_del = temp_cna_length[temp_cna_length$bin_length > 0.5 |
-                                             temp_cna_length$Segment_Mean <= -0.2,]$length,
+                                             temp_cna_length$Segment_Mean <= -as.numeric(segment_cutoff)/100,]$length,
           cna_length_ampl = temp_cna_length[temp_cna_length$bin_length > 0.5 |
-                                              temp_cna_length$Segment_Mean >= 0.2,]$length,
+                                              temp_cna_length$Segment_Mean >= as.numeric(segment_cutoff)/100,]$length,
           chr_bins
         )
       
       cna_freq_ampl <-
-        as.numeric(colSums(chr_bins[chr_bins$Segment_Mean >= 0.2, 6:ncol(chr_bins)], na.rm = TRUE) /
+        as.numeric(colSums(chr_bins[chr_bins$Segment_Mean >= as.numeric(segment_cutoff)/100, 6:ncol(chr_bins)], na.rm = TRUE) /
                      length(common_patients))
       cna_freq_del <-
-        as.numeric(colSums(chr_bins[chr_bins$Segment_Mean <= -0.2, 6:ncol(chr_bins)], na.rm = TRUE) /
+        as.numeric(colSums(chr_bins[chr_bins$Segment_Mean <= -as.numeric(segment_cutoff)/100, 6:ncol(chr_bins)], na.rm = TRUE) /
                      length(common_patients))
       cna_freq_total <-
         as.numeric(colSums(chr_bins[, 6:ncol(chr_bins)], na.rm = TRUE) / length(common_patients))
@@ -533,8 +1053,12 @@ for (mutation_type in mutation_types) {
         cna_freq_total = cna_freq_total
       )
       
-      unamplified_patients <-
-        all_patients[!(all_patients %in% chr_bins$patient)]
+      if(mut_withinCNA == T){
+        unamplified_patients <- all_patients
+      }else{
+        unamplified_patients <-
+          all_patients[!(all_patients %in% chr_bins$patient)]
+      }
       
       ## 2nd loop: compute the mutation score in copy-neutral regions ----
       # (normalized for the number of patients (1), the coding region (2) and thus log10 (3))
@@ -556,15 +1080,26 @@ for (mutation_type in mutation_types) {
       n_patients <- NULL
       
       for (i in 1:n_bins) {
-        n_pts <-
-          length(c(chr_bins_pt[chr_bins_pt[, i + 1] == 0,]$patient, unamplified_patients))
-        mut <-
-          temp_snv[str_sub(temp_snv$Tumor_Sample_Barcode, end = 12) %in% c(chr_bins_pt[chr_bins_pt[, i +
-                                                                                                     1] == 0,]$patient, unamplified_patients),]
-        mut <-
-          mut[mut$Start_Position >= start_bin &
-                mut$End_Position < end,]
-        mut_a <- as.data.frame(table(mut$patient_id))
+        if(mut_withinCNA == T){
+          n_pts <- length(all_patients)
+          mut <- temp_snv[str_sub(temp_snv$Tumor_Sample_Barcode, end = 12) %in% all_patients,]
+          mut <-
+            mut[mut$Start_Position >= start_bin &
+                  mut$End_Position < end,]
+          mut_a <- as.data.frame(table(mut$patient_id))        
+        }else{
+          n_pts <-
+            length(c(chr_bins_pt[chr_bins_pt[, i + 1] == 0,]$patient, unamplified_patients))
+          mut <-
+            temp_snv[str_sub(temp_snv$Tumor_Sample_Barcode, end = 12) %in% 
+                       c(chr_bins_pt[chr_bins_pt[, i +1] == 0,]$patient, 
+                         unamplified_patients),]
+          mut <-
+            mut[mut$Start_Position >= start_bin &
+                  mut$End_Position < end,]
+          mut_a <- as.data.frame(table(mut$patient_id))        
+        }
+        
         if (dim(mut_a)[1] != 0) {
           colnames(mut_a) <- c("patient_id", "mutations_raw")
           x <- sum(mut_a$mutations_raw , na.rm = T)
@@ -602,13 +1137,19 @@ for (mutation_type in mutation_types) {
     ## end of the 1st loop: write chromosome/arm amplification frequencies ----
     colnames(freq_ampl_chr) <- NULL
     freq_ampl_chr[is.na(freq_ampl_chr)] <- 0
-    write.table(freq_ampl_chr,
-                file = paste0(results_table_path, tumor_type, "_chrAmpFreq.txt"))
-    
-    cat("\n\n > End. Next tumor type \n\n")
-  }
+    freq_ampl_chr <- rbind(freq_ampl_chr, chr = as.numeric(freq_ampl_chr[4,])+as.numeric(freq_ampl_chr[5,]))
+    freq_ampl_chr <- freq_ampl_chr[-c(4,5),]
+    if(stringent_mutations != T){
+      write.table(freq_ampl_chr,
+                  file = paste0(results_table_path, tumor_type, 
+                                "_chrAmpFreq",
+                                ifelse(segment_cutoff=="20","",paste0("_0",segment_cutoff))
+                                ,".txt"))                               
+    }  
+    cat("\n\n> >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Analysis on", tumor_type, " ended.\n\n")
+  })
+  # }
 }
-
 
 cat(
   "\n\n OUTPUT of the script: \n \t (1) raw tables path: results/tables/01_binLevelAnalysis/ \n"

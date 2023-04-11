@@ -53,21 +53,12 @@ tumor_types <- c(
     
 mutation_types <- c(
   # "all_mutations"
-
-  # "haploinsufficient_GHIS"
-  # "non_haploinsufficient_GHIS"
   
   # "aggregation_causing"
   # "non_aggregation_causing"
   
-  # "expressed010"
-  # "non_expressed010"
   # "expressed_no0"
   # "non_expressed_no0"
-  # "expressed_GTEX"
-  # "non_expressed_GTEX"
-  # "expressed_GTEX_TPM"
-  # "non_expressed_GTEX_TPM"
 
   # "synonymous"
   # "non_synonymous"
@@ -78,17 +69,18 @@ mutation_types <- c(
   # "remove_TSG"
   # "remove_BOTH"
   
-  # "polyphen_highlyDamaging"
-  # "polyphen_moderatelyDamaging"
-  # "polyphen_highlyDamaging_new"
-  # "polyphen_moderatelyDamaging_new"
-  # "CADD_highlyDamaging"
+  # ,"polyphen_highlyDamaging"
+  # ,"polyphen_moderatelyDamaging"
+  # ,"CADD_highlyDamaging"
   # ,"CADD_moderatelyDamaging"
-  # "CADD_highlyDamaging_phred"
+  # ,"CADD_highlyDamaging_phred"
   # ,"CADD_moderatelyDamaging_phred"
   
   # "haploinsufficient"
   # "non_haploinsufficient"
+  # "haploinsufficient_GHIS"
+  # "non_haploinsufficient_GHIS"
+  
   # "haploinsufficient_damaging"
   # "haploinsufficient_nondamaging"
   # "non_haploinsufficient_damaging"
@@ -97,15 +89,6 @@ mutation_types <- c(
   # "non_haploinsufficient_synonymous"
   # "haploinsufficient_non_synonymous"
   # "non_haploinsufficient_non_synonymous"
-  
-  # NOT WORKING
-  # "haploinsufficient_expressed"
-  # "haploinsufficient_non_expressed"
-  # "non_haploinsufficient_expressed"
-  # "non_haploinsufficient_non_expressed"
-  
-  # "haploinsufficient_diffCutoff"
-  # "non_haploinsufficient_diffCutoff"
 )
 
 cat("\n\n Gene and mutation types are:\n\n")
@@ -118,7 +101,7 @@ segment_cutoff <- 20
 cat("\n\n segment cutoff:", segment_cutoff, "\n\n")
 stringent_mutations <- F
 
-cores <- 15
+cores <- 23
 # cores <- length(tumor_types)-8
 
 # produce HAPLOINSUFFICIENT_GHIS score table
@@ -163,16 +146,6 @@ for (mutation_type in mutation_types) {
       snv[!duplicated(snv[, c(6, 7, 8, 9, 17)]),] # remove duplicated mutations in the same patient
     # cat("  done!")
     
-    # filter for hypermutated patients
-    if(mutation_type == "no_hypermut"){
-      # based on definition --
-      snv <- snv[snv$patient_id %in% 
-                   names(table(snv$patient_id)[table(snv$patient_id)/691 <= 6]),]
-      # based on quantile --
-      # snv <- snv[snv$patient_id %in% names(table(snv$patient_id) <= 
-      #                                        quantile(sort(table(snv$patient_id)), prob = .95)),]
-    }
-    
     # Load CNAs file
     cat("\n > Load", tumor_type, "SCNA File \n")
     scna <-
@@ -191,13 +164,6 @@ for (mutation_type in mutation_types) {
     scna <-
       scna[scna$patient_id %in% snv$patient_id,]
     
-    if(mutation_type == "removeWGD"){
-      absolute <- read_tsv(file = "potential_reviews/07_TEST_add_geneExpr/TCGA_mastercalls.abs_tables_JSedit.fixed.txt")
-      # hist(absolute[substr(absolute$sample, 1, 12) %in% common_patients,]$`Genome doublings`)
-      scna <- scna[scna$patient_id %in% substr(absolute[absolute$ploidy < 3,]$sample, 1, 12),]
-      snv_filt <- snv_filt[snv_filt$patient_id %in% substr(absolute[absolute$ploidy < 3,]$sample, 1, 12),]
-    }
-    
     common_patients <-
       levels(as.factor(snv[snv$patient_id %in% scna$patient_id,]$patient_id))
     # keep only non copy-neutral segments (amplified or deleted)
@@ -211,29 +177,11 @@ for (mutation_type in mutation_types) {
     ## 1st Loop: filter for gene properties ----
     # cat("\n > Filter for gene properties \n")
     if (mutation_type == "all_mutations") {
-      # cat(" no gene filtering")
+      cat(" no gene filtering")
     }
     
-    if (mutation_type == "expressed010") {
-      # cat("\n Filter for gene type: expressed \n")
-      tpm <- readRDS(file = "data/TCGA_tpm/PANCANCER_tpm_mean.rds.gz")
-      tpm <- tpm[[tumor_type]]
-      tpm <- tpm[tpm$median > quantile(tpm$median, prob = 0.05),]
-      snv_filt <-
-        snv_filt[snv_filt$Hugo_Symbol %in% tpm$`Approved symbol`,]
-      cat("Removed", dim(snv)[1] - dim(snv_filt)[1], "mutations")
-    }
-    if (mutation_type == "non_expressed010") {
-      # cat("\n Filter for gene type: expressed \n")
-      tpm <- readRDS(file = "data/TCGA_tpm/PANCANCER_tpm_mean.rds.gz")
-      tpm <- tpm[[tumor_type]]
-      tpm <- tpm[tpm$median <= quantile(tpm$median, prob = 0.05),]
-      snv_filt <-
-        snv_filt[snv_filt$Hugo_Symbol %in% tpm$`Approved symbol`,]
-      cat("Removed", dim(snv)[1] - dim(snv_filt)[1], "mutations")
-    }
     if (mutation_type == "expressed_no0") {
-      # cat("\n Filter for gene type: expressed \n")
+      cat("\n Filter for gene type: expressed \n")
       tpm <- readRDS(file = "data/TCGA_tpm/PANCANCER_tpm_mean.rds.gz")
       tpm <- tpm[[tumor_type]]
       tpm <- tpm[tpm$median != 0,]
@@ -242,7 +190,7 @@ for (mutation_type in mutation_types) {
       cat("Removed", dim(snv)[1] - dim(snv_filt)[1], "mutations")
     }
     if (mutation_type == "non_expressed_no0") {
-      # cat("\n Filter for gene type: expressed \n")
+      cat("\n Filter for gene type: expressed \n")
       tpm <- readRDS(file = "data/TCGA_tpm/PANCANCER_tpm_mean.rds.gz")
       tpm <- tpm[[tumor_type]]
       tpm <- tpm[tpm$median == 0,]
@@ -251,225 +199,8 @@ for (mutation_type in mutation_types) {
       cat("Removed", dim(snv)[1] - dim(snv_filt)[1], "mutations")
     }
     
-    
-    if (mutation_type == "non_expressed_GTEX"){
-      if (!exists("gtex_annot")){
-        suppressMessages({
-          library(org.Hs.eg.db)
-          library("annotables") 
-        })
-        gtex <- read.table("potential_reviews/GTEx_Analysis_2017-06-05_v8_RNASeQCv1.1.9_gene_median_tpm.gct",
-                           sep = "\t")
-        colnames(gtex) <- gtex[1,]
-        gtex <- gtex[-1,]
-        gtex_annot <- gtex %>% 
-          dplyr::inner_join(grch37, by = c("Description" = "symbol")) %>%
-          dplyr::filter(biotype == "protein_coding")
-      }
-      if (tumor_type == "COADREAD"){
-        # hist(as.numeric(gtex_annot$`Colon - Transverse`), breaks = 100000, xlim = c(0,10))
-        snv_filt <-
-          snv_filt[snv_filt$Hugo_Symbol %in% 
-                     gtex_annot[gtex_annot$`Colon - Sigmoid` == 0,]$Description,]
-        # cat("Removed", dim(snv)[1] - dim(snv_filt)[1], "mutations")
-      }else if (tumor_type == "LUSC" | tumor_type == "LUAD"){
-        snv_filt <-
-          snv_filt[snv_filt$Hugo_Symbol %in% 
-                     gtex_annot[gtex_annot$Lung == 0,]$Description,]
-      }else if (tumor_type == "HNSC"){
-        snv_filt <-
-          snv_filt[snv_filt$Hugo_Symbol %in% 
-                     gtex_annot[gtex_annot$`Esophagus - Mucosa` == 0,]$Description,]
-      }else if (tumor_type == "PAAD"){
-        snv_filt <-
-          snv_filt[snv_filt$Hugo_Symbol %in% 
-                     gtex_annot[gtex_annot$Pancreas == 0,]$Description,]
-      }else if (tumor_type == "GBMLGG"){
-        snv_filt <-
-          snv_filt[snv_filt$Hugo_Symbol %in% 
-                     gtex_annot[gtex_annot$`Brain - Cortex` == 0,]$Description,]
-      }else if (tumor_type == "CESC"){
-        # gtex$`Cervix - Ectocervix`
-        snv_filt <-
-          snv_filt[snv_filt$Hugo_Symbol %in% 
-                     gtex_annot[gtex_annot$`Cervix - Endocervix` == 0,]$Description,]
-      }else if (tumor_type == "BRCA"){
-        snv_filt <-
-          snv_filt[snv_filt$Hugo_Symbol %in% 
-                     gtex_annot[gtex_annot$`Breast - Mammary Tissue` == 0,]$Description,]
-      }else if (tumor_type == "THCA"){
-        snv_filt <-
-          snv_filt[snv_filt$Hugo_Symbol %in% 
-                     gtex_annot[gtex_annot$Thyroid == 0,]$Description,]
-      }
-    }
-    if (mutation_type == "non_expressed_GTEX_TPM"){
-      if (!exists("gtex_annot")){
-        suppressMessages({
-        library(org.Hs.eg.db)
-        library("annotables") 
-          })
-        gtex <- read.table("potential_reviews/GTEx_Analysis_2017-06-05_v8_RNASeQCv1.1.9_gene_median_tpm.gct",
-                           sep = "\t")
-        colnames(gtex) <- gtex[1,]
-        gtex <- gtex[-1,]
-        gtex_annot <- gtex %>% 
-          dplyr::inner_join(grch37, by = c("Description" = "symbol")) %>%
-          dplyr::filter(biotype == "protein_coding")
-      }
-      tpm <- readRDS(file = "data/TCGA_tpm/PANCANCER_tpm_mean.rds.gz")
-      tpm <- tpm[[tumor_type]]
-      tpm <- tpm[tpm$median == 0,]
-      snv_filt <-
-        snv_filt[snv_filt$Hugo_Symbol %in% tpm$`Approved symbol`,]
-      if (tumor_type == "COADREAD"){
-        # hist(as.numeric(gtex_annot$`Colon - Transverse`), breaks = 100000, xlim = c(0,10))
-        snv_filt <-
-          snv_filt[snv_filt$Hugo_Symbol %in% 
-                     gtex_annot[gtex_annot$`Colon - Sigmoid` == 0,]$Description,]
-        # cat("Removed", dim(snv)[1] - dim(snv_filt)[1], "mutations")
-      }else if (tumor_type == "LUSC" | tumor_type == "LUAD"){
-        snv_filt <-
-          snv_filt[snv_filt$Hugo_Symbol %in% 
-                     gtex_annot[gtex_annot$Lung == 0,]$Description,]
-      }else if (tumor_type == "HNSC"){
-        snv_filt <-
-          snv_filt[snv_filt$Hugo_Symbol %in% 
-                     gtex_annot[gtex_annot$`Esophagus - Mucosa` == 0,]$Description,]
-      }else if (tumor_type == "PAAD"){
-        snv_filt <-
-          snv_filt[snv_filt$Hugo_Symbol %in% 
-                     gtex_annot[gtex_annot$Pancreas == 0,]$Description,]
-      }else if (tumor_type == "GBMLGG"){
-        snv_filt <-
-          snv_filt[snv_filt$Hugo_Symbol %in% 
-                     gtex_annot[gtex_annot$`Brain - Cortex` == 0,]$Description,]
-      }else if (tumor_type == "CESC"){
-        # gtex$`Cervix - Ectocervix`
-        snv_filt <-
-          snv_filt[snv_filt$Hugo_Symbol %in% 
-                     gtex_annot[gtex_annot$`Cervix - Endocervix` == 0,]$Description,]
-      }else if (tumor_type == "BRCA"){
-        snv_filt <-
-          snv_filt[snv_filt$Hugo_Symbol %in% 
-                     gtex_annot[gtex_annot$`Breast - Mammary Tissue` == 0,]$Description,]
-      }else if (tumor_type == "THCA"){
-        snv_filt <-
-          snv_filt[snv_filt$Hugo_Symbol %in% 
-                     gtex_annot[gtex_annot$Thyroid == 0,]$Description,]
-      }
-    }
-    if (mutation_type == "expressed_GTEX"){
-      if (!exists("gtex_annot")){
-        suppressMessages({
-          library(org.Hs.eg.db)
-          library("annotables") 
-        })
-        gtex <- read.table("potential_reviews/GTEx_Analysis_2017-06-05_v8_RNASeQCv1.1.9_gene_median_tpm.gct",
-                           sep = "\t")
-        colnames(gtex) <- gtex[1,]
-        gtex <- gtex[-1,]
-        gtex_annot <- gtex %>% 
-          dplyr::inner_join(grch37, by = c("Description" = "symbol")) %>%
-          dplyr::filter(biotype == "protein_coding")
-      }
-      if (tumor_type == "COADREAD"){
-        # hist(as.numeric(gtex_annot$`Colon - Transverse`), breaks = 100000, xlim = c(0,10))
-        snv_filt <-
-          snv_filt[snv_filt$Hugo_Symbol %in% 
-                     gtex_annot[gtex_annot$`Colon - Sigmoid` != 0,]$Description,]
-        # cat("Removed", dim(snv)[1] - dim(snv_filt)[1], "mutations")
-      }else if (tumor_type == "LUSC" | tumor_type == "LUAD"){
-        snv_filt <-
-          snv_filt[snv_filt$Hugo_Symbol %in% 
-                     gtex_annot[gtex_annot$Lung != 0,]$Description,]
-      }else if (tumor_type == "HNSC"){
-        snv_filt <-
-          snv_filt[snv_filt$Hugo_Symbol %in% 
-                     gtex_annot[gtex_annot$`Esophagus - Mucosa` != 0,]$Description,]
-      }else if (tumor_type == "PAAD"){
-        snv_filt <-
-          snv_filt[snv_filt$Hugo_Symbol %in% 
-                     gtex_annot[gtex_annot$Pancreas != 0,]$Description,]
-      }else if (tumor_type == "GBMLGG"){
-        snv_filt <-
-          snv_filt[snv_filt$Hugo_Symbol %in% 
-                     gtex_annot[gtex_annot$`Brain - Cortex` != 0,]$Description,]
-      }else if (tumor_type == "CESC"){
-        # gtex$`Cervix - Ectocervix`
-        snv_filt <-
-          snv_filt[snv_filt$Hugo_Symbol %in% 
-                     gtex_annot[gtex_annot$`Cervix - Endocervix` != 0,]$Description,]
-      }else if (tumor_type == "BRCA"){
-        snv_filt <-
-          snv_filt[snv_filt$Hugo_Symbol %in% 
-                     gtex_annot[gtex_annot$`Breast - Mammary Tissue` != 0,]$Description,]
-      }else if (tumor_type == "THCA"){
-        snv_filt <-
-          snv_filt[snv_filt$Hugo_Symbol %in% 
-                     gtex_annot[gtex_annot$Thyroid != 0,]$Description,]
-      }
-    }
-    if (mutation_type == "expressed_GTEX_TPM"){
-      if (!exists("gtex_annot")){
-        suppressMessages({
-          library(org.Hs.eg.db)
-          library("annotables") 
-        })
-        gtex <- read.table("potential_reviews/GTEx_Analysis_2017-06-05_v8_RNASeQCv1.1.9_gene_median_tpm.gct",
-                           sep = "\t")
-        colnames(gtex) <- gtex[1,]
-        gtex <- gtex[-1,]
-        gtex_annot <- gtex %>% 
-          dplyr::inner_join(grch37, by = c("Description" = "symbol")) %>%
-          dplyr::filter(biotype == "protein_coding")
-      }
-      tpm <- readRDS(file = "data/TCGA_tpm/PANCANCER_tpm_mean.rds.gz")
-      tpm <- tpm[[tumor_type]]
-      tpm <- tpm[tpm$median != 0,]
-      snv_filt <-
-        snv_filt[snv_filt$Hugo_Symbol %in% tpm$`Approved symbol`,]
-      if (tumor_type == "COADREAD"){
-        # hist(as.numeric(gtex_annot$`Colon - Transverse`), breaks = 100000, xlim = c(0,10))
-        snv_filt <-
-          snv_filt[snv_filt$Hugo_Symbol %in% 
-                     gtex_annot[gtex_annot$`Colon - Sigmoid` != 0,]$Description,]
-        # cat("Removed", dim(snv)[1] - dim(snv_filt)[1], "mutations")
-      }else if (tumor_type == "LUSC" | tumor_type == "LUAD"){
-        snv_filt <-
-          snv_filt[snv_filt$Hugo_Symbol %in% 
-                     gtex_annot[gtex_annot$Lung != 0,]$Description,]
-      }else if (tumor_type == "HNSC"){
-        snv_filt <-
-          snv_filt[snv_filt$Hugo_Symbol %in% 
-                     gtex_annot[gtex_annot$`Esophagus - Mucosa` != 0,]$Description,]
-      }else if (tumor_type == "PAAD"){
-        snv_filt <-
-          snv_filt[snv_filt$Hugo_Symbol %in% 
-                     gtex_annot[gtex_annot$Pancreas != 0,]$Description,]
-      }else if (tumor_type == "GBMLGG"){
-        snv_filt <-
-          snv_filt[snv_filt$Hugo_Symbol %in% 
-                     gtex_annot[gtex_annot$`Brain - Cortex` != 0,]$Description,]
-      }else if (tumor_type == "CESC"){
-        # gtex$`Cervix - Ectocervix`
-        snv_filt <-
-          snv_filt[snv_filt$Hugo_Symbol %in% 
-                     gtex_annot[gtex_annot$`Cervix - Endocervix` != 0,]$Description,]
-      }else if (tumor_type == "BRCA"){
-        snv_filt <-
-          snv_filt[snv_filt$Hugo_Symbol %in% 
-                     gtex_annot[gtex_annot$`Breast - Mammary Tissue` != 0,]$Description,]
-      }else if (tumor_type == "THCA"){
-        snv_filt <-
-          snv_filt[snv_filt$Hugo_Symbol %in% 
-                     gtex_annot[gtex_annot$Thyroid != 0,]$Description,]
-      }
-    }
-    
-    
     if (mutation_type == "remove_OG") {
-      # cat("\n Filter for gene type: OGs \n")
+      cat("\n Filter for gene type: OGs \n")
       OGs <-
         read.csv(file = "data/CancerGenes/OG_list.tsv", sep = "\t")
       snv_filt <-
@@ -478,7 +209,7 @@ for (mutation_type in mutation_types) {
       rm(OGs)
     }
     if (mutation_type == "remove_TSG") {
-      # cat("\n Filter for gene type: TSGs \n")
+      cat("\n Filter for gene type: TSGs \n")
       TSGs <-
         read.csv(file = "data/CancerGenes/TSG_list.tab", sep = "\t")
       snv_filt <-
@@ -487,7 +218,7 @@ for (mutation_type in mutation_types) {
       rm(TSGs)
     }
     if (mutation_type == "remove_BOTH") {
-      # cat("\n Filter for gene type: both TSGs and OGs \n")
+      cat("\n Filter for gene type: both TSGs and OGs \n")
       OGs <-
         read.csv(file = "data/CancerGenes/OG_list.tsv", sep = "\t")
       TSGs <-
@@ -558,30 +289,6 @@ for (mutation_type in mutation_types) {
       snv_filt <- snv_filt[!is.na(snv_filt$Chromosome),]
       snv_filt <- unique(snv_filt)
     }
-    if (mutation_type == "haploinsufficient_diffCutoff") {
-      cat("\n Filter for haploinsufficient genes")
-      pLI_scores <-
-        readxl::read_xlsx("data/misc/pLI_scores.xlsx", sheet = 2)
-      pLI_scores <-
-        pLI_scores[!is.na(pLI_scores$chr),] # remove genes within X and Y chromosomes
-      pLI_scores_intolerant <- pLI_scores[pLI_scores$pLI >= 0.9,]
-      snv_filt <-
-        snv_filt[snv_filt$Hugo_Symbol %in% pLI_scores_intolerant$gene,]
-      snv_filt <- snv_filt[!is.na(snv_filt$Chromosome),]
-      snv_filt <- unique(snv_filt)
-    }
-    if (mutation_type == "non_haploinsufficient_diffcutoff") {
-      cat("\n Filter for non-haploinsufficient genes")
-      pLI_scores <-
-        readxl::read_xlsx("data/misc/pLI_scores.xlsx", sheet = 2)
-      pLI_scores <-
-        pLI_scores[!is.na(pLI_scores$chr),] # remove genes within X and Y chromosomes
-      pLI_scores_tolerant <- pLI_scores[pLI_scores$pLI < 0.1,]
-      snv_filt <-
-        snv_filt[snv_filt$Hugo_Symbol %in% pLI_scores_tolerant$gene,]
-      snv_filt <- snv_filt[!is.na(snv_filt$Chromosome),]
-      snv_filt <- unique(snv_filt)
-    }
     
     if (mutation_type == "haploinsufficient_damaging") {
       # cat("\n Filter for haploinsufficient_damaging genes")
@@ -613,7 +320,6 @@ for (mutation_type in mutation_types) {
       snv_filt <- snv_filt[as.numeric(snv_filt$CADD_raw) < 3.5,]
       snv_filt <- snv_filt[!is.na(snv_filt$Chromosome),]
     }
-    
     if (mutation_type == "non_haploinsufficient_damaging") {
       # cat("\n Filter for haploinsufficient_nondamaging genes")
       pLI_scores <-
@@ -634,7 +340,7 @@ for (mutation_type in mutation_types) {
     ## 1st Loop: filter for mutation properties ----
     # cat("\n > Filter for Mutations Type \n")
     if (mutation_type == "all_mutations") {
-      # cat("\n no mutation filtering\n")
+      cat("\n no mutation filtering\n")
     }
     
     if (mutation_type == "polyphen_highlyDamaging") {
@@ -646,15 +352,6 @@ for (mutation_type in mutation_types) {
       snv_filt <- snv_filt[!is.na(snv_filt$Chromosome),]
       snv_filt <- unique(snv_filt)
     }
-    if (mutation_type == "polyphen_highlyDamaging_new") {
-      # cat("\n Filter for polyphen_highlyDamaging mutations")
-      mean(as.numeric(snv_filt$Polyphen2_HVAR_score), na.rm = T)
-      snv_filt <- snv_filt[!is.na(snv_filt$Polyphen2_HVAR_score),]
-      snv_filt <-
-        snv_filt[as.numeric(snv_filt$Polyphen2_HVAR_score) >= 0.15,]
-      snv_filt <- snv_filt[!is.na(snv_filt$Chromosome),]
-      snv_filt <- unique(snv_filt)
-    }
     if (mutation_type == "polyphen_moderatelyDamaging") {
       # cat("\n Filter for polyphen_moderatelyDamaging mutations")
       snv_filt <- snv_filt[!is.na(snv_filt$Polyphen2_HVAR_score),]
@@ -663,21 +360,9 @@ for (mutation_type in mutation_types) {
       snv_filt <- snv_filt[!is.na(snv_filt$Chromosome),]
       snv_filt <- unique(snv_filt)
     }
-    if (mutation_type == "polyphen_moderatelyDamaging_new") {
-      # cat("\n Filter for polyphen_moderatelyDamaging mutations")
-      snv_filt <- snv_filt[!is.na(snv_filt$Polyphen2_HVAR_score),]
-      snv_filt <-
-        snv_filt[as.numeric(snv_filt$Polyphen2_HVAR_score) <= 0.15,]
-      snv_filt <- snv_filt[!is.na(snv_filt$Chromosome),]
-      snv_filt <- unique(snv_filt)
-    }
     
     if (mutation_type == "CADD_highlyDamaging") {
       # cat("\n Filter for CADD_highlyDamaging mutations")
-      # plot(density(as.numeric(snv_filt$CADD_raw), na.rm = T))
-      # abline(col = "red", v = mean(as.numeric(snv_filt$CADD_raw), na.rm = T))
-      # abline(col = "blue", v = 2)
-      # snv_filt <- snv_filt[!is.na(as.numeric(snv_filt$CADD_raw)),]
       snv_filt <- snv_filt[as.numeric(snv_filt$CADD_phred) >= 20,]
       snv_filt <- snv_filt[as.numeric(snv_filt$CADD_raw) >= 3.5,]
       snv_filt <- snv_filt[!is.na(snv_filt$Chromosome),]
@@ -688,14 +373,12 @@ for (mutation_type in mutation_types) {
     }
     if (mutation_type == "CADD_moderatelyDamaging") {
       # cat("\n Filter for CADD_moderatelyDamaging mutations")
-      # snv_filt <- snv_filt[!is.na(as.numeric(snv_filt$CADD_raw)),]
       snv_filt <- snv_filt[as.numeric(snv_filt$CADD_phred) < 20,]
       snv_filt <- snv_filt[as.numeric(snv_filt$CADD_raw) < 3.5,]
       snv_filt <- snv_filt[!is.na(snv_filt$Chromosome),]
     }
     if (mutation_type == "CADD_moderatelyDamaging_phred") {
       # cat("\n Filter for CADD_moderatelyDamaging mutations")
-      # snv_filt <- snv_filt[!is.na(as.numeric(snv_filt$CADD_raw)),]
       snv_filt <- snv_filt[as.numeric(snv_filt$CADD_phred) < 20,]
       snv_filt <- snv_filt[!is.na(snv_filt$Chromosome),]
     }

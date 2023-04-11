@@ -3,9 +3,6 @@
 # This script produces as output mutation score and amplification frequency for
 # each chromosome (for each tumor type)
 
-# rm(list=ls())
-gc(full=T)
-
 suppressMessages({
   library(readxl)
   library(tibble)
@@ -26,7 +23,6 @@ cat(
 )
 
 setwd("../")
-# setwd("/home/ieo5099/Desktop_linux/mutation_compensation/")
 
 tumor_types <- c(
   "BRCA",
@@ -57,9 +53,6 @@ tumor_types <- c(
     
 mutation_types <- c(
   # "all_mutations"
-  # "no_hypermut"
-  # "all_mutations_mutsWithinCNA"
-  # "removeWGD"
 
   # "haploinsufficient_GHIS"
   # "non_haploinsufficient_GHIS"

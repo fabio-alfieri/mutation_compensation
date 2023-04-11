@@ -1,11 +1,7 @@
-
 # SEGMENT-LEVEL ANALYSIS
 #
 # This script produces as output mutation score and amplification frequency for
 # each chromosome (for each tumor type) with different bin sizes and conditions
-
-# rm(list=ls())
-gc(full=T)
 
 suppressMessages({
   require(ggplot2)
@@ -73,8 +69,7 @@ if (opt$statistics == "n") {
   produce_statistics <- FALSE
 }
 
-# setwd("../")
-setwd("/home/ieo5099/Desktop_linux/mutation_compensation/")
+setwd("../")
 
 tumor_types <- c(
   "LUAD",
@@ -104,20 +99,6 @@ tumor_types <- c(
 )
 
 segment_cutoffs <- c(20)
-
-stringent_mutations <- F
-if(stringent_mutations){
-  segment_cutoffs_muts <- c( #2.5,
-    # 5,
-    10,
-    15,
-    20
-    # 30
-    )
-}else{
-  segment_cutoffs_muts <- 20
-}
-
 
 all_conditions <- data.frame()
 
@@ -183,9 +164,6 @@ if (produce_tables) {
     cat("\n > MUTATION segment_mean cutoff: ", segment_cutoff_muts)
     
     for(segment_cutoff in segment_cutoffs){
-      if(stringent_mutations){
-        cat("\n > COPY-NUMBER segment_mean cutoff: ", segment_cutoff, "\n")
-      }
       cat("\n >> (1) analyis: produce correlations at different bin sizes \n")
       
       ## >> 1st loop (optional): varying segment lengths << ----
@@ -269,35 +247,15 @@ if (produce_tables) {
         
         ## >> 2nd loop: mutation/gene type conditions << ----
         for (condition in conditions) {
-          if (!stringent_mutations) {
-            if(condition == "amplifications" | condition == "deletions"){
-              source_table_path <-
-                paste0("results/tables/01_binLevelAnalysis/all_mutations_vs_CN",
-                       ifelse(segment_cutoff=="20","",paste0("_0",segment_cutoff)),"/")
-            }else{
-              source_table_path <-
-                paste0("results/tables/01_binLevelAnalysis/",
-                       condition,
-                       "_vs_CN",ifelse(segment_cutoff=="20","",paste0("_0",segment_cutoff)),"/")
-            }
+          if(condition == "amplifications" | condition == "deletions"){
+            source_table_path <-
+              paste0("results/tables/01_binLevelAnalysis/all_mutations_vs_CN",
+                     ifelse(segment_cutoff=="20","",paste0("_0",segment_cutoff)),"/")
           }else{
-              if(condition == "amplifications" | condition == "deletions"){
-                source_table_path <-
-                  paste0("results/tables/01_binLevelAnalysis/all_mutations_vs_CN",
-                         ifelse(segment_cutoff=="20","",paste0("_0",segment_cutoff)),"/")
-                source_table_path_stringent <-
-                  paste0("results/tables/01_binLevelAnalysis/all_mutations_vs_CN",
-                         ifelse(segment_cutoff_muts=="20","",paste0("_0",segment_cutoff_muts)),"/")
-              }else{
-                source_table_path <-
-                  paste0("results/tables/01_binLevelAnalysis/",
-                         condition,
-                         "_vs_CN",ifelse(segment_cutoff=="20","",paste0("_0",segment_cutoff)),"/")
-                source_table_path_stringent <-
-                  paste0("results/tables/01_binLevelAnalysis/",
-                         condition,
-                         "_vs_CN",ifelse(segment_cutoff_muts=="20","",paste0("_0",segment_cutoff_muts)),"/")
-              }
+            source_table_path <-
+              paste0("results/tables/01_binLevelAnalysis/",
+                     condition,
+                     "_vs_CN",ifelse(segment_cutoff=="20","",paste0("_0",segment_cutoff)),"/")
           }
           
           cat(" > correlation condition: ", condition, "\n")
@@ -483,185 +441,6 @@ if (produce_tables) {
                   )
                 ), chr = 22)
               
-              
-              if(stringent_mutations){
-                chr1[,c(11,12)] <-
-                  cbind(read.table(
-                    file = paste0(
-                      source_table_path_stringent,
-                      tumor_type,
-                      "_chr1_1000000BIN_table.txt"
-                    )
-                  ), chr = 1)[,c(11,12)]
-                chr2[,c(11,12)]  <-
-                  cbind(read.table(
-                    file = paste0(
-                      source_table_path_stringent,
-                      tumor_type,
-                      "_chr2_1000000BIN_table.txt"
-                    )
-                  ), chr = 2)[,c(11,12)] 
-                chr3[,c(11,12)]  <-
-                  cbind(read.table(
-                    file = paste0(
-                      source_table_path_stringent,
-                      tumor_type,
-                      "_chr3_1000000BIN_table.txt"
-                    )
-                  ), chr = 3)[,c(11,12)] 
-                chr4[,c(11,12)]  <-
-                  cbind(read.table(
-                    file = paste0(
-                      source_table_path_stringent,
-                      tumor_type,
-                      "_chr4_1000000BIN_table.txt"
-                    )
-                  ), chr = 4)[,c(11,12)] 
-                chr5[,c(11,12)]  <-
-                  cbind(read.table(
-                    file = paste0(
-                      source_table_path_stringent,
-                      tumor_type,
-                      "_chr5_1000000BIN_table.txt"
-                    )
-                  ), chr = 5)[,c(11,12)] 
-                chr6[,c(11,12)]  <-
-                  cbind(read.table(
-                    file = paste0(
-                      source_table_path_stringent,
-                      tumor_type,
-                      "_chr6_1000000BIN_table.txt"
-                    )
-                  ), chr = 6)[,c(11,12)] 
-                chr7[,c(11,12)]  <-
-                  cbind(read.table(
-                    file = paste0(
-                      source_table_path_stringent,
-                      tumor_type,
-                      "_chr7_1000000BIN_table.txt"
-                    )
-                  ), chr = 7)[,c(11,12)] 
-                chr8[,c(11,12)]  <-
-                  cbind(read.table(
-                    file = paste0(
-                      source_table_path_stringent,
-                      tumor_type,
-                      "_chr8_1000000BIN_table.txt"
-                    )
-                  ), chr = 8)[,c(11,12)] 
-                chr9[,c(11,12)]  <-
-                  cbind(read.table(
-                    file = paste0(
-                      source_table_path_stringent,
-                      tumor_type,
-                      "_chr9_1000000BIN_table.txt"
-                    )
-                  ), chr = 9)[,c(11,12)] 
-                chr10[,c(11,12)]  <-
-                  cbind(read.table(
-                    file = paste0(
-                      source_table_path_stringent,
-                      tumor_type,
-                      "_chr10_1000000BIN_table.txt"
-                    )
-                  ), chr = 10)[,c(11,12)] 
-                chr11[,c(11,12)]  <-
-                  cbind(read.table(
-                    file = paste0(
-                      source_table_path_stringent,
-                      tumor_type,
-                      "_chr11_1000000BIN_table.txt"
-                    )
-                  ), chr = 11)[,c(11,12)] 
-                chr12[,c(11,12)]  <-
-                  cbind(read.table(
-                    file = paste0(
-                      source_table_path_stringent,
-                      tumor_type,
-                      "_chr12_1000000BIN_table.txt"
-                    )
-                  ), chr = 12)[,c(11,12)] 
-                chr13[,c(11,12)]  <-
-                  cbind(read.table(
-                    file = paste0(
-                      source_table_path_stringent,
-                      tumor_type,
-                      "_chr13_1000000BIN_table.txt"
-                    )
-                  ), chr = 13)[,c(11,12)] 
-                chr14[,c(11,12)]  <-
-                  cbind(read.table(
-                    file = paste0(
-                      source_table_path_stringent,
-                      tumor_type,
-                      "_chr14_1000000BIN_table.txt"
-                    )
-                  ), chr = 14)[,c(11,12)] 
-                chr15[,c(11,12)]  <-
-                  cbind(read.table(
-                    file = paste0(
-                      source_table_path_stringent,
-                      tumor_type,
-                      "_chr15_1000000BIN_table.txt"
-                    )
-                  ), chr = 15)[,c(11,12)] 
-                chr16[,c(11,12)]  <-
-                  cbind(read.table(
-                    file = paste0(
-                      source_table_path_stringent,
-                      tumor_type,
-                      "_chr16_1000000BIN_table.txt"
-                    )
-                  ), chr = 16)[,c(11,12)] 
-                chr17[,c(11,12)]  <-
-                  cbind(read.table(
-                    file = paste0(
-                      source_table_path_stringent,
-                      tumor_type,
-                      "_chr17_1000000BIN_table.txt"
-                    )
-                  ), chr = 17)[,c(11,12)] 
-                chr18[,c(11,12)]  <-
-                  cbind(read.table(
-                    file = paste0(
-                      source_table_path_stringent,
-                      tumor_type,
-                      "_chr18_1000000BIN_table.txt"
-                    )
-                  ), chr = 18)[,c(11,12)] 
-                chr19[,c(11,12)]  <-
-                  cbind(read.table(
-                    file = paste0(
-                      source_table_path_stringent,
-                      tumor_type,
-                      "_chr19_1000000BIN_table.txt"
-                    )
-                  ), chr = 19)[,c(11,12)] 
-                chr20[,c(11,12)]  <-
-                  cbind(read.table(
-                    file = paste0(
-                      source_table_path_stringent,
-                      tumor_type,
-                      "_chr20_1000000BIN_table.txt"
-                    )
-                  ), chr = 20)[,c(11,12)] 
-                chr21[,c(11,12)]  <-
-                  cbind(read.table(
-                    file = paste0(
-                      source_table_path_stringent,
-                      tumor_type,
-                      "_chr21_1000000BIN_table.txt"
-                    )
-                  ), chr = 21)[,c(11,12)] 
-                chr22[,c(11,12)]  <-
-                  cbind(read.table(
-                    file = paste0(
-                      source_table_path_stringent,
-                      tumor_type,
-                      "_chr22_1000000BIN_table.txt"
-                    )
-                  ), chr = 22)[,c(11,12)] 
-              }
               
               # 3rd loop: remove the extremes of the chromosomes (uncovered by CNAs) ----
               if (extremes == "remove") {

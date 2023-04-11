@@ -11,6 +11,7 @@ suppressMessages({
   library(dplyr)
   library(ggplot2)
   library(readr)
+  library(data.table)
 })
 
 
@@ -148,11 +149,16 @@ cat(paste0(" \n > Loading ",ifelse(test, "MOCK file containing", "file containin
 if (test) {
   mutations_wCCF <-
     read.csv(paste0("data/misc/PCAWG_mutations_wCCF_allTumorTypes_test.tsv"), sep = "\t")
-} else{
+} else {
   # ATTENTION: big dataset (5 GB) !
+  # mutations_wCCF <-
+  #   read.csv(paste0("data/misc/PCAWG_mutations_wCCF_allTumorTypes.tsv"), sep = "\t")
+
   mutations_wCCF <-
-    read.csv(paste0("data/misc/PCAWG_mutations_wCCF_allTumorTypes.tsv"), sep = "\t")
+    fread(paste0("data/misc/PCAWG_mutations_wCCF_allTumorTypes.tsv"), sep = "\t",
+          nThread = 8)
 }
+
 
 mutations_wCCF$multiplicity <-
   as.factor(mutations_wCCF$multiplicity)
@@ -161,70 +167,56 @@ mutations_wCCF$multiplicity <-
 mutations_wCCF$multiplicity <-
   as.numeric(as.character(mutations_wCCF$multiplicity))
 
-intergenic_region <-
-  mutations_wCCF %>% filter(consequence_type == "intergenic_region")
-intergenic_region_mixed <-
-  mutations_wCCF %>% filter(
-    consequence_type == "intergenic_region:upstream_gene_variant" |
-      consequence_type == "intergenic_region:downstream_gene_variant" |
-      consequence_type == "downstream_gene_variant:intergenic_region" |
-      consequence_type == "upstream_gene_variant:intergenic_region" |
-      consequence_type == "intergenic_region:upstream_gene_variant:downstream_gene_variant" |
-      consequence_type == "intergenic_region:downstream_gene_variant:upstream_gene_variant" |
-      consequence_type == "downstream_gene_variant:intergenic_region:upstream_gene_variant" |
-      consequence_type == "upstream_gene_variant:intergenic_region:downstream_gene_variant" |
-      consequence_type == "downstream_gene_variant:upstream_gene_variant:intergenic_region" |
-      consequence_type == "upstream_gene_variant:downstream_gene_variant:intergenic_region"
-  )
+## define coding and non-coding mutations
+coding <- mutations_wCCF[mutations_wCCF$consequence_type %in%
+                         names(table(mutations_wCCF$consequence_type)[str_detect(names(table(mutations_wCCF$consequence_type)),
+                                                                      "exon")]) |
+                         mutations_wCCF$consequence_type %in%
+                         names(table(mutations_wCCF$consequence_type)[str_detect(names(table(mutations_wCCF$consequence_type)),
+                                                                      "missense")]) |
+                         mutations_wCCF$consequence_type %in%
+                         names(table(mutations_wCCF$consequence_type)[str_detect(names(table(mutations_wCCF$consequence_type)),
+                                                                      "synonymous")]),]
+non_coding <- mutations_wCCF[mutations_wCCF$consequence_type  %in%
+                            names(table(mutations_wCCF$consequence_type)[str_detect(names(table(mutations_wCCF$consequence_type)),
+                                                                         "intergenic")]) |
+                            mutations_wCCF$consequence_type %in%
+                            names(table(mutations_wCCF$consequence_type)[str_detect(names(table(mutations_wCCF$consequence_type)),
+                                                                         "intron")]) & !(mutations_wCCF$consequence_type %in%
+                                                                                           names(table(mutations_wCCF$consequence_type)[str_detect(names(table(mutations_wCCF$consequence_type)),
+                                                                                                                                        "exon")]) |
+                                                                                           mutations_wCCF$consequence_type %in%
+                                                                                           names(table(mutations_wCCF$consequence_type)[str_detect(names(table(mutations_wCCF$consequence_type)),
+                                                                                                                                        "missense")]) |
+                                                                                           mutations_wCCF$consequence_type %in%
+                                                                                           names(table(mutations_wCCF$consequence_type)[str_detect(names(table(mutations_wCCF$consequence_type)),
+                                                                                                                                        "synonymous")])),]
 
-exon_variant  <-
-  mutations_wCCF %>% filter(consequence_type == "exon_variant")
-exon_variant_mixed  <-
-  mutations_wCCF %>% filter(
-    consequence_type == "intron_variant:exon_variant" |
-      consequence_type == "exon_variant:intron_variant" |
-      consequence_type == "downstream_gene_variant:exon_variant" |
-      consequence_type == "upstream_gene_variant:exon_variant" |
-      consequence_type == "intron_variant:downstream_gene_variant:exon_variant" |
-      consequence_type == "exon_variant:upstream_gene_variant" |
-      consequence_type == "exon_variant:downstream_gene_variant" |
-      consequence_type == "intron_variant:upstream_gene_variant:exon_variant" |
-      consequence_type == "downstream_gene_variant:intron_variant:exon_variant" |
-      consequence_type == "intron_variant:exon_variant:downstream_gene_variant" |
-      consequence_type == "intron_variant:exon_variant:upstream_gene_variant"
-  )
+coding_nonsynonym <- mutations_wCCF[mutations_wCCF$consequence_type %in%
+                           names(table(mutations_wCCF$consequence_type)[str_detect(names(table(mutations_wCCF$consequence_type)),
+                                                                                   "exon")]) |
+                           mutations_wCCF$consequence_type %in%
+                           names(table(mutations_wCCF$consequence_type)[str_detect(names(table(mutations_wCCF$consequence_type)),
+                                                                                   "missense")]) & !(
+                           mutations_wCCF$consequence_type %in%
+                           names(table(mutations_wCCF$consequence_type)[str_detect(names(table(mutations_wCCF$consequence_type)),
+                                                                                   "synonymous")])),]
 
-missense_variant <-
-  mutations_wCCF %>% filter(consequence_type == "missense_variant")
-missense_variant_mixed <-
-  mutations_wCCF %>% filter(
-    consequence_type == "missense_variant:exon_variant" |
-      consequence_type == "missense_variant:downstream_gene_variant" |
-      consequence_type == "intron_variant:missense_variant" |
-      consequence_type == "downstream_gene_variant:missense_variant" |
-      consequence_type == "exon_variant:missense_variant" |
-      consequence_type == "missense_variant:upstream_gene_variant" |
-      consequence_type == "missense_variant:intron_variant" |
-      consequence_type == "upstream_gene_variant:missense_variant" |
-      consequence_type == "missense_variant:3_prime_UTR_variant" |
-      consequence_type == "missense_variant:downstream_gene_variant:exon_variant" |
-      consequence_type == "missense_variant:exon_variant:downstream_gene_variant" |
-      consequence_type == "3_prime_UTR_variant:missense_variant" |
-      consequence_type == "downstream_gene_variant:missense_variant:upstream_gene_variant" |
-      consequence_type == "downstream_gene_variant:missense_variant:exon_variant"
-  )
-synonymous_variant <-
-  mutations_wCCF %>% filter(consequence_type == "synonymous_variant")
 
-# define coding and non-coding mutations
-non_coding <- rbind(intergenic_region, intergenic_region_mixed)
-coding <- rbind(
-  missense_variant,
-  missense_variant_mixed,
-  exon_variant,
-  exon_variant_mixed,
-  synonymous_variant
-)
+coding_synonym <- mutations_wCCF[!(mutations_wCCF$consequence_type %in%
+                                   names(table(mutations_wCCF$consequence_type)[str_detect(names(table(mutations_wCCF$consequence_type)),
+                                                                                           "exon")]) |
+                                   mutations_wCCF$consequence_type %in%
+                                   names(table(mutations_wCCF$consequence_type)[str_detect(names(table(mutations_wCCF$consequence_type)),
+                                                                                           "missense")])) &
+                                   mutations_wCCF$consequence_type %in%
+                                   names(table(mutations_wCCF$consequence_type)[str_detect(names(table(mutations_wCCF$consequence_type)),
+                                                                                           "synonymous")]),]
+
+
+
+# coding_syn <- synonymous_variant
+# coding_nonsyn <- rbind(missense_variant, missense_variant_mixed)
 
 timing_kar <- function(ta) {
   ta2.0 <- ta[ta$karyotype == "2:0", ]
@@ -287,8 +279,31 @@ timing_kar <- function(ta) {
 non_coding_timing <- timing_kar(non_coding)
 coding_timing <- timing_kar(coding)
 
+lam <- rbind(cbind(non_coding_timing, status = "non_coding"), 
+             cbind(coding_timing, status = "coding"))
+
+fisher.test(table(lam$timing, lam$status),
+            alternative = "less")
+
 # pie(table(non_coding_timing$timing) / length(non_coding_timing$timing))
 # pie(table(coding_timing$timing) / length(coding_timing$timing))
+
+coding_synonym_timing <- timing_kar(coding_synonym)
+coding_nonsynonym_timing <- timing_kar(coding_nonsynonym)
+
+pie(table(coding_synonym_timing$timing) / length(coding_synonym_timing$timing))
+pie(table(coding_nonsynonym_timing$timing) / length(coding_nonsynonym_timing$timing))
+
+rbind(table(coding_synonym_timing$timing),
+      table(coding_nonsynonym_timing$timing))[, 1:2]
+fisher.test(rbind(
+  table(coding_synonym_timing$timing),
+  table(coding_nonsynonym_timing$timing)
+)[, 1:2], alternative = "greater")
+chisq.test(rbind(
+  table(coding_synonym_timing$timing),
+  table(coding_nonsynonym_timing$timing)
+)[, 1:2])
 
 mutations_wCCF$multiplicity <-
   as.factor(mutations_wCCF$multiplicity)
@@ -344,6 +359,19 @@ for (kar in c(
   })
 }
 dev.off()
+
+
+x <- rbind(cbind(as.data.frame(table(coding_timing$karyotype, coding_timing$timing)),
+                status = "coding"),
+           cbind(as.data.frame(table(non_coding_timing$karyotype, non_coding_timing$timing)),
+                 status = "non_coding"))
+
+
+ggplot(x, aes(y = Freq, x = paste0(Var1,"_",status))) +
+  geom_bar(stat="identity", aes(fill = Var2)) +
+  geom_text(aes(label=Freq), position=position_stack(vjust=0.5), size=2)
+
+
 
 rbind(table(non_coding_timing$timing),
       table(coding_timing$timing))[, 1:2]

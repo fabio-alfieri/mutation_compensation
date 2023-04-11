@@ -12,7 +12,7 @@ Using 8,690 primary tumor samples from The Cancer Genome Atlas (TCGA) dataset, w
 
 ### Reproduce analysis and figures
 
-The available code was run on tested and run on Ubuntu (22.04.01 LTS), using R (4.2.1) and Python (3.9.12).
+The available code was run and tested on Ubuntu (22.04.01 LTS), using R (4.2.1) and Python (3.9.12).
 
 #### Clone the repository
 
@@ -53,7 +53,7 @@ mkdir results/tables
 mkdir results/plots
 ```
 
-#### Run the analysis
+#### Run the analyses
 
 In order to run the R scripts you should activate the conda environment and then launch the script:
 
@@ -68,10 +68,12 @@ Script and detailed parameters:
 
 | Rscript | Description | Parameters |
 | --- | --- | --- |
-| 00_geneLevelAnalysis.R | produces gene level scores and correlations | `--tables` (y/[n]), produces gene-level score tables. If y, it may take several hours and it requires parallelization (see `cores` parameter within the Rscript and set according to your machine). Set n to skip this step, but only if you already downloaded the preprocessed data contained results.zip folder; `--statistics` ([y]/n), calculates gene level correlations |
-| 01_binLevelAnalysis.R | produces bin level scores with multiple conditions | no parameters |
-| 02_statisticalAnalysis.R | produce correlations using different segmentation lengths and conditions | `--tables` ([y]/n), it may take several minutes depending on your machine; `--statistics` ([y]/n), produces statistics and plots |
-| 03_BRCA-PAAD_analysis.R | produces BRCA and PAAD analysis using OG and GO scores | no parameters |
-| 04_timingAnalysis.R | produces CNAqc and timing analysis on PCAWG dataset | `--runCNAqc` (y/[n]), if set to y it may take several hours; `--test` (y/[n]), if set to y it uses a small dataset (100,000 mutations) instead of the 5.5GB one |
-| 05_protectionAnalysis.R | retrieves the tables for protected and unprotected gene sets and perform Gene Ontology analysis |  `--runPermutations` (y/[n]), if set to y it may take several time; it run 10,000 permutations to caculate the distribution percentile of Pi scores |
-
+| 00_geneLevelAnalysis.R | it produces gene level scores and correlations | `--tables` (y/[n]), produces gene-level score tables. If y, it may take several hours and it requires parallelization (see `cores` parameter within the Rscript and set according to your machine). Set n to skip this step, but only if you already downloaded the preprocessed data contained results.zip folder; `--statistics` ([y]/n), calculates gene level correlations |
+| 01_binLevelAnalysis_TCGA.R | it produces bin level scores with multiple conditions using TCGA | no parameters |
+| 01_binLevelAnalysis_PCAWG.R | it produces bin level scores with multiple conditions using PCAWG | no parameters |
+| 02_statisticalAnalysis_TCGA.R | it produces correlations using different segmentation lengths and conditions | `--tables` ([y]/n), it may take several minutes depending on your machine; `--statistics` ([y]/n), produces statistics and plots |
+| 02_statisticalAnalysis_PCAWG.R | it produces correlations using different segmentation lengths and conditions | no parameters |
+| 03_BRCA-PAAD_analysis.R | it produces BRCA and PAAD analyses using OG and GO scores | no parameters |
+| 04_timingAnalysis.R | it produces CNAqc and timing analyses on PCAWG dataset using the timing method | `--runCNAqc` (y/[n]), if set to 'y' it may take several hours; `--test` (y/[n]), if set to 'y' it uses a small dataset (100,000 mutations) instead of the 5.5GB one |
+| 04_bufferingAnalysis.R | it produces the analyses on PCAWG dataset using the buffering method | no parameters |
+| 05_protectionAnalysis.R | rit etrieves the tables for protected and unprotected gene sets and perform Gene Ontology analyses |  `--runPermutations` (y/[n]), if set to 'y' it may take some time; it runs 10,000 permutations to caculate the distribution percentile of Pi scores |

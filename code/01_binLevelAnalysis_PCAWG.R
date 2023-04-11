@@ -15,16 +15,14 @@ suppressMessages({
   library(parallel)
 })
   
-# setwd("~/mountHD/noncoding/")
 setwd("../")
 
-scratchMS <- "/home/ieo5099/mountHPC/scratch/MS/falfieri/PCAWG/" # replace with correct directory
 fixed_bin_length <- 1000000
 
 results_table_path <- "results/tables/01_binLevel_PCAWG/"
 system(paste("mkdir -p", results_table_path))
 
-columns <- read.table("/home/ieo5099/mountHPC/scratch/MS/falfieri/PCAWG/patient_per_tumortype.tsv",
+columns <- read.table("data/PCAWG/patient_per_tumortype.tsv",
                       skip = 1)
 if(F){
   tumor_types <- levels(factor(columns$V1))
@@ -53,11 +51,11 @@ mclapply(tumor_types, mc.cores = 11, function(tumor_type){
   # for(tumor_type in tumor_types){
   print(tumor_type)
   if(merged){
-    snv <- read.table(file = paste0(scratchMS,"snv.merged/",tumor_type,"_snv.tsv"))
-    cna <- read.table(file = paste0(scratchMS,"cna.merged/",tumor_type,"_cna.tsv"))
+    snv <- read.table(file = paste0("data/PCAWG/snv.merged/",tumor_type,"_snv.tsv.gz"))
+    cna <- read.table(file = paste0("data/PCAWG/cna.merged/",tumor_type,"_cna.tsv.gz"))
   }else{
-    snv <- read.table(file = paste0(scratchMS,"snv/",tumor_type,"_snv.tsv"))
-    cna <- read.table(file = paste0(scratchMS,"cna/",tumor_type,"_cna.tsv"))
+    snv <- read.table(file = paste0("data/PCAWG/snv/",tumor_type,"_snv.tsv.gz"))
+    cna <- read.table(file = paste0("data/PCAWG/cna/",tumor_type,"_cna.tsv.gz"))
   }
   
   # snv <- snv[snv$VAF >= 0.15,]
@@ -65,9 +63,9 @@ mclapply(tumor_types, mc.cores = 11, function(tumor_type){
   common_patients <- levels(factor(snv$ID))[levels(factor(snv$ID)) %in% levels(factor(cna$ID))]
   
   chr_info <-
-    read.table("/home/ieo5099/Desktop_linux/mutation_compensation/data/misc/chr_info_h19.txt", header = TRUE)
+    read.table("data/PCAWG/chr_info_h19.txt", header = TRUE)
   chr_arms <-
-    read.table(file = "/home/ieo5099/Desktop_linux/mutation_compensation/data/misc/cytoBand.txt", header = T)
+    read.table(file = "data/PCAWG/cytoBand.txt", header = T)
   chr_arms[, 2:3] <-
     apply(chr_arms[, 2:3] / 1000000, 2, as.integer)
   
@@ -132,8 +130,7 @@ mclapply(tumor_types, mc.cores = 11, function(tumor_type){
     ## 2nd loop: load segmented chromosome/gene structure ----
     bin_gene <-
       read.table(
-        paste0("/home/ieo5099/Desktop_linux/mutation_compensation/",
-               "data/ChromosomeGeneStructure/chr_",
+        paste0("data/ChromosomeGeneStructure/chr_",
                parse_number(chr),
                "_binSize_",
                fixed_bin_length,

@@ -60,8 +60,8 @@ In order to run the R scripts you should activate the conda environment and then
 ```bash
 conda activate mutation_compensation
 cd path/to/GitHub/mutation_compensation/code/
-Rscript 02_statisticalAnalysis.R --help
-Rscript 02_statisticalAnalysis.R --tables y --statistics y
+Rscript 02_statisticalAnalysis_TCGA.R --help
+Rscript 02_statisticalAnalysis_TCGA.R --tables y --statistics y
 ```
 
 Scripts and detailed parameters:

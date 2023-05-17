@@ -30,7 +30,7 @@ suppressMessages({
         paste0(
           "data/ChromosomeGeneStructure/chr_",
           chr,
-          "_binSize_1000000.txt"
+          "_binSize_1e+06.txt"
         )
       )
     bin_gene <- bin_gene[bin_gene$gene_count != 0,]
@@ -71,7 +71,7 @@ if (CTR) {
   stat_signif_CTR <- data.frame()
 }
 
-tumor_types <- c("BRCA", "PAAD")
+tumor_types <- c("PAAD", "BRCA")
 
 stat_estimates <- data.frame()
 stat_signif <- data.frame()

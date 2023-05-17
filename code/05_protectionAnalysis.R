@@ -31,6 +31,7 @@ suppressMessages({
   library(AnnotationDbi)
   library(parallel)
   library(optparse)
+  library(tidyverse)
 })
 
 option_list = list(

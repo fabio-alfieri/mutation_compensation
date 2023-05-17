@@ -72,30 +72,30 @@ if (opt$statistics == "n") {
 setwd("../")
 
 tumor_types <- c(
-  "LUAD",
-  "LUSC",
-  "BRCA",
-  "CESC",
-  "THCA",
-  "HNSC",
-  "PAAD",
-  "COADREAD",
-  "GBMLGG",
-  # #
-  "SKCM",
-  "OV",
-  "BLCA",
-  "PCPG",
-  "PRAD",
-  "KIRC",
-  "MESO",
-  "TGCT",
-  "KIRP",
-  "SARC",
-  "LIHC",
-  "ESCA",
-  "STAD",
-  "UCS"
+  "LUAD"
+  # "LUSC",
+  # "BRCA",
+  # "CESC",
+  # "THCA",
+  # "HNSC",
+  # "PAAD",
+  # "COADREAD",
+  # "GBMLGG",
+  # # #
+  # "SKCM",
+  # "OV",
+  # "BLCA",
+  # "PCPG",
+  # "PRAD",
+  # "KIRC",
+  # "MESO",
+  # "TGCT",
+  # "KIRP",
+  # "SARC",
+  # "LIHC",
+  # "ESCA",
+  # "STAD",
+  # "UCS"
 )
 
 segment_cutoffs <- c(20)
@@ -156,7 +156,9 @@ if (produce_tables) {
   tierfinal <- data.frame()
   
   # segmentation lengths (default is 36Mbp)
-  segment_lengths <- c(15,18,20,22,25,28,30,33,36)
+  segment_lengths <- c(1:50)
+  
+  segment_cutoffs_muts <- 20
   
   for(segment_cutoff_muts in segment_cutoffs_muts){
     cat("\n > MUTATION segment_mean cutoff: ", segment_cutoff_muts)
@@ -176,32 +178,33 @@ if (produce_tables) {
         } else{
           conditions <- c(
             "all_mutations"
+            ,"deletions"
             
             ,"aggregation_causing"
             ,"non_aggregation_causing"
-            
+            # 
             ,"expressed_no0"
             ,"non_expressed_no0"
-            
+            # 
             ,"synonymous"
             ,"non_synonymous"
             # "silent"
             
-            # "missense"
+            ,"missense"
             ,"remove_OG"
             ,"remove_TSG"
             ,"remove_BOTH"
-            
+            # 
             ,"polyphen_highlyDamaging"
             ,"polyphen_moderatelyDamaging"
             ,"CADD_highlyDamaging_phred"
             ,"CADD_moderatelyDamaging_phred"
-            
+            # 
             ,"haploinsufficient"
             ,"non_haploinsufficient"
             ,"haploinsufficient_GHIS"
             ,"non_haploinsufficient_GHIS"
-            
+            # 
             # "haploinsufficient_damaging"
             # "haploinsufficient_nondamaging"
             # "non_haploinsufficient_damaging"
@@ -628,7 +631,7 @@ if (produce_tables) {
                   "_",
                   segment_length,
                   "Mbp_table",
-                  ifelse(segment_cutoff=="020","",paste0("_",segment_cutoff)),
+                  ifelse(segment_cutoff=="20","",paste0("_",segment_cutoff)),
                   ".tsv"
                 )
               )
@@ -637,7 +640,7 @@ if (produce_tables) {
               if (chr_arm == "yes") {
                 ampl_freq <-
                   read.table(file = paste0(source_table_path, tumor_type, "_chrAmpFreq",
-                                           ifelse(segment_cutoff=="020","",paste0("_",segment_cutoff)),
+                                           ifelse(segment_cutoff=="20","",paste0("_",segment_cutoff)),
                                            ".txt"))
                 chr_ampl_mut <- data.frame()
                 for (chr in 1:22) {
@@ -1163,7 +1166,7 @@ if (produce_statistics) {
   
   
   cat(" \n > Producing Fig. S2a \n\n")
-  # Figure S1a ----
+  # Figure S2a ----
   # correlation between mean mutation score and deletion frequency
   x <- as.numeric(toPlot$mut_norm)
   y <- as.numeric(toPlot$cna_mean_freq_del)
@@ -1258,8 +1261,8 @@ if (produce_statistics) {
   print(p1)
   dev.off()
   
-  cat(" \n > Producing Fig. S1b \n\n")
-  # Figure S1b ----
+  cat(" \n > Producing Fig. S2b \n\n")
+  # Figure S2b ----
   # correlation between amplification burden and correlation estimate
   x <- as.numeric(join$cna_mean_freq_ampl)
   y <- as.numeric(join$corS)
@@ -1459,44 +1462,37 @@ if (produce_statistics) {
   wilcox.test(
     corParameters[corParameters$condition == "amplifications", ]$corS,
     corParameters[corParameters$condition == "deletions", ]$corS,
-    paired = T,
-    alternative = "greater"
+    paired = T
   )
   wilcox.test(
     corParameters[corParameters$condition == "expressed_no0", ]$corS,
     corParameters[corParameters$condition == "non_expressed_no0", ]$corS,
-    paired = T,
-    alternative = "greater"
+    paired = T
   )
   wilcox.test(
     corParameters[corParameters$condition == "CADD_moderatelyDamaging_phred", ]$corS,
     corParameters[corParameters$condition == "CADD_highlyDamaging_phred", ]$corS,
-    paired = T,
-    alternative = "less"
+    paired = T
   )
   wilcox.test(
     corParameters[corParameters$condition == "polyphen_moderatelyDamaging", ]$corS,
     corParameters[corParameters$condition == "polyphen_highlyDamaging", ]$corS,
-    paired = T,
-    alternative = "less"
+    paired = T
   )
   wilcox.test(
     corParameters[corParameters$condition == "aggregation_causing", ]$corS,
     corParameters[corParameters$condition == "non_aggregation_causing", ]$corS,
-    paired = T,
-    alternative = "less"
+    paired = T
   )
   wilcox.test(
     corParameters[corParameters$condition == "haploinsufficient", ]$corS,
     corParameters[corParameters$condition == "non_haploinsufficient", ]$corS,
-    paired = T,
-    alternative = "greater"
+    paired = T
   )
   wilcox.test(
     corParameters[corParameters$condition == "haploinsufficient_GHIS", ]$corS,
     corParameters[corParameters$condition == "non_haploinsufficient_GHIS", ]$corS,
-    paired = T,
-    alternative = "greater"
+    paired = T
   )
   wilcox.test(corParameters[corParameters$condition == "amplifications", ]$corS, corParameters[corParameters$condition == "remove_OG", ]$corS)
   wilcox.test(corParameters[corParameters$condition == "amplifications", ]$corS, corParameters[corParameters$condition == "remove_TSG", ]$corS)

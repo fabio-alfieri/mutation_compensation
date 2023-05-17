@@ -72,30 +72,30 @@ if (opt$statistics == "n") {
 setwd("../")
 
 tumor_types <- c(
-  "LUAD"
-  # "LUSC",
-  # "BRCA",
-  # "CESC",
-  # "THCA",
-  # "HNSC",
-  # "PAAD",
-  # "COADREAD",
-  # "GBMLGG",
-  # # #
-  # "SKCM",
-  # "OV",
-  # "BLCA",
-  # "PCPG",
-  # "PRAD",
-  # "KIRC",
-  # "MESO",
-  # "TGCT",
-  # "KIRP",
-  # "SARC",
-  # "LIHC",
-  # "ESCA",
-  # "STAD",
-  # "UCS"
+  "LUAD",
+  "LUSC",
+  "BRCA",
+  "CESC",
+  "THCA",
+  "HNSC",
+  "PAAD",
+  "COADREAD",
+  "GBMLGG",
+  # #
+  "SKCM",
+  "OV",
+  "BLCA",
+  "PCPG",
+  "PRAD",
+  "KIRC",
+  "MESO",
+  "TGCT",
+  "KIRP",
+  "SARC",
+  "LIHC",
+  "ESCA",
+  "STAD",
+  "UCS"
 )
 
 segment_cutoffs <- c(20)
@@ -1016,7 +1016,6 @@ if (produce_tables) {
 # statistics ----
 if (produce_statistics) {
   cat("\n >> (2) analyis: produce figures \n")
-  
   
   fig1b_toPlot <- list()
   cat(" \n > Producing Fig. 1b \n\n")

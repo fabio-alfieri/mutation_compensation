@@ -43,7 +43,7 @@ tumor_types <- paste0(c(
   "Pancreas",
   "Prostate",
   "Ovary",
-  "Skin",
+  "Skin"
 ), ".merged")
 merged <- T
 
@@ -63,9 +63,9 @@ mclapply(tumor_types, mc.cores = 11, function(tumor_type){
   common_patients <- levels(factor(snv$ID))[levels(factor(snv$ID)) %in% levels(factor(cna$ID))]
   
   chr_info <-
-    read.table("data/PCAWG/chr_info_h19.txt", header = TRUE)
+    read.table("data/misc/chr_info_h19.txt", header = TRUE)
   chr_arms <-
-    read.table(file = "data/PCAWG/cytoBand.txt", header = T)
+    read.table(file = "data/misc/cytoBand.txt", header = T)
   chr_arms[, 2:3] <-
     apply(chr_arms[, 2:3] / 1000000, 2, as.integer)
   

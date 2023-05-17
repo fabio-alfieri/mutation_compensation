@@ -36,11 +36,9 @@ option_list = list(
   )
 )
 
-
 opt_parser = OptionParser(option_list = option_list)
 
 opt = parse_args(opt_parser)
-
 
 if (opt$tables == "y" & opt$statistics == "y") {
   cat("\n\n >> You chose default options: \n\t(1) --tables 'y';\n\t(2) --statistics 'y' \n\n")
@@ -87,7 +85,6 @@ tumor_types <- paste0(c(
 # tumor_types <- tumor_types$tumor_types
 # tumor_types <- tumor_types[!tumor_types %in% c("CLLE-ES", "CMDI-UK", "LAML-KR", "THCA-US")]
 
-normLEN <- F
 intron_intergenic <- T
 
 if (F) {
@@ -111,7 +108,7 @@ n_mutations <- data.frame()
 if (produce_tables) {
   # output table directory
   results_table_path <-
-    paste0("results/02_produceStatistics_PCAWG/")
+    paste0("results/tables/02_produceStatistics_PCAWG/")
   system(paste0("mkdir -p ", results_table_path))
   
   # initialize parameters
@@ -143,7 +140,7 @@ if (produce_tables) {
     
     ## >> 2nd loop: mutation/gene type conditions << ----
     source_table_path <-
-      paste0("results/01_binLevel_PCAWG/")
+      paste0("results/tables/01_binLevel_PCAWG/")
     
     ## >> 3rd loop: CANCER TYPE << ----
     suppressMessages({
@@ -409,10 +406,6 @@ if (produce_tables) {
               mutations_normPT <- 0
               mutations_coding_normPT <- 0
               mutations_coding_wointron_normPT <- 0
-              mutations_coding_normPT_normLEN <- 0
-              mutations_coding_wointron_normPT_normLEN <- 0
-              mutations_noncoding_intron_normPT_normLEN <- 0
-              mutations_noncoding_intergenic_normPT_normLEN <- 0
               mutations_noncoding_intron_normPT <- 0
               mutations_noncoding_intergenic_normPT <- 0
             }else{
@@ -431,25 +424,10 @@ if (produce_tables) {
                   as.numeric(df[df$resize == i, ]$mutations_coding_wointron_norm),
                   na.rm = T
                 )
-              mutations_coding_wointron_normPT_normLEN <-
-                mean(
-                  as.numeric(df[df$resize == i, ]$mutations_coding_wointron_norm) / 
-                    (as.numeric(df[df$resize == i, ]$length_coding)+1),
-                  na.rm = T
-                )
-              mutations_coding_normPT_normLEN <-
-                mean(
-                  as.numeric(df[df$resize == i, ]$mutations_coding_norm) / 
-                    (as.numeric(df[df$resize == i, ]$length_coding)+1),
-                  na.rm = T
-                )
-              # if(intron_intergenic){
               
               if(intron_intergenic == F){
                 mutations_noncoding_intron <- 0
                 mutations_noncoding_intergenic <- 0
-                mutations_noncoding_intron_normPT_normLEN <- 0
-                mutations_noncoding_intergenic_normPT_normLEN <- 0
                 mutations_noncoding_intron_normPT <- 0
                 mutations_noncoding_intergenic_normPT <- 0
               }else{                  
@@ -461,18 +439,6 @@ if (produce_tables) {
                 mutations_noncoding_intergenic_normPT <-
                   mean(
                     as.numeric(df[df$resize == i, ]$mutations_noncoding_intergenic_norm),
-                    na.rm = T
-                  )
-                mutations_noncoding_intron_normPT_normLEN <-
-                  mean(
-                    as.numeric(df[df$resize == i, ]$mutations_noncoding_intron_norm) / 
-                      (as.numeric(df[df$resize == i, ]$length_noncoding)+1),
-                    na.rm = T
-                  )
-                mutations_noncoding_intergenic_normPT_normLEN <-
-                  mean(
-                    as.numeric(df[df$resize == i, ]$mutations_noncoding_intergenic_norm) / 
-                      (as.numeric(df[df$resize == i, ]$length_noncoding)+1),
                     na.rm = T
                   )
               }
@@ -502,10 +468,6 @@ if (produce_tables) {
                 mutations_coding_wointron_normPT,
                 mutations_noncoding_intron_normPT,
                 mutations_noncoding_intergenic_normPT,
-                mutations_coding_normPT_normLEN,
-                mutations_coding_wointron_normPT_normLEN,
-                mutations_noncoding_intron_normPT_normLEN,
-                mutations_noncoding_intergenic_normPT_normLEN,
                 gene_id,
                 gene_count,
                 chr,
@@ -533,10 +495,6 @@ if (produce_tables) {
             "mutations_coding_wointron_normPT",
             "mutations_noncoding_intron_normPT",
             "mutations_noncoding_intergenic_normPT",
-            "mutations_coding_normPT_normLEN",
-            "mutations_coding_wointron_normPT_normLEN",
-            "mutations_noncoding_intron_normPT_normLEN",
-            "mutations_noncoding_intergenic_normPT_normLEN",
             "gene_id",
             "gene_count",
             "chr",
@@ -588,10 +546,6 @@ if (produce_tables) {
               mutations_normPT <- 0
               mutations_coding_normPT <- 0
               mutations_coding_wointron_normPT <- 0
-              mutations_coding_normPT_normLEN <- 0
-              mutations_coding_wointron_normPT_normLEN <- 0
-              mutations_noncoding_intron_normPT_normLEN <- 0
-              mutations_noncoding_intergenic_normPT_normLEN <- 0
               mutations_noncoding_intron_normPT <- 0
               mutations_noncoding_intergenic_normPT <- 0
             }else{
@@ -610,25 +564,10 @@ if (produce_tables) {
                   as.numeric(df[df$resize == i, ]$mutations_coding_wointron_norm),
                   na.rm = T
                 )
-              mutations_coding_wointron_normPT_normLEN <-
-                mean(
-                  as.numeric(df[df$resize == i, ]$mutations_coding_wointron_norm) / 
-                    (as.numeric(df[df$resize == i, ]$length_coding)+1),
-                  na.rm = T
-                )
-              mutations_coding_normPT_normLEN <-
-                mean(
-                  as.numeric(df[df$resize == i, ]$mutations_coding_norm) / 
-                    (as.numeric(df[df$resize == i, ]$length_coding)+1),
-                  na.rm = T
-                )
-              # if(intron_intergenic){
               
               if(intron_intergenic == F){
                 mutations_noncoding_intron <- 0
                 mutations_noncoding_intergenic <- 0
-                mutations_noncoding_intron_normPT_normLEN <- 0
-                mutations_noncoding_intergenic_normPT_normLEN <- 0
                 mutations_noncoding_intron_normPT <- 0
                 mutations_noncoding_intergenic_normPT <- 0
               }else{                  
@@ -640,18 +579,6 @@ if (produce_tables) {
                 mutations_noncoding_intergenic_normPT <-
                   mean(
                     as.numeric(df[df$resize == i, ]$mutations_noncoding_intergenic_norm),
-                    na.rm = T
-                  )
-                mutations_noncoding_intron_normPT_normLEN <-
-                  mean(
-                    as.numeric(df[df$resize == i, ]$mutations_noncoding_intron_norm) / 
-                      (as.numeric(df[df$resize == i, ]$length_noncoding)+1),
-                    na.rm = T
-                  )
-                mutations_noncoding_intergenic_normPT_normLEN <-
-                  mean(
-                    as.numeric(df[df$resize == i, ]$mutations_noncoding_intergenic_norm) / 
-                      (as.numeric(df[df$resize == i, ]$length_noncoding)+1),
                     na.rm = T
                   )
               }
@@ -681,10 +608,6 @@ if (produce_tables) {
                 mutations_coding_wointron_normPT,
                 mutations_noncoding_intron_normPT,
                 mutations_noncoding_intergenic_normPT,
-                mutations_coding_normPT_normLEN,
-                mutations_coding_wointron_normPT_normLEN,
-                mutations_noncoding_intron_normPT_normLEN,
-                mutations_noncoding_intergenic_normPT_normLEN,
                 gene_id,
                 gene_count,
                 chr,
@@ -712,10 +635,6 @@ if (produce_tables) {
             "mutations_coding_wointron_normPT",
             "mutations_noncoding_intron_normPT",
             "mutations_noncoding_intergenic_normPT",
-            "mutations_coding_normPT_normLEN",
-            "mutations_coding_wointron_normPT_normLEN",
-            "mutations_noncoding_intron_normPT_normLEN",
-            "mutations_noncoding_intergenic_normPT_normLEN",
             "gene_id",
             "gene_count",
             "chr",
@@ -774,8 +693,8 @@ if (produce_tables) {
             chr22_coding
           )
         
-        tier_coding[, c(1:21, 23:25)] <-
-          apply(tier_coding[, c(1:21, 17:25)], 2, as.numeric)
+        tier_coding[, c(1:18, 20:21)] <-
+          apply(tier_coding[, c(1:18, 20:21)], 2, as.numeric)
         
         
         chr1_noncoding <-  merge.bins_noncoding(chr1)
@@ -827,8 +746,8 @@ if (produce_tables) {
             chr22_noncoding
           )
         
-        tier_noncoding[, c(1:21, 23:25)] <-
-          apply(tier_noncoding[, c(1:21, 17:25)], 2, as.numeric)
+        tier_noncoding[, c(1:18, 20:21)] <-
+          apply(tier_noncoding[, c(1:18, 20:21)], 2, as.numeric)
         
         # output table of the analysis
         write_tsv(
@@ -858,49 +777,7 @@ if (produce_tables) {
                                    coding = sum(tier_coding$mutations_coding, na.rm = T),
                                    non_coding = sum(tier_noncoding$mutations_noncoding, na.rm = T)))
         
-        if(normLEN){
-          corP_amplifications <- try(cor.test(log10(tier_coding$mutations_normPT), 
-                                              tier_coding$cna_freq_ampl, method = "pearson"))
-          corS_amplifications <- try(cor.test(log10(tier_coding$mutations_normPT), 
-                                              tier_coding$cna_freq_ampl, method = "spearman"))
-          
-          corP_deletions <- try(cor.test(log10(tier_coding$mutations_normPT), 
-                                         tier_coding$cna_freq_del, method = "pearson"))
-          corS_deletions <- try(cor.test(log10(tier_coding$mutations_normPT), 
-                                         tier_coding$cna_freq_del, method = "spearman"))
-          
-          corP_coding <- try(cor.test(log10(tier_coding$mutations_coding_normPT_normLEN), 
-                                      tier_coding$cna_freq_ampl, method = "pearson"))
-          corS_coding <- try(cor.test(log10(tier_coding$mutations_coding_normPT_normLEN), 
-                                      tier_coding$cna_freq_ampl, method = "spearman"))
-          
-          corP_coding_deletions <- try(cor.test(log10(tier_coding$mutations_coding_normPT_normLEN), 
-                                                tier_coding$cna_freq_del, method = "pearson"))
-          corS_coding_deletions <- try(cor.test(log10(tier_coding$mutations_coding_normPT_normLEN), 
-                                                tier_coding$cna_freq_del, method = "spearman"))
-          
-          corP_coding_wointron <- try(cor.test(log10(tier_noncoding$mutations_coding_wointron_normPT_normLEN), 
-                                               tier_noncoding$cna_freq_ampl, method = "pearson"))
-          corS_coding_wointron <- try(cor.test(log10(tier_noncoding$mutations_coding_wointron_normPT_normLEN), 
-                                               tier_noncoding$cna_freq_ampl, method = "spearman"))
-          
-          corP_coding_wointron_deletions <- try(cor.test(log10(tier_noncoding$mutations_coding_wointron_normPT_normLEN), 
-                                                         tier_noncoding$cna_freq_del, method = "pearson"))
-          corS_coding_wointron_deletions <- try(cor.test(log10(tier_noncoding$mutations_coding_wointron_normPT_normLEN), 
-                                                         tier_noncoding$cna_freq_del, method = "spearman"))
-          
-          if(intron_intergenic){                
-            corP_noncoding_intron <- try(cor.test(log10(tier_noncoding$mutations_noncoding_intron_normPT_normLEN), 
-                                                  tier_noncoding$cna_freq_ampl, method = "pearson"))
-            corS_noncoding_intron <- try(cor.test(log10(tier_noncoding$mutations_noncoding_intron_normPT_normLEN), 
-                                                  tier_noncoding$cna_freq_ampl, method = "spearman"))
-            
-            corP_noncoding_intergenic <- try(cor.test(log10(tier_noncoding$mutations_noncoding_intergenic_normPT_normLEN), 
-                                                      tier_noncoding$cna_freq_ampl, method = "pearson"))
-            corS_noncoding_intergenic <- try(cor.test(log10(tier_noncoding$mutations_noncoding_intergenic_normPT_normLEN), 
-                                                      tier_noncoding$cna_freq_ampl, method = "spearman"))
-          }
-        }else{
+        
           corP_amplifications <- try(cor.test(log10(tier_coding$mutations_normPT), 
                                               tier_coding$cna_freq_ampl, method = "pearson"))
           corS_amplifications <- try(cor.test(log10(tier_coding$mutations_normPT), 
@@ -952,7 +829,6 @@ if (produce_tables) {
             corS_noncoding_intergenic_deletions <- try(cor.test(log10(tier_noncoding$mutations_noncoding_intergenic_normPT), 
                                                                 tier_noncoding$cna_freq_del, method = "spearman"))
           }
-        }
         
         tryCatch({
           parameters <- rbind(parameters,  rbind(c(
@@ -966,45 +842,12 @@ if (produce_tables) {
           ),c(
             tumor_type = tumor_type,
             segment_length = segment_length,
-            condition = "deletions",
-            corP = corP_deletions$estimate,
-            p.corP = corP_deletions$p.value,
-            corS = corS_deletions$estimate,
-            p.corS = corS_deletions$p.value
-          ),c(
-            tumor_type = tumor_type,
-            segment_length = segment_length,
             condition = "coding",
             corP = corP_coding$estimate,
             p.corP = corP_coding$p.value,
             corS = corS_coding$estimate,
             p.corS = corS_coding$p.value
           ),c(
-            tumor_type = tumor_type,
-            segment_length = segment_length,
-            condition = "coding_deletions",
-            corP = corP_coding_deletions$estimate,
-            p.corP = corP_coding_deletions$p.value,
-            corS = corS_coding_deletions$estimate,
-            p.corS = corS_coding_deletions$p.value
-          ),c(
-            tumor_type = tumor_type,
-            segment_length = segment_length,
-            condition = "coding_wointron",
-            corP = corP_coding_wointron$estimate,
-            p.corP = corP_coding_wointron$p.value,
-            corS = corS_coding_wointron$estimate,
-            p.corS = corS_coding_wointron$p.value
-          ),c(
-            tumor_type = tumor_type,
-            segment_length = segment_length,
-            condition = "coding_wointron_deletions",
-            corP = corP_coding_wointron_deletions$estimate,
-            p.corP = corP_coding_wointron_deletions$p.value,
-            corS = corS_coding_wointron_deletions$estimate,
-            p.corS = corS_coding_wointron_deletions$p.value
-          )
-          ,c(
             tumor_type = tumor_type,
             segment_length = segment_length,
             condition = "noncoding_intron",
@@ -1020,23 +863,6 @@ if (produce_tables) {
             p.corP = corP_noncoding_intergenic$p.value,
             corS = corS_noncoding_intergenic$estimate,
             p.corS = corS_noncoding_intergenic$p.value
-          )
-          ,c(
-            tumor_type = tumor_type,
-            segment_length = segment_length,
-            condition = "noncoding_intron_deletions",
-            corP = corP_noncoding_intron_deletions$estimate,
-            p.corP = corP_noncoding_intron_deletions$p.value,
-            corS = corS_noncoding_intron_deletions$estimate,
-            p.corS = corS_noncoding_intron_deletions$p.value
-          ),c(
-            tumor_type = tumor_type,
-            segment_length = segment_length,
-            condition = "noncoding_intergenic_deletions",
-            corP = corP_noncoding_intergenic_deletions$estimate,
-            p.corP = corP_noncoding_intergenic_deletions$p.value,
-            corS = corS_noncoding_intergenic_deletions$estimate,
-            p.corS = corS_noncoding_intergenic_deletions$p.value
           )
           ))
         })
@@ -1054,3 +880,32 @@ colnames(parameters) <-
     "corS",
     "p.corS")
 parameters[, 4:7] <- apply(parameters[, 4:7], 2, as.numeric)
+
+
+aggregat <-
+  parameters[parameters$condition == "coding" |
+               parameters$condition == "noncoding_intron" |
+               parameters$condition == "noncoding_intergenic",]
+
+p1 <-
+  ggplot(aggregat, aes(
+    x = as.factor(tumorType),
+    y = corS,
+    fill = condition
+  )) +
+  geom_bar(color = "black",
+           stat = "identity",
+           position = position_dodge()) +
+  theme_classic() + scale_fill_brewer(palette = "Blues")
+p2 <-
+  ggplot(aggregat, aes(
+    x = as.factor(tumorType),
+    y = log10(p.corS),
+    fill = condition
+  )) +
+  geom_bar(color = "black",
+           stat = "identity",
+           position = position_dodge()) +
+  theme_classic() + scale_fill_brewer(palette = "Reds")
+
+ggarrange(p1, p2, nrow = 2)

@@ -1,6 +1,6 @@
 ## Cancer genomes tolerate deleterious coding mutations through somatic copy-number amplifications of wild-type regions
 
-The related paper was published in [Nature Communications]([https://www.nature.com/articles/s41467-023-39313-8]).
+The related paper was published in [Nature Communications](https://www.nature.com/articles/s41467-023-39313-8).
 
 For any questions regarding the code and/or data, please contact with Fabio Alfieri (fabio.alfieri@ieo.it).
 

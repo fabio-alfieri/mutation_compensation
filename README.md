@@ -2,7 +2,7 @@
 
 The related paper was published in [Nature Communications](https://www.nature.com/articles/s41467-023-39313-8) on June 16th, 2023.
 
-For any questions regarding the code and/or data, please contact with Fabio Alfieri (fabio.alfieri@ieo.it).
+For any questions regarding the code and/or data, please contact with Fabio Alfieri (fabio.alfieri@nyulangone.org).
 
 [comment]: <> (Replace with the correct DOI)
 [comment]:[![](https://img.shields.io/badge/doi-10.1101/2021.02.13.429885-rec.svg)](https://doi.org/10.1101/2021.03.13.429885)
